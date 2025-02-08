@@ -1,0 +1,96 @@
+/* Reset básico
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; */
+/* } */
+
+/* Variables CSS globales */
+/* :root {
+  --transition-speed: 0.3s;
+  --border-radius: 4px;
+  --spacing-unit: 8px;
+  --max-width: 1200px;
+} */
+
+/* Estilos base */
+/* html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+} */
+
+/* body {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+/* Enlaces */
+/* a {
+  text-decoration: none;
+  color: inherit;
+} */
+
+/* Imágenes responsivas */
+/* img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+} */
+
+/* Contenedor principal */
+/* .container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-unit);
+} */
+
+/* Utilidades */
+/* .flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+} */
+
+/* Clases de espaciado */
+/* .mt-1 {
+  margin-top: var(--spacing-unit);
+}
+.mb-1 {
+  margin-bottom: var(--spacing-unit);
+}
+.ml-1 {
+  margin-left: var(--spacing-unit);
+}
+.mr-1 {
+  margin-right: var(--spacing-unit);
+} */
+
+/* Animaciones */
+/* .fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity var(--transition-speed) ease-in;
+} */
+
+/* .fade-exit {
+  opacity: 1;
+} */
+
+/* .fade-exit-active {
+  opacity: 0;
+  transition: opacity var(--transition-speed) ease-out;
+} */

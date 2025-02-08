@@ -1,0 +1,208 @@
+.header {
+  background-color: #fff;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.75rem;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  height: 7rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headerTop {
+  width: 100%;
+  background-color: rgb(37, 37, 37);
+  color: rgb(255, 255, 255);
+  display: grid;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  grid-template-columns: 1fr minmax(465px, 1fr);
+  height: 33px;
+  margin: 0px auto;
+  padding: 0px;
+  position: relative;
+  vertical-align: middle;
+  z-index: 999;
+}
+
+.headerTopLeft {
+  height: fit-content;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px !important;
+  font-weight: 500;
+  margin-left: 2.5rem;
+  margin-bottom: -10px;
+}
+
+.headerTopLeft > p {
+  position: absolute;
+  top: -9px;
+}
+
+.headerTopRight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+  font-size: 12px !important;
+  font-family: "Roboto", sans-serif;
+}
+
+.headerRetailer {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.headerLogin {
+  width: 110px;
+  cursor: pointer;
+  background-color: rgb(75, 66, 66);
+  padding-right: 5px;
+  padding-left: 30px;
+}
+
+.headerLogin button {
+  font-family: "Roboto", sans-serif;
+  height: 33px;
+  border: none;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  background-color: rgb(75, 66, 66);
+  font-weight: 400;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.headerLogin > button:hover {
+  color: #1cc3ed;
+  transition: all 0.25s ease;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+}
+
+.headerBottom {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.headerbottomLogo {
+  width: auto;
+  height: 52px;
+  padding: auto;
+  align-self: center;
+}
+
+.headerBottom__logo_main {
+  height: 5rem;
+  align-self: center;
+  padding-left: 25px;
+  margin-top: 7px;
+}
+
+.headerMobileMenu {
+  display: none;
+}
+
+.headerBottomNavMenu {
+  width: auto;
+  height: 64px;
+}
+
+.headerBottomNavMenu ul {
+  display: flex;
+  gap: 0.9rem;
+  height: 50px;
+  width: auto;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.headerBottomNavMenu ul li {
+  padding: 18px 14px;
+  width: auto;
+  list-style: none;
+  height: fit-content;
+  padding: 30px;
+  padding-bottom: 10px;
+}
+
+.headerBottomNavMenu ul li a {
+  color: #121212;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+}
+
+.headerBottomNavMenu ul li a:hover {
+  color: #e30605;
+  transition: 0.5s ease-in-out;
+}
+
+.headerBottomIcons {
+  display: flex;
+  gap: 1.1rem;
+  align-items: center;
+  font-size: 14px;
+  width: auto;
+}
+
+.headerBottomIcons > *:hover {
+  color: #e30605;
+  transition: 0.5s ease-in-out;
+}
+
+@media (max-width: 899px) {
+  .headerTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .headerTopLeft {
+    margin-bottom: 3px;
+  }
+
+  .headerTopLeft > p {
+    position: absolute;
+    top: -13px;
+  }
+
+  .headerRetailer {
+    display: none;
+  }
+
+  .headerLogin {
+    display: none;
+  }
+
+  .headerBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .headerbottomLogo {
+    display: flex;
+  }
+
+  .headerMobileMenu {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .searchBar {
+    display: none;
+  }
+
+  .headerBottomNavMenu {
+    display: none;
+  }
+}

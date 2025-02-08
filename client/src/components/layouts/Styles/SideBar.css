@@ -1,0 +1,156 @@
+/* .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sidebar-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.sidebar-header button:hover {
+  color: #e30605;
+}
+
+.sidebar-content {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-buttons a {
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.auth-buttons a:hover {
+  background-color: #f5f5f5;
+  color: #e30605;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar-nav a {
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: #f5f5f5;
+  color: #e30605;
+} */
+
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+  width: 240px;
+  background-color: rgb(37, 37, 37);
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  padding-top: 20px;
+}
+
+.sidebar-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 10px;
+  font-size: 20px;
+  color: #f2f2f2;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: larger;
+  transition: background-color 0.3s, transform 0.3s;
+  border-radius: 50%;
+}
+
+.sidebar-close-btn:hover {
+  background-color: #ed1c24;
+  transform: scale(1.1);
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 3rem 0 0;
+}
+
+.sidebar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-menu-item:hover {
+  background-color: #ed1c24;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-menu-item-text {
+  color: #f2f2f5;
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 1rem;
+  text-decoration: none;
+  text-decoration-line: none;
+}
+
+.sidebar-menu-item svg {
+  color: #f2f2f5;
+  font-size: 26px;
+  margin-right: 0.5rem;
+}

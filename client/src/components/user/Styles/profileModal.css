@@ -1,0 +1,35 @@
+.profile-modal {
+  position: relative;
+}
+
+.profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-button:hover {
+  color: #e30605;
+}
+
+/* Estilos para los items del menú */
+.MuiMenuItem-root {
+  min-width: 150px;
+}
+
+.MuiMenuItem-root a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  display: block;
+}
+
+.MuiMenuItem-root:hover {
+  background-color: #f5f5f5;
+  color: #e30605;
+}
