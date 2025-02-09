@@ -46,7 +46,6 @@
 .priceFilter {
   display: flex;
   flex-direction: column;
-
   align-items: center;
 }
 
@@ -172,11 +171,11 @@
 }
 
 .page-item:hover .page-link {
-  color: rgb(234, 10, 10);
+  color: var(--btn-hover-main);
 }
 
 .pageItemActive {
-  background-color: #ed1c24;
+  background-color: var(--btn-hover-main);
 }
 
 .pageLinkActive {

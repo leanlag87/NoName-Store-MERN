@@ -109,16 +109,16 @@
   width: 92%;
   border-radius: 1px;
   color: white;
-  background: rgba(222, 9, 9, 0.744);
+  background: var(--btn-hover-main);
 }
 
 .btnFooter:hover {
-  background-color: rgb(215, 6, 6);
-  color: rgb(236, 227, 227);
+  background-color: #f6a64f;
+  color: black;
 }
 
 .foot_subs_text:hover {
-  color: #f00;
+  color: var(--btn-hover-main);
 }
 
 /* Menu section */
@@ -158,7 +158,7 @@
 }
 
 .foot_menu li a:hover {
-  color: #f00;
+  color: var(--btn-hover-main);
 }
 
 /* Links section */
@@ -200,7 +200,7 @@
 }
 
 .foot_social a:hover {
-  color: rgb(179, 9, 9);
+  color: var(--btn-hover-main);
 }
 
 /* separator */
@@ -243,7 +243,6 @@
   font-weight: 400;
   font-size: 12px;
   margin-left: 38px;
-
   align-content: center;
 }
 .foot_copyright a {
@@ -251,7 +250,8 @@
   color: rgba(248, 245, 245, 0.733);
 }
 .foot_copyright a:hover {
-  color: #f00;
+  text-decoration: none;
+  color: var(--btn-hover-main);
 }
 .facebook_icon {
   font-size: 18px;
@@ -283,7 +283,7 @@
 }
 
 .foot_policyLink p:hover {
-  color: #f00;
+  color: var(--btn-hover-main);
 }
 
 @media screen and (max-width: 899px) {
@@ -366,7 +366,7 @@
   }
 
   .foot_menu li a:hover {
-    color: #f00;
+    color: var(--btn-hover-main);
   }
 
   /* Grid container for all menu sections */
@@ -478,6 +478,7 @@
   .foot_policyLink_p {
     font-size: 13px;
   }
+
   .foot_copyright > * {
     gap: 2px;
     font-size: 11px;

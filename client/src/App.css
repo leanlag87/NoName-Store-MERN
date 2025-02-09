@@ -15,3 +15,9 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+:root {
+  --btn-hover-main: #ee7b00d7; /* Color principal para hover */
+  --btn-hover-alt: #34c759; /* Color alternativo para hover */
+  /* Puedes agregar más variables según necesites */
+}

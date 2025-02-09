@@ -61,7 +61,7 @@
 .headerLogin {
   width: 110px;
   cursor: pointer;
-  background-color: rgb(75, 66, 66);
+  background-color: rgb(37, 37, 37);
   padding-right: 5px;
   padding-left: 30px;
 }
@@ -72,16 +72,17 @@
   border: none;
   text-align: center;
   color: rgb(255, 255, 255);
-  background-color: rgb(75, 66, 66);
+  background-color: var(--btn-hover-main);
   font-weight: 400;
   font-size: 12px;
   cursor: pointer;
 }
 
-.headerLogin > button:hover {
-  color: #1cc3ed;
+.headerLogin * button:hover {
+  color: black;
+  background-color: #f6a64f;
   transition: all 0.25s ease;
-  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+  filter: drop-shadow(0 0 8px #f6a64f);
 }
 
 .headerBottom {
@@ -141,7 +142,7 @@
 }
 
 .headerBottomNavMenu ul li a:hover {
-  color: #e30605;
+  color: var(--btn-hover-main);
   transition: 0.5s ease-in-out;
 }
 
@@ -154,7 +155,7 @@
 }
 
 .headerBottomIcons > *:hover {
-  color: #e30605;
+  color: var(--btn-hover-main);
   transition: 0.5s ease-in-out;
 }
 

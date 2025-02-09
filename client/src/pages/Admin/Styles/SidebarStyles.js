@@ -59,7 +59,7 @@ export const AccountButton = styled(Button)({
   padding: "0.8rem 2rem   !important",
   borderRadius: "4px !important",
   "&:hover": {
-    backgroundColor: "#ed1c24 !important",
+    backgroundColor: "#ee7b00d7 !important",
     color: "white !important",
   },
 });
@@ -80,7 +80,7 @@ export const SideBarMenuItem = styled("li")({
   width: "75%",
   boxShadow: " 4px 4px 8px rgba(0, 0, 0, 0.3)",
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
     boxShadow: "2px 2px 6px rgba(0, 0, 0, 0.4)",
     "& svg": {
       color: "white",

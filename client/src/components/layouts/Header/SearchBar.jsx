@@ -58,7 +58,7 @@ const Search = ({
           <form onSubmit={handleSearchFormSubmit} className="search_from">
             <SearchInput
               type="text"
-              placeholder="Search........."
+              placeholder="Buscar........."
               value={searchValue}
               onChange={handleSearchInputChange}
             />

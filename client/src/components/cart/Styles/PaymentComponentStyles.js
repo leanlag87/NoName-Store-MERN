@@ -330,7 +330,7 @@ export const ShippingAddressEdit = styled("div")({
     cursor: "pointer",
     color: "black",
     "&:hover": {
-      color: "#ed1c24",
+      color: " #ee7b00d7",
     },
   },
 });

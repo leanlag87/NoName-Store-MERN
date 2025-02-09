@@ -81,8 +81,8 @@ export const ProductButton = styled(Button)(({ theme }) => ({
   marginLeft: "3.3rem !important",
   borderRadius: "5px !important",
   "&:hover": {
-    backgroundColor: "#ed1c24 !important",
-    color: "white !important",
+    backgroundColor: "#ee7b00d7 !important",
+    color: "black !important",
   },
   [theme.breakpoints.down("sm")]: {
     marginLeft: "15px !important",
@@ -97,8 +97,8 @@ export const ContactButton = styled(Button)(({ theme }) => ({
   marginLeft: "1.3rem !important",
   borderRadius: "5px !important",
   "&:hover": {
-    backgroundColor: "#ed1c24 !important",
-    color: "white !important",
+    backgroundColor: "#ee7b00d7!important",
+    color: "black !important",
   },
   [theme.breakpoints.down("sm")]: {
     padding: "0.8rem 3.4rem   !important",

@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 .cartText2:hover {
-  color: #ed1c24 !important;
+  color: var(--btn-hover-main) !important;
 }
 
 .emptyCartContainer {
@@ -88,7 +88,7 @@
 }
 
 .emptyCartContainer .shopNowButton:hover {
-  background-color: #ed1c24;
+  background-color: var(--btn-hover-main);
 }
 
 .cartPage {
@@ -135,7 +135,6 @@
   margin: 1rem 0 0 6rem;
 }
 
-/* ??????????????????? */
 .cart_right_container {
   width: 35%;
   display: flex;
@@ -246,11 +245,11 @@
 }
 
 .coupon-box-content .MuiButton-containedPrimary:hover {
-  background-color: #ed1c24;
+  background-color: var(--btn-hover-main);
 }
 
 .coupon-box-content .MuiFormHelperText-root {
-  color: #ed1c24;
+  color: var(--btn-hover-main);
   font-size: 0.75rem;
 }
 .coupon-box-content .MuiInputLabel-outlined.Mui-focused {
@@ -286,8 +285,8 @@
 }
 
 .btn-custom:hover {
-  background-color: #ed1c24 !important;
-  border-color: #ed1c24 !important;
+  background-color: var(--btn-hover-main) !important;
+  border-color: var(--btn-hover-main) !important;
 }
 
 .paymentLogoImg {
@@ -474,13 +473,13 @@
 }
 
 .additem_increase:hover {
-  color: #ed1c24;
+  color: var(--btn-hover-main);
   transition: transform 0.3s ease 0s;
   border-style: 2px solid;
 }
 
 .additem_decrease:hover {
-  color: #ed1c24;
+  color: var(--btn-hover-main);
   transition: transform 0.3s ease 0s;
   border-style: 2px solid;
 }

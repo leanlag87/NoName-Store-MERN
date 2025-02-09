@@ -44,7 +44,7 @@ export const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 export const ColorlibStepIconRoot = styled("div")(
   ({ theme, active, completed }) => ({
     backgroundColor:
-      active || completed ? (active ? "#ed1c24" : "#000000") : "#666666",
+      active || completed ? (active ? " #ee7b00d7" : "#000000") : "#666666",
     zIndex: 1,
     color: "#FFFFFF",
     width: 40,

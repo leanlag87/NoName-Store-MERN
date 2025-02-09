@@ -14,7 +14,7 @@
 }
 
 .profile-button:hover {
-  color: #e30605;
+  color: var(--btn-hover-main);
 }
 
 /* Estilos para los items del menú */
@@ -31,5 +31,5 @@
 
 .MuiMenuItem-root:hover {
   background-color: #f5f5f5;
-  color: #e30605;
+  color: var(--btn-hover-main);
 }

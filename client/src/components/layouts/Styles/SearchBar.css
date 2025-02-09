@@ -31,7 +31,7 @@
 }
 
 .search-bar button:hover {
-  color: #e30605;
+  color: var(--btn-hover-main);
 }
 
 .search-bar.active form {

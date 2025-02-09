@@ -192,8 +192,8 @@ export const BuyAgainButton = styled(Button)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   "&:hover": {
-    backgroundColor: "#ed1c24 !important",
-    borderColor: "#ed1c24 !important",
+    backgroundColor: "#ee7b00d7 !important",
+    borderColor: "#ee7b00d7 !important",
   },
   [theme.breakpoints.down("sm")]: {
     width: "100%",
@@ -215,8 +215,8 @@ export const ReviewButton = styled(Button)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   "&:hover": {
-    backgroundColor: "#ed1c24 !important",
-    borderColor: "#ed1c24 !important",
+    backgroundColor: "#ee7b00d7 !important",
+    borderColor: "#ee7b00d7 !important",
   },
   [theme.breakpoints.down("sm")]: {
     width: "100%",

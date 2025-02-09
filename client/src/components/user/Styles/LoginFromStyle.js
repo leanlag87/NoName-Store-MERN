@@ -102,7 +102,7 @@ export const ShowPasswordButton = styled(Button)(({ theme }) => ({
   transform: "translateY(-50%)",
   border: "none",
   "&:hover": {
-    color: "#ed1c24",
+    color: "#ee7b00d7",
     background: "none",
   },
 }));
@@ -123,7 +123,7 @@ export const ForgotPasswordLink = styled("a")({
   textDecoration: "none",
   "&:hover": {
     textDecoration: "underline",
-    color: "#ed1c24",
+    color: "#ee7b00d7",
   },
 });
 
@@ -149,8 +149,8 @@ export const LoginButton = styled(Button)(({ theme }) => ({
     borderColor: "#444444",
   },
   "&:hover": {
-    backgroundColor: "#ff0000",
-    borderColor: "#ff0000",
+    backgroundColor: "#ee7b00d7",
+    borderColor: "#ee7b00d7",
   },
 }));
 
@@ -160,7 +160,7 @@ export const PrivacyText = styled("a")({
   color: "black",
   fontSize: "14px",
   "&:hover": {
-    color: "#ed1c24",
+    color: "#ee7b00d7",
   },
 });
 
@@ -170,7 +170,7 @@ export const CreateAccount = styled("a")({
   color: "#121212",
   paddingLeft: "6px",
   "&:hover": {
-    color: "#ed1c24",
+    color: "#ee7b00d7",
     textDecoration: "underline",
   },
 });
@@ -248,7 +248,7 @@ export const StyledAvatar2 = styled(Avatar)({
     backgroundColor: "black",
   },
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
   },
 });
 
@@ -324,7 +324,7 @@ export const UploadAvatarButton = styled(Button)({
   backgroundColor: "#414141",
   height: "2.5rem",
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
   },
 });
 
@@ -442,7 +442,7 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
   },
   "& .MuiOutlinedInput-root": {
     "&:hover fieldset": {
-      borderColor: "#ed1c24",
+      borderColor: "#ee7b00d7",
     },
     "&.Mui-focused fieldset": {
       borderColor: "black",
@@ -464,7 +464,7 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     borderColor: "black",
   },
   "& .MuiMenuItem-root:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
     color: "white",
   },
 }));
@@ -475,7 +475,7 @@ export const Menu = styled("div")(({ theme }) => ({
     color: "black",
   },
   "& .MuiMenuItem-root:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
     color: "white",
   },
 }));

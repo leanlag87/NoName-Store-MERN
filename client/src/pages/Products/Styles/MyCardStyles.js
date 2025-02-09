@@ -62,8 +62,8 @@ export const ThumbIcon = styled("span")(({ theme, clicked }) => ({
   "&:hover": {
     color: "red",
   },
-  display: "flex", // Añadido para centrar los iconos
-  alignItems: "center", // Añadido para centrar los iconos
+  display: "flex", // para centrar los iconos
+  alignItems: "center", // para centrar los iconos
 }));
 
 export const SubHeadingsTypography = styled(Typography)({

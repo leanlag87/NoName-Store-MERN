@@ -101,7 +101,7 @@ export const CartDeleteIcon = styled(IconButton)(({ theme }) => ({
     marginRight: "-2.5rem",
   },
   "&:hover": {
-    color: "#ed1c24",
+    color: " #ee7b00d7",
   },
   [theme.breakpoints.down(499)]: {
     marginRight: "-2rem",

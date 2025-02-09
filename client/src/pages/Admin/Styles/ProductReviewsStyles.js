@@ -152,9 +152,9 @@ export const LoginButton = styled(Button)(({ theme }) => ({
     borderColor: "#444444",
   },
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
     color: "#fff",
-    borderColor: "#ed1c24",
+    borderColor: "#ee7b00d7",
   },
 }));
 

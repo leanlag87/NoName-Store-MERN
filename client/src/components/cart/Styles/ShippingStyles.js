@@ -29,8 +29,8 @@ export const SubmitButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
   height: "3rem",
   "&:hover": {
-    backgroundColor: "#ed1c24",
-    color: "#FFFFFF",
+    backgroundColor: " #ee7b00d7",
+    color: "black",
   },
 }));
 

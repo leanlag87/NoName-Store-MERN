@@ -41,6 +41,6 @@ export const ViewOrdersButton = styled(Button)(({ theme }) => ({
   fontWeight: "bold",
   transition: "background-color 0.3s ease",
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: " #ee7b00d7",
   },
 }));

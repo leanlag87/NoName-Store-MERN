@@ -97,7 +97,7 @@ export const CardContainer = styled("div")(({ theme, image }) => ({
   cursor: "pointer",
   "&:hover": {
     transform: "scale(1.1) !important",
-    backgroundColor: "#ed1c24 ",
+    backgroundColor: "#ee7b00d7",
     boxShadow: "0px 0px 10px rgba(0, 0, 0, black) !important",
   },
   [theme.breakpoints.between("sm", "md")]: {

@@ -22,7 +22,7 @@ export const CloseButton = styled("div")({
   color: "white",
   cursor: "pointer",
   "&:hover": {
-    color: "#ed1c24",
+    color: " #ee7b00d7",
   },
 });
 
@@ -94,7 +94,7 @@ export const HintButton = styled(Button)({
   padding: "4px 8px",
   transform: "translateX(-50%)",
   fontSize: 16,
-  color: "#ed1c24",
+  color: " #ee7b00d7",
   fontWeight: "400",
   cursor: "pointer",
   textDecoration: "underline",

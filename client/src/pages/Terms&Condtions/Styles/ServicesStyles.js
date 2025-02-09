@@ -34,7 +34,7 @@ export const ServicesCard = styled("div")(({ theme }) => ({
 }));
 
 export const ServicesIcon = styled("div")(({ theme }) => ({
-  color: "#ed1c24",
+  color: "#ee7b00d7",
   fontSize: "3rem",
   marginRight: theme.spacing(2.5),
   "& svg": {
@@ -56,17 +56,17 @@ export const ServicesCardInfo = styled("div")({
 
 // Estilos específicos para cada icono
 export const StyledLocalShipping = styled(LocalShipping)({
-  // Estilos para LocalShipping si son necesarios
+  // Estilos para LocalShipping
 });
 
 export const StyledSecurity = styled(Security)({
-  // Estilos para Security si son necesarios
+  // Estilos para Security
 });
 
 export const StyledLocalOffer = styled(LocalOffer)({
-  // Estilos para LocalOffer si son necesarios
+  // Estilos para LocalOffer
 });
 
 export const StyledCreditCard = styled(CreditCard)({
-  // Estilos para CreditCard si son necesarios
+  // Estilos para CreditCard
 });

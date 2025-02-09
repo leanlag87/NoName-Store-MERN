@@ -45,8 +45,6 @@ function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, error } = useSelector((state) => state.user);
-  console.log(isAuthenticated);
-
   //Effects
   useEffect(() => {
     if (error) {
@@ -144,6 +142,7 @@ function Signup() {
     isValidEmail &&
     confirmPassword &&
     name &&
+    lastName &&
     isValidName &&
     isValidLastName &&
     areCheckboxesChecked.checkbox1 &&

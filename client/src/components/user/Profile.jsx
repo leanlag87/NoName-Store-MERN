@@ -160,9 +160,9 @@ const ProfilePage = () => {
               </Typography>
 
               <p className="profileText3">
-                Para acceder nuevamente al sitio web de NoName-Store, debe
+                Para acceder nuevamente al sitio web de NoName-Store, debes
                 proporcionar sus credenciales. Esta acción cerrará tu sesión en
-                cualquier otros navegadores web que haya utilizado antes.
+                cualquier otros navegadores web que hayas utilizado antes.
               </p>
             </div>
             <Button

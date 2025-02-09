@@ -51,8 +51,8 @@ export const SubmitBtn = styled(Button)({
   background: "rgb(37, 37, 37)",
   color: "rgb(255, 255, 255)",
   "&:hover": {
-    backgroundColor: "rgba(222, 9, 9, 0.744)",
-    borderColor: "rgba(222, 9, 9, 0.744)",
+    backgroundColor: "#ee7b00d7)",
+    borderColor: "#ee7b00d7)",
     transform: "scale(1.05)",
   },
 });
@@ -127,10 +127,10 @@ export const MenuItem = styled("option")({
   backgroundColor: "black",
   color: "white",
   "&:hover": {
-    backgroundColor: "rgba(222, 9, 9, 0.744)",
+    backgroundColor: "#ee7b00d7",
   },
   "&.Mui-selected": {
-    backgroundColor: "rgba(222, 9, 9, 0.744)",
+    backgroundColor: "#ee7b00d7)",
     color: "white",
   },
 });

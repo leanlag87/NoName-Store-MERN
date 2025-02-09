@@ -113,7 +113,7 @@ const Header = () => {
                     fontSize: 29,
                     color: "black",
                     "&:hover": {
-                      color: "#e7070f",
+                      color: "#ee7b00d7",
                       cursor: "pointer",
                     },
                   }}

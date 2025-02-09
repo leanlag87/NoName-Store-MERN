@@ -29,7 +29,7 @@ export const StyledMenuIcon = styled(IconButton)(({ theme }) => ({
     "& svg": {
       fontSize: "2rem",
       "&:hover": {
-        color: "#ed1c24",
+        color: "#ee7b00d7",
       },
     },
     "&:hover": {
@@ -84,7 +84,7 @@ export const ContactButton = styled(Button)(({ theme }) => ({
   },
 
   "&:hover": {
-    background: "#ed1c24",
+    background: "#ee7b00d7",
   },
 }));
 

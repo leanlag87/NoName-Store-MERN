@@ -44,7 +44,7 @@ export const RatingContainer = styled(Box)({
 });
 
 export const StyledRating = styled(Rating)({
-  color: "#ed1c24 !important",
+  color: "#ee7b00d7 !important",
   marginRight: 8,
   fontWeight: "400",
 });
@@ -99,7 +99,7 @@ export const AddToCartButton = styled(Button)({
   width: "100%",
   height: 45,
   "&:hover": {
-    backgroundColor: "#ed1c24",
+    backgroundColor: "#ee7b00d7",
     color: "black",
     fontWeight: "bold",
   },

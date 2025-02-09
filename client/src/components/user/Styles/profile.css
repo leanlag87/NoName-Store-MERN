@@ -147,11 +147,11 @@
   color: #fff !important;
 }
 .ordersButton:hover {
-  background-color: #ed1c24 !important;
+  background-color: var(--btn-hover-main) !important;
 }
 
 .profileButton:hover {
-  background-color: #ed1c24 !important;
+  background-color: var(--btn-hover-main) !important;
 }
 
 .rightConatiner {
