@@ -236,6 +236,12 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+.foot_policyLink p:hover {
+  text-decoration: none;
+  color: var(--btn-hover-main);
+}
+
 .foot_copyright > * {
   display: flex;
   gap: 5px;
@@ -280,10 +286,6 @@
 }
 .likedin_icon:hover {
   color: #0a66c2;
-}
-
-.foot_policyLink p:hover {
-  color: var(--btn-hover-main);
 }
 
 @media screen and (max-width: 899px) {
