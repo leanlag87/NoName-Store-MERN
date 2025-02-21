@@ -27,7 +27,8 @@ const Sidebar = ({ handleSideBarMenu, isAuthenticated, user }) => {
         <CloseIcon />
       </button>
       <ul className="sidebar-menu">
-        {isAuthenticated && user.role === "admin" && (
+        {/* Verificar que user exista antes de acceder a role */}
+        {isAuthenticated && user && user.role === "admin" && (
           <Link
             to="/admin/dashboard"
             style={{ color: "inherit", textDecoration: "none" }}
@@ -71,15 +72,18 @@ const Sidebar = ({ handleSideBarMenu, isAuthenticated, user }) => {
             <span className="sidebar-menu-item-text">Sobre nosotros</span>
           </li>
         </Link>
-        <Link
-          to="/account"
-          style={{ color: "inherit", textDecoration: "none" }}
-        >
-          <li className="sidebar-menu-item">
-            <AccountCircleIcon fontSize="large" />
-            <span className="sidebar-menu-item-text">Cuenta</span>
-          </li>
-        </Link>
+        {/* Solo mostrar el enlace a la cuenta si está autenticado */}
+        {isAuthenticated && (
+          <Link
+            to="/account"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <li className="sidebar-menu-item">
+              <AccountCircleIcon fontSize="large" />
+              <span className="sidebar-menu-item-text">Cuenta</span>
+            </li>
+          </Link>
+        )}
 
         {isAuthenticated ? (
           <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
@@ -93,10 +97,7 @@ const Sidebar = ({ handleSideBarMenu, isAuthenticated, user }) => {
             to="/login"
             style={{ color: "inherit", textDecoration: "none" }}
           >
-            <li
-              className="sidebar-menu-item"
-              style={{ textDecorationLine: "none", textDecoration: "none" }}
-            >
+            <li className="sidebar-menu-item">
               <LoginIcon fontSize="large" />
               <span className="sidebar-menu-item-text">Acceso</span>
             </li>

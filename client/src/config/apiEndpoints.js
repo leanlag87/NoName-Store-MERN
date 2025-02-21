@@ -1,7 +1,8 @@
+//Configuracion para las rutas de la API
 export const API_ENDPOINTS = {
   PRODUCTS: {
     BASE: "/products",
-    REVIEWS: "/products/reviews",
+    REVIEWS: "/products",
   },
   CART: {
     BASE: "/cart",
@@ -10,18 +11,18 @@ export const API_ENDPOINTS = {
     SHIPPING: "/cart/shipping",
   },
   ORDERS: {
-    BASE: "/orders",
-    NEW: "/orders/new",
+    BASE: "/order",
+    NEW: "/order/new",
     ME: "/orders/me",
   },
   USER: {
     BASE: "/user",
     ME: "/user/me",
-    PROFILE: "/user/profile",
+    PROFILE: "/profile",
   },
   AUTH: {
-    LOGIN: "/login",
-    REGISTER: "/registerUser",
+    LOGIN: "/authController/login",
+    REGISTER: "/authController/registerUser",
     LOGOUT: "/userController/logout",
     FORGOT_PASSWORD: "/password/forgot",
     REFRESH: "/auth/refresh",
@@ -29,7 +30,7 @@ export const API_ENDPOINTS = {
   ADMIN: {
     USERS: "/admin/users",
     USER: "/admin/user",
-    PRODUCTS: "/admin/products",
+    PRODUCTS: "/products",
     ORDERS: "/admin/orders",
   },
   PAYMENT: {

@@ -20,4 +20,5 @@ const AdminRoute = ({ children }) => {
   );
 };
 
-export default AdminRoute;
+//Usa React.memo para memorizar el componente y evitar renderizados innecesarios
+export default React.memo(AdminRoute);

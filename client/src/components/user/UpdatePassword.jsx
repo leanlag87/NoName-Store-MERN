@@ -3,11 +3,9 @@ import { Typography } from "@mui/material";
 import SecurityUpdateGoodIcon from "@mui/icons-material/SecurityUpdateGood";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
 import Loader from "../ui/Loader/Loader";
 import MetaData from "../ui/MetaData/MetaData";
 import { useDispatch, useSelector } from "react-redux";
-//import { UPDATE_PASSWORD_RESET } from "../../constants/userConstanat";
 import {
   resetPassword,
   updatePassword,
@@ -179,11 +177,9 @@ function UpdatePassword() {
               align="center"
               style={{ marginTop: ".5rem" }}
             >
-              <Link to="/account">
-                <LoginFromStyle.CreateAccount>
-                  Cancelar
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              <LoginFromStyle.CreateAccount to="/account">
+                Cancelar
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

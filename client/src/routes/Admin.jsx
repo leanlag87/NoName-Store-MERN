@@ -11,7 +11,6 @@ import ProcessOrder from "../pages/Admin/ProcessOrder";
 import UpdateUser from "../pages/Admin/UpdateUser";
 import NewProduct from "../pages/Admin/NewProduct";
 import ProductReviews from "../pages/Admin/ProductReview";
-//import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
 
 const Admin = () => {
@@ -92,59 +91,5 @@ const Admin = () => {
     </Routes>
   );
 };
-
-// const Admin = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/dashboard"
-//           element={<Dashboard />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/products"
-//           element={<ProductList />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/product/:id"
-//           element={<UpdateProduct />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/reviews"
-//           element={<ProductReviews />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/orders"
-//           element={<OrderList />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/order/:id"
-//           element={<ProcessOrder />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/new/product"
-//           element={<NewProduct />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/users"
-//           element={<UserList />}
-//         />
-//         <PrivateRoute
-//           isAdmin={true}
-//           path="/admin/user/:id"
-//           element={<UpdateUser />}
-//         />
-//       </Routes>
-//     </Router>
-//   );
-// };
 
 export default Admin;

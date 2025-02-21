@@ -1,7 +1,7 @@
 //React y hooks
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //Componentes de Material-UI
 import { FormControlLabel, Grid, Typography } from "@mui/material";
@@ -79,9 +79,9 @@ function Signup() {
     setIsValidLastName(newLastName.length >= 4 && newLastName.length <= 20);
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-    setIsValidPassword(event.target.value.length >= 8);
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsValidPassword(e.target.value.length >= 8);
   };
 
   //Handlers de UI
@@ -89,20 +89,20 @@ function Signup() {
     setShowPassword(!showPassword);
   };
 
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
   };
 
-  const handleCheckboxChange = (checkboxName) => (event) => {
+  const handleCheckboxChange = (checkboxName) => (e) => {
     setAreCheckboxesChecked((prevState) => ({
       ...prevState,
-      [checkboxName]: event.target.checked,
+      [checkboxName]: e.target.checked,
     }));
   };
 
   //Handlers de avatar
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -113,26 +113,41 @@ function Signup() {
     }
   };
 
-  //Handlers de submit
-  function handleSignUpSubmit(e) {
-    setLoading(true);
-    e.preventDefault();
+  async function handleSignUpSubmit(e) {
+    try {
+      e.preventDefault();
+      setLoading(true);
 
-    if (password !== confirmPassword) {
-      toast.error("Contraseña y Confirmar contraseña no coinciden");
+      // Validación de contraseñas
+      if (password !== confirmPassword) {
+        toast.error("Las contraseñas no coinciden");
+        setLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("password", password);
+
+      if (avatar) {
+        formData.append("avatar", avatar);
+      }
+
+      // Dispatch de la acción
+      const resultAction = await dispatch(registerUser(formData)).unwrap();
+
+      if (resultAction) {
+        toast.success("Usuario registrado exitosamente");
+        navigate("/account");
+      }
+    } catch (error) {
+      console.error("Error en el registro:", error);
+      toast.error(error.message || "Error al registrar usuario");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const formData = new FormData();
-    formData.set("name", name);
-    formData.set("lastName", lastName);
-    formData.set("email", email);
-    formData.set("password", password);
-    formData.set("avatar", avatar);
-
-    dispatch(registerUser(formData));
-    setLoading(false);
   }
 
   //Utilidades y cálculos
@@ -292,12 +307,10 @@ function Signup() {
             </LoginFromStyle.Gridcheckbox>
             <LoginFromStyle.TermsAndConditionsText variant="body2">
               Reconozco que NoName-Store utilizará mi información de acuerdo con
-              sus
-              <Link to="/policy/privacy" style={{ textDecoration: "none" }}>
-                <LoginFromStyle.PrivacyText>
-                  Política de privacidad.
-                </LoginFromStyle.PrivacyText>
-              </Link>
+              sus{" "}
+              <LoginFromStyle.PrivacyText to="/policy/privacy">
+                Política de privacidad.
+              </LoginFromStyle.PrivacyText>
             </LoginFromStyle.TermsAndConditionsText>
             <LoginFromStyle.LoginButton
               variant="contained"
@@ -312,12 +325,10 @@ function Signup() {
               align="center"
               style={{ marginTop: "1rem" }}
             >
-              ¿Ya tenes una cuenta?
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                <LoginFromStyle.CreateAccount>
-                  Login
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              ¿Ya tenes cuenta?{" "}
+              <LoginFromStyle.CreateAccount to="/login">
+                Ingresar
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

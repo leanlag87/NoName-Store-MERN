@@ -2,17 +2,16 @@
   width: 90%;
   padding: 8rem 0;
   background-color: #ffffff;
-   margin: 0 auto;
+  margin: 0 auto;
 }
 .container___ {
   width: 80%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
- 
+
   justify-content: center;
   padding: 20px;
-
 }
 
 .container___ h1 {
@@ -34,7 +33,7 @@ p {
 }
 .container___ ul {
   margin-bottom: 15px;
-} 
+}
 
 .container___ li {
   margin: 10px;
@@ -47,7 +46,7 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {

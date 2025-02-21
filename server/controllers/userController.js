@@ -3,19 +3,28 @@ const User = require("../models/usersModel");
 const bcryptjs = require("bcryptjs");
 const jwt = require("../utils/jwt");
 const sendEmail = require("../utils/sendEmail"); // Importar la función sendEmail para enviar correos electrónicos
+const RevokedToken = require("../models/revokedTokenModel"); // Importamos el modelo de tokens revocados
 
+//Funcion para cerrar sesion
 async function logoutUser(req, res) {
   try {
-    // Si usas cookies para almacenar el token, elimínalo
-    res.clearCookie("token"); // Asegúrate de que el nombre de la cookie coincida
+    // Obtener el token del encabezado de autorización
+    const token = req.headers.authorization.replace("Bearer ", "");
 
-    // Opcional: Invalidar el token en el servidor si tienes una lista de revocación
+    // Verificar si el token ya está en la lista de tokens revocados
+    const revokedTokenExists = await RevokedToken.findOne({ token });
+    if (revokedTokenExists) {
+      return res.status(400).send({ msg: "El token ya ha sido revocado" });
+    }
 
-    res
-      .status(200)
-      .send({ success: true, msg: "Sesión cerrada correctamente" });
+    // Agregar el token a la lista de tokens revocados
+    const revokedToken = new RevokedToken({ token });
+    await revokedToken.save();
+
+    res.status(200).send({ msg: "Sesión cerrada correctamente" });
   } catch (error) {
-    res.status(500).send({ success: false, msg: "Error al cerrar la sesión" });
+    console.error("Error al cerrar sesión:", error);
+    res.status(500).send({ msg: "Error al cerrar sesión" });
   }
 }
 
@@ -25,7 +34,7 @@ async function getMe(req, res) {
   const { user_id } = req.user; //obtenemos el "ID" del usuario
 
   try {
-    const user = await User.findById(user_id); //obtenemos un solo usuario con el metodo "findById"
+    const user = await User.findById(user_id).select("-password -__v -active"); //obtenemos un solo usuario con el metodo "findById"
     res.status(200).send(user);
   } catch (error) {
     res.status(400).send({ msg: "Usuario No Encontrado" });
@@ -69,7 +78,7 @@ try {
   await sendEmail({
     email: user.email,
     subject: "Restablecimiento de contraseña",
-    message: `Hola ${user.name},\n\nHas solicitado restablecer tu contraseña.\n\nPor favor, haz clic en el siguiente enlace para restablecer tu contraseña:\n\n${resetUrl}\n\nSi no has solicitado restablecer tu contraseña, puedes ignorar este correo electrónico.\n\nAtentamente,\nEl equipo de tu aplicación`,
+    message: `Hola ${user.name},\n\nHas solicitado restablecer tu contraseña.\n\nPor favor, haz clic en el siguiente enlace para restablecer tu contraseña:\n\n${resetUrl}\n\nSi no has solicitado restablecer tu contraseña, puedes ignorar este correo electrónico.\n\nAtentamente,\nEl equipo de NoName-Store`,
   });
 
   res.status(200).send({ msg: "Correo electrónico enviado correctamente" });
@@ -83,7 +92,6 @@ try {
 */
 
     // Mostrar la URL de restablecimiento en la consola (temporal)
-    //Si no has configurado la función sendEmail, puedes mostrar la URL de restablecimiento en la consola del servidor para que puedas probar la funcionalidad.
     console.log(`URL de restablecimiento de contraseña: ${resetUrl}`);
     res
       .status(200)
@@ -171,7 +179,7 @@ async function updatePassword(req, res) {
   }
 }
 
-// Update user Profile = Actualizar perfil de usuario
+// Update user Profile
 async function updateUserProfile(req, res) {
   const { user_id } = req.user; // Obtener el ID del usuario autenticado
   const { name, email } = req.body; // Obtener los campos del perfil del usuario
@@ -225,6 +233,7 @@ async function getUserAdmin(req, res) {
 }
 
 //Obtener todos los usuarios
+//me falta incluir para que la funcion sea solo para administrador
 async function getUsers(req, res) {
   try {
     const users = await User.find(); //Con el metodo "find" obtenemos todos los usuarios

@@ -4,6 +4,9 @@ const cors = require("cors"); //Importamos los cors
 const path = require("path"); //Importamos path
 const session = require("express-session"); //Importamos express-session
 
+//Variables de entorno
+require("dotenv").config();
+
 //Creamos nuestra app con express
 const app = express();
 
@@ -13,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar session ANTES de CORS
 app.use(
   session({
-    secret: "ESTO ES SECRETO",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -27,7 +30,7 @@ app.use(
 // Configurar CORS después de session
 app.use(
   cors({
-    origin: "http://localhost:3000", // URL del frontend
+    origin: process.env.FRONTEND_URL, // URL del frontend
     credentials: true, // Importante para las cookies/sesiones
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

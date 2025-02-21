@@ -9,7 +9,6 @@ import { loginUser, clearErrors } from "../../store/reducers/userSlice";
 import Loader from "../ui/Loader/Loader";
 import MetaData from "../ui/MetaData/MetaData";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import * as LoginFromStyle from "./Styles/LoginFromStyle";
 
 export default function Login() {
@@ -17,25 +16,24 @@ export default function Login() {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const { isAuthenticated, loading, error } = useSelector(
-    (state) => state.user
-  );
+  const { isAuthenticated, loading, error, user, authInitialized } =
+    useSelector((state) => state.user);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
     setEmail(newEmail);
     setIsValidEmail(
       newEmail !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)
     );
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
   };
 
   const handleShowPasswordClick = () => {
@@ -44,23 +42,53 @@ export default function Login() {
 
   const isSignInDisabled = !(email && password && isValidEmail);
 
-  const redirect = location.search ? location.search.split("=")[1] : "/account";
-
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
+  }, [dispatch, error]);
 
-    if (isAuthenticated) {
-      navigate(redirect);
-    }
-  }, [dispatch, isAuthenticated, loading, error, navigate, redirect]);
-
-  function handleLoginSubmit(e) {
+  async function handleLoginSubmit(e) {
     e.preventDefault();
-    dispatch(loginUser(email, password));
+
+    if (!email || !password) {
+      toast.error("Por favor, complete todos los campos");
+      return;
+    }
+
+    if (!isValidEmail) {
+      toast.error("Por favor, ingrese un email válido");
+      return;
+    }
+
+    try {
+      const result = await dispatch(loginUser({ email, password })).unwrap();
+      console.log("Resultado del login:", result);
+
+      if (!result.access) {
+        throw new Error("No se recibió el token de acceso");
+      }
+
+      // Redirige aquí, después de un inicio de sesión exitoso
+      const redirectTo = location.state?.from || "/account";
+      navigate(redirectTo, { replace: true });
+    } catch (error) {
+      console.error("Error en login:", error);
+      toast.error(
+        error.message ||
+          "Error al iniciar sesión. Por favor, verifique sus credenciales."
+      );
+    }
   }
+
+  // Redirige en el useEffect si ya está autenticado al cargar el componente
+  useEffect(() => {
+    if (authInitialized && isAuthenticated && user) {
+      const redirectTo = location.state?.from || "/account";
+      navigate(redirectTo, { replace: true });
+    }
+  }, [authInitialized, isAuthenticated, user, navigate, location]);
 
   return (
     <>
@@ -77,6 +105,8 @@ export default function Login() {
               Iniciar sesión
             </LoginFromStyle.Heading>
             <LoginFromStyle.EmailInput
+              id="email"
+              name="email"
               label="Email"
               variant="outlined"
               fullWidth
@@ -88,8 +118,11 @@ export default function Login() {
                   ? "Por favor, ingrese una dirección de correo electrónico válida."
                   : ""
               }
+              autoComplete="email"
             />
             <LoginFromStyle.PasswordInput
+              id="password"
+              name="password"
               label="Contraseña"
               variant="outlined"
               type={showPassword ? "text" : "password"}
@@ -97,6 +130,7 @@ export default function Login() {
               InputProps={{
                 endAdornment: (
                   <LoginFromStyle.ShowPasswordButton
+                    type="button"
                     variant="outlined"
                     onClick={handleShowPasswordClick}
                   >
@@ -115,29 +149,26 @@ export default function Login() {
                 />
               </Grid>
               <Grid item>
-                <Link to="/password/forgot" style={{ textDecoration: "none" }}>
-                  <LoginFromStyle.ForgotPasswordLink>
-                    ¿Olvidaste tu contraseña?
-                  </LoginFromStyle.ForgotPasswordLink>
-                </Link>
+                <LoginFromStyle.ForgotPasswordLink to="/password/forgot">
+                  ¿Olvidaste tu contraseña?
+                </LoginFromStyle.ForgotPasswordLink>
               </Grid>
             </LoginFromStyle.RememberMeContainer>
             <LoginFromStyle.TermsAndConditionsText variant="body2">
               Acepto los Términos de uso de NoName-Store y reconozco que
               NoName-Store utilizará mi información de acuerdo con sus
-              <Link to="/policy/privacy" style={{ textDecoration: "none" }}>
-                <LoginFromStyle.PrivacyText>
-                  Política de Privacidad.
-                </LoginFromStyle.PrivacyText>
-              </Link>
+              <LoginFromStyle.PrivacyText to="/policy/privacy">
+                Política de Privacidad.
+              </LoginFromStyle.PrivacyText>
             </LoginFromStyle.TermsAndConditionsText>
             <LoginFromStyle.LoginButton
+              type="submit"
               variant="contained"
               fullWidth
-              disabled={isSignInDisabled}
+              disabled={isSignInDisabled || loading}
               onClick={handleLoginSubmit}
             >
-              Iniciar sesión
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </LoginFromStyle.LoginButton>
             <Typography
               variant="body1"
@@ -145,11 +176,9 @@ export default function Login() {
               style={{ marginTop: "1rem" }}
             >
               ¿No tenes cuenta?
-              <Link to="/signup" style={{ textDecoration: "none" }}>
-                <LoginFromStyle.CreateAccount>
-                  Crear una cuenta
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              <LoginFromStyle.CreateAccount to="/signup">
+                Crear cuenta
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

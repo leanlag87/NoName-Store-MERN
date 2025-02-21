@@ -3,27 +3,23 @@ import { Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../ui/Loader/Loader";
 import MetaData from "../ui/MetaData/MetaData";
-//import { UPDATE_PROFILE_RESET } from "../../constants/userConstanat";
 import {
   clearErrors,
   resetUpdate,
   updateUser,
-  loadUser,
 } from "../../store/reducers/userSlice"; // Verificar si esto esta bien
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import UpdateIcon from "@mui/icons-material/Update";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Link } from "react-router-dom";
 import * as LoginFromStyle from "./Styles/LoginFromStyle";
 
 function UpdateProfile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error, isUpdated, loading } = useSelector(
-    (state) => state.profileData
+  const { error, isUpdated, loading, user } = useSelector(
+    (state) => state.user
   );
-  const { user } = useSelector((state) => state.userData);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -31,16 +27,16 @@ function UpdateProfile() {
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
 
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
     setEmail(newEmail);
     setIsValidEmail(
       newEmail !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)
     );
   };
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -51,9 +47,9 @@ function UpdateProfile() {
     }
   };
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-    setIsValidEName(event.target.value.length >= 4);
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    setIsValidEName(e.target.value.length >= 4);
   };
 
   const UpdateProfileSubmitHandler = (e) => {
@@ -80,19 +76,10 @@ function UpdateProfile() {
     // isUpadted no es más que un mensaje de éxito de la respuesta. Una vez actualizado el usuario, aparece el mensaje y muestra los datos del perfil.
     if (isUpdated) {
       toast.success("Perfil actualizado exitosamente");
-      // ahora obtengo nuevos datos del usuario desde el backend
-      dispatch({
-        type: resetUpdate,
-      });
-
       // Ahora restablezco todos los valores. por ejemplo: isUpdate: falso y todo
-      dispatch({
-        type: resetUpdate,
-      });
-
+      dispatch(resetUpdate());
       navigate("/account");
-
-      dispatch(loadUser());
+      //dispatch(loadUser());
     }
   }, [dispatch, error, navigate, user, isUpdated]);
 
@@ -110,7 +97,7 @@ function UpdateProfile() {
               <UpdateIcon />
             </LoginFromStyle.StyledAvatar>
             <LoginFromStyle.Heading variant="h5" component="h1">
-              Actualizar detalles del perfil
+              Actualizar Tu Perfil
             </LoginFromStyle.Heading>
             <LoginFromStyle.NameInput
               label="Nombre"
@@ -179,11 +166,9 @@ function UpdateProfile() {
               align="center"
               style={{ marginTop: ".5rem" }}
             >
-              <Link to="/account">
-                <LoginFromStyle.CreateAccount>
-                  Cancelar
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              <LoginFromStyle.CreateAccount to="/account">
+                Cancelar
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

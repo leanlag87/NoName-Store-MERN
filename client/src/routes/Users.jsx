@@ -1,11 +1,11 @@
 // Este archivo contendrá las rutas de las páginas que verán los usuarios de tu aplicación. Por ejemplo, la página de inicio, la página de productos, la página de detalles de un producto, etc.
 //Rutas para los usuarios
-
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loadUser } from "../store/reducers/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearErrors, loadUser } from "../store/reducers/userSlice";
 import { initializeMercadoPago } from "../utils/mercadoPago";
+import { toast } from "react-toastify";
 import Header from "../components/layouts/Header/Header";
 import Footer from "../components/layouts/Footer/Footer";
 import Services from "../pages/Terms&Condtions/Service";
@@ -26,7 +26,7 @@ import TermsAndConditions from "../pages/Terms&Condtions/TermsCondtion";
 import PrivacyPolicy from "../pages/Terms&Condtions/Privacy";
 import Signup from "../components/user/SingUp";
 import Login from "../components/user/Login";
-import Profile from "../components/user/Profile";
+import ProfilePage from "../components/user/Profile";
 import PrivateRoute from "./PrivateRoute";
 import UpdatePassword from "../components/user/UpdatePassword";
 import ForgetPassword from "../components/user/ForgetPassword";
@@ -37,6 +37,7 @@ function Users() {
   const location = useLocation();
   const [isAdminRoute, setIsAdminRoute] = useState(false);
   const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) {
@@ -47,13 +48,24 @@ function Users() {
   }, [location.pathname]);
 
   useEffect(() => {
-    dispatch(loadUser());
-    initializeMercadoPago("REACT_APP_MP_PUBLIC_KEY"); // Inicializa Mercado Pago
+    dispatch(loadUser()); // Carga el usuario
+    initializeMercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY); // Inicializa Mercado Pago
   }, [dispatch]);
+
+  useEffect(() => {
+    if (
+      error &&
+      error !== "No autorizado" &&
+      error !== "Error al cargar usuario"
+    ) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+  }, [dispatch, error]);
 
   return (
     <>
-      {isAdminRoute ? null : <Header />}
+      {isAdminRoute ? null : <Header />} {/* Contenedor principal */}
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/product/:id" element={<ProductDetails />} />
@@ -82,9 +94,11 @@ function Users() {
           exact
           path="/account"
           element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
+            <>
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            </>
           }
         />
         <Route

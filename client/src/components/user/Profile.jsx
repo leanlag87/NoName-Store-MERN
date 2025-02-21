@@ -1,39 +1,47 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { ExitToApp as LogoutIcon } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./Styles/profile.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/reducers/userSlice";
 import { toast } from "react-toastify";
 import { formatCreatedAt } from "../../utils/dateFormatter";
+import Loader from "../ui/Loader/Loader";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useSelector((state) => state.userData);
-  const userCreatedAt = user ? formatCreatedAt(user) : ""; //Para mostrar la fecha de creacion del usuario
+  const { user, loading } = useSelector((state) => state.user);
+
+  // Para evitar errores si el usuario no esta definido aun
+  const userCreatedAt = user ? formatCreatedAt(user) : "Fecha no disponible";
+
+  //log para verificar el ciclo de vida
+  console.log("Estado del perfil:", { user, loading });
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const logoutHandler = () => {
     dispatch(logoutUser());
     toast.success("Sesión cerrada con éxito");
     navigate("/login");
   };
-  useEffect(() => {
-    // if user not logged in
-    if (isAuthenticated === false) {
-      navigate("/login");
-    }
-  }, [navigate, isAuthenticated]);
 
   return (
     <div className="rootProfile">
       <div className="header-root">
         <Typography variant="h5" component="h1" className="headingProfile">
-          Hi, {user.name} !
+          Hola, {user.name}!
         </Typography>
 
         <Typography variant="body2" className="greeting">
@@ -51,18 +59,12 @@ const ProfilePage = () => {
               className="profileAvatar"
             />
             <div className="leftDetails">
-              <Typography className="profileText">
-                <h5 className="profileSubHeading">Nombre :</h5>
-                {user.name}
-              </Typography>
-              <Typography className="profileText">
-                <h5 className="profileSubHeading">Email : </h5>
-                {user.email}
-              </Typography>
-              <Typography className="profileText">
-                <h5 className="profileSubHeading">Miembro desde :</h5>{" "}
-                {userCreatedAt}
-              </Typography>
+              <h5 className="profileSubHeading">Nombre :</h5>
+              <Typography className="profileText">{user.name}</Typography>
+              <h5 className="profileSubHeading">Email :</h5>
+              <Typography className="profileText">{user.email}</Typography>
+              <h5 className="profileSubHeading">Miembro desde :</h5>
+              <Typography className="profileText">{userCreatedAt}</Typography>
             </div>
           </div>
 
@@ -101,8 +103,10 @@ const ProfilePage = () => {
               >
                 Mis Detalles
               </Typography>
-              <Typography className="profileText">{user.name}</Typography>
-              <Typography className="profileText">Email del Usuario</Typography>
+              <Typography className="profileText">
+                {user.name} {user.lastName}
+              </Typography>
+              <Typography className="profileText">{user.email}</Typography>
               <Typography className="profileText">
                 Numero de Telefono
               </Typography>
@@ -180,4 +184,5 @@ const ProfilePage = () => {
     </div>
   );
 };
+
 export default ProfilePage;

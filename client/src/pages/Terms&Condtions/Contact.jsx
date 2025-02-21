@@ -161,22 +161,22 @@ const ContactForm = () => {
                 <ContactFormStyles.StyledSelect
                   labelId="language-label"
                   id="language-select"
-                  defaultValue="english"
+                  defaultValue="spanish"
                 >
+                  <ContactFormStyles.StyledMenuItem value="spanish">
+                    Español
+                  </ContactFormStyles.StyledMenuItem>
                   <ContactFormStyles.StyledMenuItem value="english">
-                    English
+                    Ingles
                   </ContactFormStyles.StyledMenuItem>
-                  <ContactFormStyles.StyledMenuItem value="hindi">
-                    Spanish
+                  <ContactFormStyles.StyledMenuItem value="italian">
+                    Italiano
                   </ContactFormStyles.StyledMenuItem>
-                  <ContactFormStyles.StyledMenuItem value="japanese">
-                    Japanese
-                  </ContactFormStyles.StyledMenuItem>
-                  <ContactFormStyles.StyledMenuItem value="chinese">
-                    Chinese
+                  <ContactFormStyles.StyledMenuItem value="french">
+                    Frances
                   </ContactFormStyles.StyledMenuItem>
                   <ContactFormStyles.StyledMenuItem value="german">
-                    German
+                    Aleman
                   </ContactFormStyles.StyledMenuItem>
                 </ContactFormStyles.StyledSelect>
               </ContactFormStyles.FormField>
@@ -189,7 +189,7 @@ const ContactForm = () => {
               </ContactFormStyles.LabelText>
               <ContactFormStyles.FormField>
                 <ContactFormStyles.StyledTextField
-                  placeholder="Enter Your Email *"
+                  placeholder="Ingrese Su Correo  *"
                   id="email-input"
                   type="email"
                 />
@@ -207,7 +207,7 @@ const ContactForm = () => {
                   multiline
                   rows={6}
                   variant="outlined"
-                  placeholder="Enter Your Message *"
+                  placeholder="Ingrese Su Mensaje *"
                 />
               </ContactFormStyles.FormField>
             </ContactFormStyles.SelectOption>

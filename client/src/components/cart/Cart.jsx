@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import "./Styles/cart.css";
 import TextField from "@mui/material/TextField";
-import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeItemFromCart } from "../../store/reducers/cartSlice";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { Link } from "react-router-dom";
 import MetaData from "../ui/MetaData/MetaData";
-import { useNavigate } from "react-router-dom";
 import CartItem from "./CartItem";
 import {
   displayMoney,

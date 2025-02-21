@@ -265,6 +265,10 @@ const updateOrder = async (req, res) => {
         .status(400)
         .json({ message: "El pedido ya ha sido entregado." });
     }
+    const allowedStatuses = ["Processing", "Shipped", "Delivered", "Cancelled"];
+    if (!allowedStatuses.includes(req.body.status)) {
+      return res.status(400).json({ message: "Estado de pedido inválido" });
+    }
 
     order.orderStatus = req.body.status;
 

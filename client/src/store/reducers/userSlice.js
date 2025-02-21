@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../config";
+import axios from "../../config"; // Importamos la instancia de axios
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
+import { clearTokens } from "../../utils/auth";
 
 const initialState = {
   user: null,
@@ -13,6 +14,7 @@ const initialState = {
   success: false, // Flag para indicar éxito en operaciones
   isUpdated: false, // Flag para indicar si el perfil se actualizó
   isDeleted: false, // Flag para indicar si el usuario fue eliminado
+  authInitialized: false, // Agrega esto, y asegúrate de establecerlo a true cuando se cargue el usuario por primera vez (ya sea al inicio de la app o después de iniciar sesión)
 };
 
 const userSlice = createSlice({
@@ -23,13 +25,16 @@ const userSlice = createSlice({
       state.error = null;
     },
     resetUpdate: (state) => {
-      state.isUpdated = false; // Para resetear después de una actualización
+      state.isUpdated = false;
     },
     resetDelete: (state) => {
-      state.isDeleted = false; // Para resetear después de una eliminación
+      state.isDeleted = false;
     },
     resetSuccess: (state) => {
-      state.success = false; // Para resetear la bandera de éxito
+      state.success = false;
+    },
+    setAuthInitialized: (state) => {
+      state.authInitialized = true;
     },
   },
   extraReducers: (builder) => {
@@ -49,31 +54,40 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload.user; // Usa la información del usuario del payload
+        state.success = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
+        state.user = null;
         state.error = action.payload;
         state.success = false;
       })
       .addCase(loadUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.authInitialized = true; // Marca la inicialización como completa
+        if (action.payload) {
+          // Solo actualizar si hay payload
+          state.user = { ...action.payload }; // Actualiza la info del usuario
+        }
       })
       .addCase(loadUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
+        state.user = null;
         state.error = action.payload;
-        state.success = false;
+        state.authInitialized = true; // Marca la inicialización como completa, incluso si falla
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
@@ -212,19 +226,31 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// Iniciar sesión
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async ({ email, password }, { rejectWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(
-        API_ENDPOINTS.AUTH.LOGIN,
-        { email, password },
-        { withCredentials: true } // Importante para cookies
-      );
-      return data.user;
+      const { data } = await axios.post(API_ENDPOINTS.AUTH.LOGIN, userData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      if (!data.access) {
+        throw new Error("No se recibió token de acceso");
+      }
+
+      // Guardar token
+      localStorage.setItem("token", data.access);
+
+      return {
+        access: data.access, // devuelve el token
+        user: data.user, // devuelve la info del usuario
+      };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message);
+      console.error("Error en login:", error.response?.data || error.message);
+      return rejectWithValue(
+        error.response?.data?.msg || error.message || "Error al iniciar sesión"
+      );
     }
   }
 );
@@ -232,14 +258,18 @@ export const loginUser = createAsyncThunk(
 // Cargar usuario
 export const loadUser = createAsyncThunk(
   "user/loadUser",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
-      console.log("Intentando cargar usuario...");
       const { data } = await axios.get(API_ENDPOINTS.USER.ME);
-      console.log("Respuesta del servidor:", data);
       return data.user;
     } catch (error) {
-      console.error("Error completo:", error);
+      // Si es error 401, retornamos silenciosamente null
+      if (error.response?.status === 401) {
+        // Si loadUser falla con 401, desloguea al usuario
+        dispatch(logoutUser());
+        return null;
+      }
+      // Para otros errores, sí lanzamos el error
       return rejectWithValue(
         error.response?.data?.message || "Error al cargar usuario"
       );
@@ -256,6 +286,7 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem("cartItems");
       return true;
     } catch (error) {
+      clearTokens(); // Elimina los tokens del localStorage
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -305,7 +336,7 @@ export const updatePassword = createAsyncThunk(
       const { user } = getState().user;
       const config = getAuthConfig(user.token);
       const { data } = await axios.put(
-        `${API_ENDPOINTS.USER}/password/update`,
+        `${API_ENDPOINTS.USER}/password/update`, //Esta es la ruta para cambiar "/api/v1/password/update" verificar si esta bien la ruta actual
         passwords,
         config
       );
@@ -343,7 +374,7 @@ export const getUserAdmin = createAsyncThunk(
       const { user } = getState().user;
       const config = getAuthConfig(user.token);
       const { data } = await axios.get(
-        `${API_ENDPOINTS.USER}/admin/user/${id}`,
+        `${API_ENDPOINTS.USER}/admin/get/${id}`,
         config
       );
       return data.user;
@@ -353,17 +384,14 @@ export const getUserAdmin = createAsyncThunk(
   }
 );
 
-// Obtener todos los usuarios (Admin)
+// Obtener todos los usuarios (Admin) por el momento no es solo para el admin
 export const getUsers = createAsyncThunk(
   "user/getUsers",
   async (_, { getState, rejectWithValue }) => {
     try {
       const { user } = getState().user;
       const config = getAuthConfig(user.token);
-      const { data } = await axios.get(
-        `${API_ENDPOINTS.USER}/admin/users`,
-        config
-      );
+      const { data } = await axios.get(`${API_ENDPOINTS.USER}/users`, config);
       return data.users;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -379,7 +407,7 @@ export const updateUserRole = createAsyncThunk(
       const { user } = getState().user;
       const config = getAuthConfig(user.token);
       const { data } = await axios.put(
-        `${API_ENDPOINTS.USER}/admin/user/${id}/role`,
+        `${API_ENDPOINTS.USER}/admin/users/${id}/role`,
         { role },
         config
       );
@@ -408,7 +436,12 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-export const { clearErrors, resetUpdate, resetDelete, resetSuccess } =
-  userSlice.actions;
+export const {
+  clearErrors,
+  resetUpdate,
+  resetDelete,
+  resetSuccess,
+  setAuthInitialized,
+} = userSlice.actions;
 
 export default userSlice.reducer;

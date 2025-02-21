@@ -34,7 +34,7 @@
   width: 90%;
   font-family: "Roboto", sans-serif;
   display: block;
-margin: 0 auto;
+  margin: 0 auto;
   gap: 1rem;
 }
 
@@ -67,7 +67,7 @@ p {
 }
 
 .email:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .phone {

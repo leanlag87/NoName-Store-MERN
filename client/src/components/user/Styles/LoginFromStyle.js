@@ -7,6 +7,7 @@ import {
   Select,
   Avatar,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 // Container principal
 export const FormContainer = styled("div")(({ theme }) => ({
@@ -104,6 +105,7 @@ export const ShowPasswordButton = styled(Button)(({ theme }) => ({
   "&:hover": {
     color: "#ee7b00d7",
     background: "none",
+    border: "none",
   },
 }));
 
@@ -118,11 +120,11 @@ export const RememberMeContainer = styled("div")(({ theme }) => ({
   },
 }));
 
-export const ForgotPasswordLink = styled("a")({
+export const ForgotPasswordLink = styled(Link)({
   color: "#000",
   textDecoration: "none",
   "&:hover": {
-    textDecoration: "underline",
+    textDecoration: "none",
     color: "#ee7b00d7",
   },
 });
@@ -154,24 +156,26 @@ export const LoginButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const PrivacyText = styled("a")({
+export const PrivacyText = styled(Link)({
   marginLeft: "4px",
-  textDecoration: "underline",
+  textDecoration: "none",
   color: "black",
   fontSize: "14px",
   "&:hover": {
     color: "#ee7b00d7",
+    textDecoration: "none",
   },
 });
 
-export const CreateAccount = styled("a")({
+export const CreateAccount = styled(Link)({
   fontSize: "1rem",
   fontWeight: 500,
   color: "#121212",
   paddingLeft: "6px",
+  textDecoration: "none",
   "&:hover": {
     color: "#ee7b00d7",
-    textDecoration: "underline",
+    textDecoration: "none",
   },
 });
 

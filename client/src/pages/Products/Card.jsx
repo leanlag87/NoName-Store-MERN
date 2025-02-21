@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as MyCardStyles from "./Styles/MyCardStyles";
+import { formatCreatedAt } from "../../utils/dateFormatter";
 
 const MyCard = ({ review }) => {
   const [helpful, setHelpful] = useState(10);
@@ -27,16 +28,6 @@ const MyCard = ({ review }) => {
     }
   };
 
-  function formateDate(dateString) {
-    const date = new Date(dateString);
-    const formattedDate = new Intl.DateTimeFormat("es-AR", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
-    return formattedDate;
-  }
-
   return (
     <MyCardStyles.CardRoot>
       <MyCardStyles.CardHeader>
@@ -52,7 +43,7 @@ const MyCard = ({ review }) => {
           color="textSecondary"
           style={{ marginLeft: "12rem" }}
         >
-          {formateDate(review.createdAt)}
+          {review.createdAt ? formatCreatedAt(review) : "Fecha no disponible"}
         </MyCardStyles.BodyTextTypography>
       </MyCardStyles.CardHeader>
       <div>

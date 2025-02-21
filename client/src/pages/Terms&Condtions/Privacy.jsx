@@ -123,7 +123,7 @@ const PrivacyPolicy = () => {
           Si tiene alguna pregunta, inquietud o sugerencia con respecto a esta
           Política de privacidad, comuníquese con nosotros a{" "}
           <Link
-            to="/"
+            to="/contact"
             style={{
               textDecoration: "none",
               color: "inherit",

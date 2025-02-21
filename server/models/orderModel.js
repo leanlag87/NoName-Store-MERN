@@ -90,6 +90,7 @@ const orderSchema = new mongoose.Schema({
     status: {
       type: String,
       required: true,
+      enum: ["pending", "approved", "rejected"], // Ejemplo de enum
     },
     paymentMethod: {
       // Nuevo campo: método de pago

@@ -9,7 +9,6 @@ import { Typography } from "@mui/material"; // Cambiado a @mui/material
 import LockResetIcon from "@mui/icons-material/LockReset";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
 import * as LoginFromStyle from "./Styles/LoginFromStyle";
 
 function ResetPassword() {
@@ -137,11 +136,9 @@ function ResetPassword() {
               align="center"
               style={{ marginTop: ".5rem" }}
             >
-              <Link to="/login">
-                <LoginFromStyle.CreateAccount>
-                  Cancelar
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              <LoginFromStyle.CreateAccount to="/login">
+                Cancelar
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

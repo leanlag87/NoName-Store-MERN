@@ -11,7 +11,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import PersonIcon from "@mui/icons-material/Person";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Modal, Avatar } from "@mui/material";
-import { AccountCircle as AccountCircleIcon } from "@mui/icons-material"; // Importar directamente de @mui/icons-material
+import { AccountCircle as AccountCircleIcon } from "@mui/icons-material";
 import "../Styles/ProfileModal.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,11 +22,54 @@ const ProfileModel = ({ user, isAuthenticated }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef(null);
-  const userCreatedAt = user ? formatCreatedAt(user) : ""; //para mostrar la fecha de creación del usuario
+
+  // Renderizado condicional del perfil del usuario
+  const renderUserProfile = () => {
+    if (!isAuthenticated || !user) {
+      return (
+        <div className="welcome-message">
+          <strong>¡Bienvenido!</strong>
+          <p>Para acceder a su cuenta y administrar pedidos, inicie sesión.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="profile-info">
+        <Avatar
+          src={user.avatar?.url || ""}
+          alt={user.name || "User"}
+          className="avatar"
+          style={{ width: "68px", height: "68px" }}
+        />
+        {user._id && (
+          <p className="user-id">
+            <strong>ID :</strong> {user._id.substring(0, 8)}
+          </p>
+        )}
+        {user.name && (
+          <p className="user-name">
+            <strong>Nombre :</strong> {user.name}
+          </p>
+        )}
+        {user.email && (
+          <p className="user-email">
+            <strong>Email :</strong> {user.email}
+          </p>
+        )}
+
+        {formatCreatedAt(user) && (
+          <p className="created-at">
+            <strong>Se unió el:</strong> {formatCreatedAt(user)}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
@@ -66,13 +109,6 @@ const ProfileModel = ({ user, isAuthenticated }) => {
     navigate("/orders");
   }
 
-  function logoutUserHandler() {
-    //Cerrar sesión
-    setIsOpen(false);
-    dispatch(logoutUser());
-    toast.success("Sesión cerrada exitosamente");
-  }
-
   function cartHandler() {
     //Redireccionar al carrito
     setIsOpen(false);
@@ -85,9 +121,16 @@ const ProfileModel = ({ user, isAuthenticated }) => {
     navigate("/login");
   }
 
+  function logoutUserHandler() {
+    //Cerrar sesión
+    setIsOpen(false);
+    dispatch(logoutUser());
+    toast.success("Sesión cerrada exitosamente");
+  }
+
   return (
     <>
-      <div className="profile-icon" onClick={handleOpen}>
+      {/* <div className="profile-icon" onClick={handleOpen}>
         <PersonIcon
           className={`icon smaller ${isOpen ? "active" : ""}`}
           fontSize="large"
@@ -112,32 +155,83 @@ const ProfileModel = ({ user, isAuthenticated }) => {
               <>
                 <div className="profile-info">
                   <Avatar
-                    src={user.avatar.url}
-                    alt="User Avatar"
+                    src={user.avatar.url || ""}
+                    alt={user.name || "User Avatar"}
                     className="avatar"
                     style={{ width: "68px", height: "68px" }}
                   />
                   <p className="user-id">
-                    <strong>ID :</strong> {user._id.substring(0, 8)}
+                    <strong>ID :</strong>{" "}
+                    {user._id ? user._id.substring(0, 8) : "N/A"}
                   </p>
 
                   <p className="user-name">
-                    <strong>Nombre :</strong> {user.name}
+                    <strong>Nombre :</strong> {user.name || "N/A"}
                   </p>
 
                   <p className="user-email">
-                    <strong>Email :</strong> {user.email}
+                    <strong>Email :</strong> {user.email || "N/A"}
                   </p>
 
                   <p className="created-at">
-                    <strong>Se unió a:</strong> {userCreatedAt}
+                    <strong>Se unió a:</strong> {userCreatedAt || "N/A"}
                   </p>
                 </div>
               </>
             )}
             <div className="divider" />
             <div className="profile-menu">
-              {user && user.role === "admin" && (
+              {isAuthenticated && user && user.role === "admin" && (
+                <div className="menu-item" onClick={dashboardHandler}>
+                  <DashboardIcon className="menu-icon" />
+                  <span>Panel</span>
+                </div>
+              )}
+              <div className="menu-item" onClick={accountHandler}>
+                <AccountCircleIcon className="menu-icon" />
+                <span>Perfil</span>
+              </div>
+              <div className="menu-item" onClick={ordersHandler}>
+                <AssignmentIcon className="menu-icon" />
+                <span>Pedidos</span>
+              </div>
+              <div className="menu-item" onClick={cartHandler}>
+                <ShoppingCartIcon className="menu-icon" />
+                <span>Carrito</span>
+              </div>
+              {!isAuthenticated ? (
+                <div className="menu-item" onClick={loginHandler}>
+                  <LockOpenIcon className="menu-icon" />
+                  <span>Acceso</span>
+                </div>
+              ) : (
+                <div className="menu-item" onClick={logoutUserHandler}>
+                  <ExitToAppIcon className="menu-icon" />
+                  <span>Cerrar sesión</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </Modal>
+      )} */}
+      <div className="profile-icon" onClick={handleOpen}>
+        <PersonIcon
+          className={`icon smaller ${isOpen ? "active" : ""}`}
+          fontSize="large"
+        />
+        {isOpen ? (
+          <ArrowDropUpIcon className="arrow-icon" />
+        ) : (
+          <ArrowDropDownIcon className="arrow-icon" />
+        )}
+      </div>
+      {isOpen && (
+        <Modal open={isOpen} onClose={onClose} className="modal-container">
+          <div className="modal-content" ref={modalRef}>
+            {renderUserProfile()}
+            <div className="divider" />
+            <div className="profile-menu">
+              {isAuthenticated && user?.role === "admin" && (
                 <div className="menu-item" onClick={dashboardHandler}>
                   <DashboardIcon className="menu-icon" />
                   <span>Panel</span>

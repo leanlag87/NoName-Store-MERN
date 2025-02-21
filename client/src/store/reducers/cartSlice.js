@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../config";
+import axios from "../../config"; // Importamos la instancia de axios
 import { getAuthConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
@@ -33,7 +33,23 @@ const cartSlice = createSlice({
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.cartItems = action.payload;
+        if (action.payload && action.payload.cart) {
+          if (Array.isArray(action.payload.cart.cartItems)) {
+            state.cartItems = action.payload.cart.cartItems;
+          } else {
+            console.error(
+              "Error: Datos de carrito inválidos recibidos",
+              action.payload
+            );
+            state.error = "Error al agregar al carrito: Datos inválidos";
+          }
+        } else {
+          console.error(
+            "Error: Datos de carrito inválidos recibidos",
+            action.payload
+          );
+          state.error = "Error al agregar al carrito: Datos inválidos";
+        }
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
@@ -44,7 +60,23 @@ const cartSlice = createSlice({
       })
       .addCase(getCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartItems = action.payload;
+        if (action.payload && action.payload.cart) {
+          if (Array.isArray(action.payload.cart.cartItems)) {
+            state.cartItems = action.payload.cart.cartItems;
+          } else {
+            console.error(
+              "Error: Datos de carrito inválidos recibidos",
+              action.payload
+            );
+            state.error = "Error al cargar el carrito: Datos inválidos";
+          }
+        } else {
+          console.error(
+            "Error: Datos de carrito inválidos recibidos",
+            action.payload
+          );
+          state.error = "Error al cargar el carrito: Datos inválidos";
+        }
       })
       .addCase(getCart.rejected, (state, action) => {
         state.loading = false;
@@ -56,7 +88,15 @@ const cartSlice = createSlice({
       .addCase(removeItemFromCart.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.cartItems = action.payload;
+        if (action.payload && Array.isArray(action.payload.cartItems)) {
+          state.cartItems = action.payload.cartItems;
+        } else {
+          console.error(
+            "Error: Datos de carrito inválidos recibidos",
+            action.payload
+          );
+          state.error = "Error al cargar el carrito: Datos inválidos";
+        }
       })
       .addCase(removeItemFromCart.rejected, (state, action) => {
         state.loading = false;
@@ -68,7 +108,23 @@ const cartSlice = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.cartItems = action.payload;
+        if (action.payload && action.payload.cart) {
+          if (Array.isArray(action.payload.cart.cartItems)) {
+            state.cartItems = action.payload.cart.cartItems;
+          } else {
+            console.error(
+              "Error: Datos de carrito inválidos recibidos",
+              action.payload
+            );
+            state.error = "Error al actualizar el carrito: Datos inválidos";
+          }
+        } else {
+          console.error(
+            "Error: Datos de carrito inválidos recibidos",
+            action.payload
+          );
+          state.error = "Error al actualizar el carrito: Datos inválidos";
+        }
       })
       .addCase(updateCart.rejected, (state, action) => {
         state.loading = false;

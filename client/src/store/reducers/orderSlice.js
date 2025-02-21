@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../config";
+import axios from "../../config"; // Importamos la instancia de axios
 import { getAuthConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 

@@ -1,20 +1,3 @@
-// const multer = require("multer");
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/"); // Carpeta de destino para las imágenes
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg"); // Nombre del archivo
-//   },
-// });
-
-// // Creamos la instancia del middleware de multer
-// const upload = multer({ storage: storage });
-
-// module.exports = upload;
-
 const multer = require("multer");
 const path = require("path");
 

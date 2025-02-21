@@ -14,7 +14,7 @@ const OrderCard = ({ item, user }) => {
   const [open, setOpen] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width: 999px)");
   const { shippingInfo, orderItems } = item;
-  const userCreatedAt = user ? formatCreatedAt(user) : ""; //Para saber la fecha de creacion del usuario
+  const userCreatedAt = user ? formatCreatedAt(user) : "Fecha no disponible";
 
   const addToCartHandler = (id, qty = 0) => {
     dispatch(addToCart(id, qty));
@@ -39,12 +39,14 @@ const OrderCard = ({ item, user }) => {
               <OrderCardStyles.OrderPlacedTypography variant="subtitle1">
                 PEDIDO REALIZADO
               </OrderCardStyles.OrderPlacedTypography>
-              <OrderCardStyles.OrderDateTypography
-                variant="body2"
-                color="#141414"
-              >
-                {userCreatedAt}
-              </OrderCardStyles.OrderDateTypography>
+              {userCreatedAt && (
+                <OrderCardStyles.OrderDateTypography
+                  variant="body2"
+                  color="#141414"
+                >
+                  {userCreatedAt}
+                </OrderCardStyles.OrderDateTypography>
+              )}
               <OrderCardStyles.OrderIdTypography variant="body2">
                 ID - DEL PEDIDO: #{item._id}
               </OrderCardStyles.OrderIdTypography>

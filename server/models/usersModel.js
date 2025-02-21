@@ -10,9 +10,9 @@ const UserSchema = mongoose.Schema({
     required: [true, "Ingrese su nombre por favor"],
     minLength: [4, "El nombre debe tener mas de 4 caracteres"],
   },
-  lastname: {
+  lastName: {
     type: String,
-    required: [true, "Ingrese su nombre por favor"],
+    required: [true, "Ingrese su apellido por favor"],
     minLength: [4, "El apellido debe tener mas de 4 caracteres"],
   },
   email: {

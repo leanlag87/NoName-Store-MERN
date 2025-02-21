@@ -6,7 +6,6 @@ import { forgotPassword, clearErrors } from "../../store/reducers/userSlice";
 import { toast } from "react-toastify";
 import MetaData from "../ui/MetaData/MetaData";
 import Loader from "../ui/Loader/Loader";
-import { Link } from "react-router-dom";
 import * as LoginFromStyle from "./Styles/LoginFromStyle";
 
 export default function ForgetPassowrd() {
@@ -104,11 +103,9 @@ export default function ForgetPassowrd() {
               align="center"
               style={{ marginTop: ".3rem" }}
             >
-              <Link to="/login">
-                <LoginFromStyle.CreateAccount>
-                  Cancelar
-                </LoginFromStyle.CreateAccount>
-              </Link>
+              <LoginFromStyle.CreateAccount to="/login">
+                Cancelar
+              </LoginFromStyle.CreateAccount>
             </Typography>
           </LoginFromStyle.Form>
         </LoginFromStyle.FormContainer>

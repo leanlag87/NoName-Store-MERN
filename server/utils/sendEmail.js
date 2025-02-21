@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  // 1. Crear un transportador (transporter) utilizando un servicio de correo electrónico (como Gmail, Outlook, etc.)
+  // Crear un transportador (transporter) utilizando un servicio de correo electrónico (como Gmail, Outlook, etc.)
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -11,7 +11,7 @@ const sendEmail = async (options) => {
     },
   });
 
-  // 2. Definir las opciones del correo electrónico
+  //  Definir las opciones del correo electrónico
   const mailOptions = {
     from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
     to: options.email,
@@ -19,7 +19,7 @@ const sendEmail = async (options) => {
     html: options.message,
   };
 
-  // 3. Enviar el correo electrónico
+  // Enviar el correo electrónico
   const info = await transporter.sendMail(mailOptions);
 
   console.log("Mensaje enviado: %s", info.messageId);

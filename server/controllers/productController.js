@@ -21,7 +21,6 @@ const createProduct = async (req, res) => {
             url: file.path,
           }))
         : [],
-      //otros campos que necesite
     };
 
     if (!req.user || !mongoose.Types.ObjectId.isValid(req.user._id)) {
@@ -67,7 +66,7 @@ const getAllProducts = async (req, res) => {
     // Construir objeto de filtro
     const filter = {};
 
-    // 1. Búsqueda por palabra clave (nombre del producto)
+    // Búsqueda por palabra clave (nombre del producto)
     if (keyword) {
       filter.name = {
         $regex: keyword,
@@ -75,18 +74,18 @@ const getAllProducts = async (req, res) => {
       };
     }
 
-    // 2. Filtrar por categoría
+    // Filtrar por categoría
     if (category) {
       filter.category = category;
     }
 
-    // 3. Filtrar por rango de precio
+    // Filtrar por rango de precio
     if (price) {
       const [minPrice, maxPrice] = price.split(",").map(Number);
       filter.price = { $gte: minPrice, $lte: maxPrice };
     }
 
-    // 4. Filtrar por rating mínimo
+    // Filtrar por rating mínimo
     if (ratings) {
       filter.ratings = { $gte: Number(ratings) };
     }
@@ -263,7 +262,7 @@ const createProductReview = async (req, res) => {
       title,
       comment,
       recommend,
-      avatar: req.user.avatar ? req.user.avatar.url : undefined, // Asegúrate de que req.user.avatar existe
+      avatar: req.user.avatar ? req.user.avatar.url : undefined,
     };
 
     // Verificar si el usuario ya ha revisado el producto

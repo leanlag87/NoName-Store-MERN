@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../config";
+import axios from "../../config"; // Importamos la instancia de axios
 import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
@@ -46,7 +46,7 @@ export const getProductDetails = createAsyncThunk(
   }
 );
 
-// Crear nuevo producto (Admin)
+// Crear nuevo producto (Admin) No es solo para el admin por el momento
 export const newProduct = createAsyncThunk(
   "product/newProduct",
   async (productData, { getState, rejectWithValue }) => {
@@ -67,7 +67,7 @@ export const newProduct = createAsyncThunk(
   }
 );
 
-// Actualizar producto (Admin)
+// Actualizar producto (Admin) No es solo para el admin por el momento
 export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, productData }, { getState, rejectWithValue }) => {
@@ -88,7 +88,7 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-// Eliminar producto (Admin)
+// Eliminar producto (Admin) No es solo para el admin por el momento
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (id, { getState, rejectWithValue }) => {
@@ -111,12 +111,12 @@ export const deleteProduct = createAsyncThunk(
 // Crear/Actualizar review
 export const newReview = createAsyncThunk(
   "product/newReview",
-  async (reviewData, { getState, rejectWithValue }) => {
+  async (id, reviewData, { getState, rejectWithValue }) => {
     try {
       const { user } = getState().user;
       const config = getAuthConfig(user.token);
       const { data } = await axios.put(
-        API_ENDPOINTS.PRODUCTS.REVIEWS,
+        `${API_ENDPOINTS.PRODUCTS.REVIEWS}/${id}/reviews`,
         reviewData,
         config
       );
