@@ -6,7 +6,7 @@ import {
   People,
 } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import ProductImg from "../../../assets/admin/products.png";
+import productImg from "../../../assets/admin/products.png";
 
 export const DashboardContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -221,7 +221,7 @@ export const RevenueContainer = styled("div")(({ theme }) => ({
   padding: "1rem 2rem",
   boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.5)",
   transition: "background-color 0.3s",
-  backgroundImage: `url(${ProductImg})`,
+  backgroundImage: `url(${productImg})`,
   backgroundSize: "cover",
 
   [theme.breakpoints.down("sm")]: {

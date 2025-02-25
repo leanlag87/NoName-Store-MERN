@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { myOrders, clearErrors } from "../../store/reducers/orderSlice";
 import MetaData from "../../components/ui/MetaData/MetaData";
@@ -10,8 +10,9 @@ import * as MyOrderStyles from "./Styles/MyOrderStyles";
 const MyOrder = () => {
   const currentYear = new Date().getFullYear();
   const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.myOrder);
-  const { user } = useSelector((state) => state.userData);
+  const [ordersLoaded, setOrdersLoaded] = useState(false);
+  const { orders, loading, error } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (error) {
@@ -19,8 +20,12 @@ const MyOrder = () => {
       dispatch(clearErrors());
     }
 
-    dispatch(myOrders());
-  }, [dispatch, error]);
+    // Despacha myOrders solo si no se ha cargado antes
+    if (!ordersLoaded) {
+      dispatch(myOrders());
+      setOrdersLoaded(true); // Marca como cargado
+    }
+  }, [dispatch, error, ordersLoaded]);
 
   return (
     <>
@@ -31,10 +36,10 @@ const MyOrder = () => {
           <MetaData title="My Orders" />
           <MyOrderStyles.OrderPageContainer>
             <MyOrderStyles.OrderPageTitle variant="h6">
-              Su Pedido
+              Sus Pedidos
             </MyOrderStyles.OrderPageTitle>
             <MyOrderStyles.OrderPageText variant="body1">
-              {orders.length}pedido realizado en{currentYear}
+              {orders.length} pedidos realizados en {currentYear}
             </MyOrderStyles.OrderPageText>
           </MyOrderStyles.OrderPageContainer>
 

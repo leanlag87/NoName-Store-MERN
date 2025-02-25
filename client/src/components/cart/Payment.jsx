@@ -51,8 +51,8 @@ const PaymentComponent = () => {
     setIsValid(false);
   };
 
-  const handleFocus = (event) => {
-    setIsFocused(event.target.value !== "");
+  const handleFocus = (e) => {
+    setIsFocused(e.target.value !== "");
   };
 
   const handleRadioChange = () => {
@@ -80,7 +80,7 @@ const PaymentComponent = () => {
   };
 
   useEffect(() => {
-    initMercadoPago("REACT_APP_MP_PUBLIC_KEY"); // Reemplaza 'YOUR_PUBLIC_KEY' con tu clave pública de MercadoPago
+    initMercadoPago({ publicKey: process.env.REACT_APP_MP_PUBLIC_KEY });
   }, []);
 
   async function paymentSubmitHandler(e) {
@@ -93,8 +93,8 @@ const PaymentComponent = () => {
     try {
       const cardToken = await createCardToken({
         cardholderName: nameOnCard,
-        identificationType: "DNI", // Tipo de documento, ajusta según tu necesidad
-        identificationNumber: "12345678", // Número de documento, ajusta según tu necesidad
+        identificationType: "DNI", // Tipo de documento
+        identificationNumber: "12345678", // Número de documento
       });
 
       const config = {
@@ -271,9 +271,9 @@ const PaymentComponent = () => {
               {showDummyCard && <DummyCard onClose={handleCloseDummyCard} />}
             </PaymentComponentStyles.CardSelection>
             <PaymentComponentStyles.TermsAndConditionsText variant="body2">
-              Al hacer clic en "Realizar pedido", usted acepta nuestro
+              Al hacer clic en "Realizar pedido", usted acepta nuestros{" "}
               <PaymentComponentStyles.PrivacyText href="#">
-                NoName-Store Terminos & Condiciones
+                Terminos & Condiciones
               </PaymentComponentStyles.PrivacyText>
             </PaymentComponentStyles.TermsAndConditionsText>
             <PaymentComponentStyles.PlaceOrderBtn

@@ -18,8 +18,8 @@ import * as LoginFromStyle from "./Styles/LoginFromStyle";
 function UpdatePassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, isUpdated, error } = useSelector(
-    (state) => state.profileData
+  const { loading, isUpdated, error, user } = useSelector(
+    (state) => state.user
   );
   const [showPassword, setShowPassword] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -27,16 +27,17 @@ function UpdatePassword() {
   const [confirmPassword, setconfirmPassword] = useState("");
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [isValidConfirmPassword, setisValidConfirmPassword] = useState(true);
-  const handleOldPassword = (event) => {
-    setOldPassword(event.target.value);
+
+  const handleOldPassword = (e) => {
+    setOldPassword(e.target.value);
   };
-  const handlePasswordChange = (event) => {
-    setNewPassword(event.target.value);
-    setIsValidPassword(event.target.value.length >= 8);
+  const handlePasswordChange = (e) => {
+    setNewPassword(e.target.value);
+    setIsValidPassword(e.target.value.length >= 8);
   };
-  const handleConfirmPasswordChange = (event) => {
-    setconfirmPassword(event.target.value);
-    setisValidConfirmPassword(event.target.value.length >= 8);
+  const handleConfirmPasswordChange = (e) => {
+    setconfirmPassword(e.target.value);
+    setisValidConfirmPassword(e.target.value.length >= 8);
   };
 
   const handleShowPasswordClick = () => {
@@ -70,7 +71,7 @@ function UpdatePassword() {
       });
       navigate("/account");
     }
-  }, [dispatch, error, isUpdated, loading, navigate]);
+  }, [dispatch, error, user, isUpdated, loading, navigate]);
 
   const isSignInDisabled = !(
     newPassword &&
@@ -91,12 +92,12 @@ function UpdatePassword() {
               <SecurityUpdateGoodIcon />
             </LoginFromStyle.StyledAvatar>
             <LoginFromStyle.Heading variant="h5" component="h1">
-              Actualizar contraseña
+              Actualizar Contraseña
             </LoginFromStyle.Heading>
 
             <LoginFromStyle.PasswordInput
               style={{ marginTop: "1rem" }}
-              label="Contraseña anterior"
+              label="Contraseña Anterior"
               variant="outlined"
               type={showPassword ? "text" : "password"}
               fullWidth
@@ -115,7 +116,7 @@ function UpdatePassword() {
             />
             <LoginFromStyle.PasswordInput
               style={{ marginTop: "4rem" }}
-              label="Contraseña"
+              label="Contraseña Nueva"
               variant="outlined"
               type={showPassword ? "text" : "password"}
               fullWidth
@@ -170,7 +171,7 @@ function UpdatePassword() {
               style={{ marginTop: "3.5rem" }}
               onClick={updatePasswordSubmitHandler}
             >
-              Actualizar nueva contraseña
+              Actualizar contraseña
             </LoginFromStyle.LoginButton>
             <Typography
               variant="body1"

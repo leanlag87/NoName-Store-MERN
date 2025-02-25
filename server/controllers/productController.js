@@ -140,6 +140,7 @@ const getProductDetails = async (req, res) => {
     });
   }
 };
+
 // Actualizar un producto existente
 const updateProduct = async (req, res) => {
   try {
@@ -165,7 +166,6 @@ const updateProduct = async (req, res) => {
 
     // Verifica si el usuario que realiza la solicitud es el dueño del producto
     if (product.user.toString() !== req.user._id.toString()) {
-      //Asegúrate de que el usuario esté autenticado y tenga el campo _id. De lo contrario, req.user._id será undefined.
       return res.status(403).json({
         success: false,
         message: "No tienes permiso para actualizar este producto",

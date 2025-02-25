@@ -36,22 +36,22 @@ const Header = () => {
     }
   }, [error, dispatch]);
 
-  // sirve para abrir y cerrar el menú lateral
+  // para abrir y cerrar el menú lateral
   const handleSideBarMenu = () => {
     setSideMenu(!sideMenu);
   };
 
-  // sirve para abrir y cerrar la barra de búsqueda
+  // para abrir y cerrar la barra de búsqueda
   const handleSearchButtonClick = () => {
     setSearchBarActive(!searchBarActive);
   };
 
-  // sirve para manejar el valor de búsqueda
+  // para manejar el valor de búsqueda
   const handleSearchInputChange = (event) => {
     setSearchValue(event.target.value);
   };
 
-  // sirve para manejar la búsqueda de productos y redirigir a la página de productos
+  // para manejar la búsqueda de productos y redirigir a la página de productos
   const handleSearchFormSubmit = (event) => {
     event.preventDefault();
     if (searchValue.trim()) {
@@ -61,7 +61,7 @@ const Header = () => {
     }
   };
 
-  // sirve para cerrar sesión y limpiar los errores
+  //para cerrar sesión y limpiar los errores
   const handleLogout = async () => {
     await dispatch(logoutUser());
     await dispatch(clearErrors()); // limpia los errores al cerrar sesión

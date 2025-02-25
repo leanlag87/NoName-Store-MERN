@@ -26,7 +26,7 @@ function ConfirmOrder() {
       iva,
       totalFinalPrice,
     };
-    // session storage allowd save data untill  browser tab is opend
+
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
   }
 
@@ -85,7 +85,7 @@ function ConfirmOrder() {
               </div>
             </div>
 
-            {/* Order Summery --> right side */}
+            {/* Order Summery right side */}
 
             <div>
               <div className="orderSummary">

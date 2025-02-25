@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; // Importamos la instancia de axios
-import { getAuthConfig } from "../../utils/authHeaders";
+//import { getAuthConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
 //Carrito en el Frontend (usando el backend)
@@ -157,14 +157,14 @@ const cartSlice = createSlice({
 // Agregar al carrito
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ id, quantity }, { getState, rejectWithValue }) => {
+  async ({ id, quantity }, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.post(
         API_ENDPOINTS.CART.ADD,
-        { id, quantity },
-        config
+        { id, quantity }
+        //config
       );
       return data.cart;
     } catch (error) {
@@ -178,11 +178,11 @@ export const addToCart = createAsyncThunk(
 // Obtener carrito
 export const getCart = createAsyncThunk(
   "cart/getCart",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.get(API_ENDPOINTS.CART.BASE, config);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.get(API_ENDPOINTS.CART.BASE);
       return data.cart;
     } catch (error) {
       return rejectWithValue(
@@ -195,13 +195,13 @@ export const getCart = createAsyncThunk(
 // Eliminar item del carrito
 export const removeItemFromCart = createAsyncThunk(
   "cart/removeItemFromCart",
-  async (productId, { getState, rejectWithValue }) => {
+  async (productId, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.delete(
-        `${API_ENDPOINTS.CART.ITEM}/${productId}`,
-        config
+        `${API_ENDPOINTS.CART.ITEM}/${productId}`
+        //config
       );
       return data.cart;
     } catch (error) {
@@ -215,14 +215,14 @@ export const removeItemFromCart = createAsyncThunk(
 // Actualizar carrito
 export const updateCart = createAsyncThunk(
   "cart/updateCart",
-  async (cartItems, { getState, rejectWithValue }) => {
+  async (cartItems, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         API_ENDPOINTS.CART.BASE,
-        { cartItems },
-        config
+        { cartItems }
+        //config
       );
       return data.cart;
     } catch (error) {
@@ -236,14 +236,14 @@ export const updateCart = createAsyncThunk(
 // Guardar información de envío
 export const saveShippingInfo = createAsyncThunk(
   "cart/saveShippingInfo",
-  async (shippingInfo, { getState, rejectWithValue }) => {
+  async (shippingInfo, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         API_ENDPOINTS.CART.SHIPPING,
-        shippingInfo,
-        config
+        shippingInfo
+        //config
       );
       return data.success;
     } catch (error) {

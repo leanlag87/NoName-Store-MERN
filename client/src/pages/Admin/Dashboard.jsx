@@ -1,68 +1,72 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import HC_3d from "highcharts-3d";
+import { useNavigate } from "react-router-dom";
 import { getProducts, clearErrors } from "../../store/reducers/productSlice";
+import { getAllOrders } from "../../store/reducers/orderSlice";
+import { getUsers } from "../../store/reducers/userSlice";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
 import { toast } from "react-toastify";
-import { getAllOrders } from "../../store/reducers/orderSlice";
-import { getUsers } from "../../store/reducers/userSlice";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { useNavigate } from "react-router-dom";
-import ProductImg from "../../assets/admin/products.png";
+import productImg from "../../assets/admin/products.png";
 import ordersImg from "../../assets/admin/order.png";
 import usersImg from "../../assets/admin/user.png";
 import * as DashboardStyles from "./Styles/DashboardStyles";
 import { getLineOptions, getDoughnutOptions } from "../utils/chartOptions";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+//import HC_3d from "highcharts-3d";
 
 // Inicializar Highcharts3D
-HC_3d(Highcharts);
+//HC_3d(Highcharts);
 
 function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [toggle, setToggle] = useState(false);
-  const { products, loading, error } = useSelector((state) => state.products);
-  const { orders, error: ordersError } = useSelector(
-    (state) => state.allOrders
-  );
-  const { users, error: usersError } = useSelector((state) => state.allUsers);
+  const { product, loading, error } = useSelector((state) => state.product);
+  const { order, error: ordersError } = useSelector((state) => state.order);
+  const { user, error: usersError } = useSelector((state) => state.user);
 
+  // stock de productos agotados
   let outOfStock = 0;
-  products &&
-    products.forEach((element) => {
-      // check how much items out of stocks in products array
-      if (element.stock === 0) {
+  product &&
+    product.forEach((element) => {
+      // Verifica que element sea válido y si el stock es 0
+      if (element && element.stock === 0) {
         outOfStock += 1;
       }
     });
 
-  // total Amount Earned
+  // total de ingresos
   let totalAmount = 0;
-  orders &&
-    orders.forEach((item) => {
-      totalAmount += item.totalPrice;
+  order &&
+    order.forEach((item) => {
+      // Verifica que item sea válido y suma el total de la orden
+      if (item) {
+        totalAmount += item.totalPrice;
+      }
     });
 
   // Generamos las opciones usando las funciones importadas
   const lineOptions = getLineOptions(totalAmount);
-  const doughnutOptions = getDoughnutOptions(products, outOfStock);
+  const doughnutOptions = product
+    ? getDoughnutOptions(product, outOfStock)
+    : {}; // Si product es válido, se generan las opciones
 
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
     if (usersError) {
       toast.error(usersError);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
     if (ordersError) {
       toast.error(ordersError);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
 
     dispatch(getAllOrders());
@@ -75,7 +79,7 @@ function Dashboard() {
     setToggle(!toggle);
   };
 
-  // to close the sidebar when the screen size is greater than 1000px
+  // Se ejecuta cuando el ancho de la ventana cambia y el toggle está activo
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 999 && toggle) {
@@ -83,10 +87,10 @@ function Dashboard() {
       }
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize); // Escucha el evento resize
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize); // Elimina el evento
     };
   }, [toggle]);
 
@@ -109,7 +113,7 @@ function Dashboard() {
 
               <DashboardStyles.SummaryCard>
                 <DashboardStyles.CardContainer
-                  image={ProductImg}
+                  image={productImg}
                   onClick={() => navigate("/admin/products")}
                 >
                   <DashboardStyles.HeaderContent>
@@ -121,7 +125,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {products && products.length}
+                      {product && product.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>
@@ -138,7 +142,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {orders && orders.length}
+                      {order && order.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>
@@ -155,7 +159,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {users && users.length}
+                      {user && user.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>

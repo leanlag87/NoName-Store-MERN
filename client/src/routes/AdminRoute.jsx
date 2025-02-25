@@ -13,12 +13,12 @@ const AdminRoute = ({ children }) => {
     return <Loader />;
   }
 
-  return isAuthenticated && user.role === "admin" ? (
+  return isAuthenticated && user && user.role === "admin" ? (
     children
   ) : (
     <Navigate to="/" />
   );
 };
 
-//Usa React.memo para memorizar el componente y evitar renderizados innecesarios
+//React.memo para memorizar el componente y evitar renderizados innecesarios
 export default React.memo(AdminRoute);

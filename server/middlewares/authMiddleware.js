@@ -1,9 +1,7 @@
 //Importamos "JWT"
 const jwt = require("../utils/jwt");
 const RevokedToken = require("../models/revokedTokenModel");
-
-//Importamos la clave publica
-const JWT_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY;
+const JWT_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY; //Importamos la clave publica
 
 //El objetivo de los Middlewares el verificar que todo este bien , lo podemos usar para bloquear las rutas
 async function asureAuth(req, res, next) {
@@ -22,13 +20,17 @@ async function asureAuth(req, res, next) {
       return res.status(401).send({ msg: "Token revocado" });
     }
 
-    //const payload = jwt.decode(token); //Cuando llegue el token, recibimos el "payload"
-    //const payload = jwt.decode(token, JWT_PUBLIC_KEY); //Cuando llegue el token, recibimos el "payload"
-    const payload = jwt.verify(token, JWT_PUBLIC_KEY);
+    // Verifica y decodifica el token utilizando la clave secreta
+    // Utilizamos el  algoritmo de firma asimétrico RS256 para firmar los tokens JWT
+    // El algoritmo RS256 utiliza una clave privada para firmar y una clave pública para verificar la firma
+    const payload = jwt.verify(token, JWT_PUBLIC_KEY, {
+      algorithms: ["RS256"],
+    });
+
     const { exp } = payload; //Sacamos la fecha de expiracion
-    //const currentData = new Date().getTime(); //Sacamos la fecha actual
+
     // Convertir current time a segundos para comparar con exp
-    const currentData = Math.floor(Date.now() / 1000);
+    const currentData = Math.floor(Date.now() / 1000); //Sacamos la fecha actual
 
     //Verificamos si el token expiro
     if (exp <= currentData) {

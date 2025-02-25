@@ -19,13 +19,9 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
-
-  // new code
   const [couponCode, setCouponCode] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isValid, setIsValid] = useState(true);
-
-  // new code end
 
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
@@ -45,17 +41,13 @@ const Cart = () => {
     dispatch(addToCart(id, newQty));
   };
 
-  // new code
   const handleApplyCoupon = () => {
-    // handle apply coupon logic
     setIsValid(false);
   };
 
   const handleFocus = (event) => {
     setIsFocused(event.target.value !== "");
   };
-
-  // new code end
 
   const deleteCartItems = (id) => {
     dispatch(removeItemFromCart(id));
@@ -65,7 +57,7 @@ const Cart = () => {
     navigate("/login?redirect=/shipping");
   };
 
-  // claculte price after discount
+  // calcular el precio total
   let totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0

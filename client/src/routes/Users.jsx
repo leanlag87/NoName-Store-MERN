@@ -37,7 +37,7 @@ function Users() {
   const location = useLocation();
   const [isAdminRoute, setIsAdminRoute] = useState(false);
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.user);
+  const { error, isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) {
@@ -48,9 +48,12 @@ function Users() {
   }, [location.pathname]);
 
   useEffect(() => {
-    dispatch(loadUser()); // Carga el usuario
+    if (!isAuthenticated) {
+      // Verifica si el usuario no está autenticado
+      dispatch(loadUser()); // Carga el usuario solo si no está autenticado
+    }
     initializeMercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY); // Inicializa Mercado Pago
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
     if (

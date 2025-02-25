@@ -5,14 +5,15 @@ const jwt = require("jsonwebtoken");
 const authUser = async (req, res, next) => {
   let token;
 
+  // Verificar si el token viene en los headers
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      token = req.headers.authorization.split(" ")[1];
+      token = req.headers.authorization.split(" ")[1]; // Extraer el token
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Verificar el token con la clave secreta
 
       if (!decoded || !decoded.user_id) {
         return res.status(401).json({

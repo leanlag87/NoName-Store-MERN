@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import * as SidebarStyles from "./Styles/SidebarStyles";
 
 function Sidebar() {
-  const { user, loading } = useSelector((state) => state.userData);
+  const { user, loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   function accountHandler() {

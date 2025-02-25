@@ -34,18 +34,5 @@ Envía una respuesta JSON con el mensaje de error y la pila de errores (solo en 
 3. Exportación de Middlewares:
 Se exportan las funciones notFound y errorHandler para que puedan ser utilizadas en la aplicación.
 
-Cómo utilizar los middlewares:
-Debes agregar estos middlewares al final de tu archivo app.js (o server.js), después de definir tus rutas:
-// ... otras importaciones ...
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
-
-// ... tus rutas ...
-
-app.use(notFound);
-app.use(errorHandler);
-Use code with caution.
-JavaScript
-Con esto, tu aplicación estará preparada para manejar errores 404 y otros errores de forma centralizada.
-  
   
   */

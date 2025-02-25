@@ -33,7 +33,12 @@ api.get(
   mdAdmin.isAdmin,
   UserController.getUserAdmin
 ); // Ruta para obtener un usuario (solo administrador)
-api.get("/users", mdAuth.asureAuth, mdAdmin.isAdmin, UserController.getUsers); //Obtenemos todos los usuarios
+api.get(
+  "/admin/users",
+  mdAuth.asureAuth,
+  mdAdmin.isAdmin,
+  UserController.getUsers
+); //Obtenemos todos los usuarios
 api.put(
   "/admin/users/:id/role",
   mdAuth.asureAuth,

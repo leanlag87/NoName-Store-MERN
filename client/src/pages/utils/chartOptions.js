@@ -45,7 +45,7 @@ export function getLineOptions(totalAmount) {
   };
 }
 
-export function getDoughnutOptions(products, outOfStock) {
+export function getDoughnutOptions(product, outOfStock) {
   //Recibe los valores como parametros y retornan el objeto de configuracion conrrespondiente
   return {
     chart: {
@@ -94,7 +94,7 @@ export function getDoughnutOptions(products, outOfStock) {
         type: "pie",
         name: "Share",
         data: [
-          ["Out of Stock", products.length - outOfStock],
+          ["Out of Stock", product.length - outOfStock],
           {
             name: "Out of Stock",
             y: outOfStock,

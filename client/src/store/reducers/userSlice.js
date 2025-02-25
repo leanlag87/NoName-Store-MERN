@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; // Importamos la instancia de axios
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
-import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
+//import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
 import { clearTokens } from "../../utils/auth";
 
 const initialState = {
@@ -213,11 +213,11 @@ export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const config = getMultipartConfig();
+      //const config = getMultipartConfig();
       const { data } = await axios.post(
         API_ENDPOINTS.AUTH.REGISTER,
-        userData,
-        config
+        userData
+        //config
       );
       return data.user;
     } catch (error) {
@@ -297,11 +297,11 @@ export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (email, { rejectWithValue }) => {
     try {
-      const config = getAuthConfig();
+      //const config = getAuthConfig();
       const { data } = await axios.post(
         API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
-        { email },
-        config
+        { email }
+        //config
       );
       return data.message;
     } catch (error) {
@@ -315,11 +315,11 @@ export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async ({ token, password }, { rejectWithValue }) => {
     try {
-      const config = getAuthConfig();
+      //const config = getAuthConfig();
       const { data } = await axios.put(
         `${API_ENDPOINTS.AUTH.FORGOT_PASSWORD}/reset/${token}`,
-        { password },
-        config
+        { password }
+        //config
       );
       return data.success;
     } catch (error) {
@@ -333,12 +333,12 @@ export const updatePassword = createAsyncThunk(
   "user/updatePassword",
   async (passwords, { getState, rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         `${API_ENDPOINTS.USER}/password/update`, //Esta es la ruta para cambiar "/api/v1/password/update" verificar si esta bien la ruta actual
-        passwords,
-        config
+        passwords
+        //config
       );
       return data.success;
     } catch (error) {
@@ -350,14 +350,14 @@ export const updatePassword = createAsyncThunk(
 // Actualizar perfil
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (userData, { getState, rejectWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getMultipartConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getMultipartConfig(user.token);
       const { data } = await axios.put(
         `${API_ENDPOINTS.USER}/profile/update`,
-        userData,
-        config
+        userData
+        //config
       );
       return data.user;
     } catch (error) {
@@ -369,13 +369,13 @@ export const updateUser = createAsyncThunk(
 // Obtener un usuario (Admin)
 export const getUserAdmin = createAsyncThunk(
   "user/getUserAdmin",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.get(
-        `${API_ENDPOINTS.USER}/admin/get/${id}`,
-        config
+        `${API_ENDPOINTS.ADMIN}/get/${id}`
+        //config
       );
       return data.user;
     } catch (error) {
@@ -387,11 +387,11 @@ export const getUserAdmin = createAsyncThunk(
 // Obtener todos los usuarios (Admin) por el momento no es solo para el admin
 export const getUsers = createAsyncThunk(
   "user/getUsers",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.get(`${API_ENDPOINTS.USER}/users`, config);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.get(`${API_ENDPOINTS.ADMIN.USERS}`);
       return data.users;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -402,14 +402,14 @@ export const getUsers = createAsyncThunk(
 // Actualizar rol de usuario (Admin)
 export const updateUserRole = createAsyncThunk(
   "user/updateUserRole",
-  async ({ id, role }, { getState, rejectWithValue }) => {
+  async ({ id, role }, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         `${API_ENDPOINTS.USER}/admin/users/${id}/role`,
-        { role },
-        config
+        { role }
+        //config
       );
       return data.user;
     } catch (error) {
@@ -421,13 +421,13 @@ export const updateUserRole = createAsyncThunk(
 // Eliminar usuario (Admin)
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.delete(
-        `${API_ENDPOINTS.USER}/admin/user/${id}`,
-        config
+        `${API_ENDPOINTS.USER}/admin/user/${id}`
+        //config
       );
       return data.message;
     } catch (error) {

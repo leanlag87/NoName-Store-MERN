@@ -19,7 +19,7 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: [true, "Ingrese su correo por favor"],
     unique: true,
-    //comprueba la cadena de correo electrónico dada y después de verificar si el tipo de correo electrónico es correcto o no es verdadero
+
     validate: [
       validator.isEmail,
       "Por favor ingrese un correo electrónico válido",
@@ -34,11 +34,11 @@ const UserSchema = mongoose.Schema({
   avatar: {
     public_id: {
       type: String,
-      required: false, // Cambiar a false si no es obligatorio
+      required: false,
     },
     url: {
       type: String,
-      required: false, // Cambiar a false si no es obligatorio
+      required: false,
     },
   },
   role: {

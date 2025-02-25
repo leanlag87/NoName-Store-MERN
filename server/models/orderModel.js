@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  // order shiping address
   shippingInfo: {
     firstName: {
       type: String,
@@ -44,7 +43,6 @@ const orderSchema = new mongoose.Schema({
     },
   },
 
-  // order item details array
   orderItems: [
     {
       name: {
@@ -65,7 +63,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      //Solucione un problema con la respuesta en insomania , antes estaba como "productId" y daba en error que el id era incorrecto
+
       product: {
         type: mongoose.Schema.ObjectId,
         ref: "ProductModel",
@@ -74,14 +72,13 @@ const orderSchema = new mongoose.Schema({
     },
   ],
 
-  // user who orderd
   user: {
     type: mongoose.Schema.ObjectId,
-    //Cambiado xq ,me estaba dando problemas para obtener los pedidos con getsinglorder , estaba asi("userModel")
+
     ref: "User",
     required: true,
   },
-  // payment status of product :
+
   paymentInfo: {
     id: {
       type: String,
@@ -90,7 +87,7 @@ const orderSchema = new mongoose.Schema({
     status: {
       type: String,
       required: true,
-      enum: ["pending", "approved", "rejected"], // Ejemplo de enum
+      enum: ["pending", "approved", "rejected"],
     },
     paymentMethod: {
       // Nuevo campo: método de pago
@@ -98,11 +95,11 @@ const orderSchema = new mongoose.Schema({
       required: true,
     },
     paymentDetails: {
-      // Nuevo campo para información adicional (opcional)
+      // Nuevo campo para información adicional
       type: String,
     },
   },
-  // payment timing
+  // pago realizado en
   paidAt: {
     type: Date,
     required: true,
@@ -126,13 +123,13 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
-  // total price will some of all of three above
+
   totalPrice: {
     type: Number,
     required: true,
     default: 0,
   },
-  // order pending or delilverd or confirm
+
   orderStatus: {
     type: String,
     required: true,

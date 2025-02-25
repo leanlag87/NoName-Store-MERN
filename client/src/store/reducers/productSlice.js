@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; // Importamos la instancia de axios
-import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
+//import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
 const initialState = {
@@ -13,161 +13,6 @@ const initialState = {
   isDeleted: false,
   reviews: [],
 };
-
-// Obtener todos los productos
-export const getProducts = createAsyncThunk(
-  "product/getProducts",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get(API_ENDPOINTS.PRODUCTS.BASE);
-      console.log("Data recibida de la API:", data); // Inspecciono la respuesta
-      return data.products;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al obtener productos"
-      );
-    }
-  }
-);
-
-// Obtener detalles de un producto
-export const getProductDetails = createAsyncThunk(
-  "product/getProductDetails",
-  async (id, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get(`${API_ENDPOINTS.PRODUCTS.BASE}/${id}`);
-      return data.product;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          "Error al obtener detalles del producto"
-      );
-    }
-  }
-);
-
-// Crear nuevo producto (Admin) No es solo para el admin por el momento
-export const newProduct = createAsyncThunk(
-  "product/newProduct",
-  async (productData, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getMultipartConfig(user.token);
-      const { data } = await axios.post(
-        API_ENDPOINTS.ADMIN.PRODUCTS,
-        productData,
-        config
-      );
-      return data.product;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al crear producto"
-      );
-    }
-  }
-);
-
-// Actualizar producto (Admin) No es solo para el admin por el momento
-export const updateProduct = createAsyncThunk(
-  "product/updateProduct",
-  async ({ id, productData }, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getMultipartConfig(user.token);
-      const { data } = await axios.put(
-        `${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`,
-        productData,
-        config
-      );
-      return data.success;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al actualizar producto"
-      );
-    }
-  }
-);
-
-// Eliminar producto (Admin) No es solo para el admin por el momento
-export const deleteProduct = createAsyncThunk(
-  "product/deleteProduct",
-  async (id, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.delete(
-        `${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`,
-        config
-      );
-      return data.success;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al eliminar producto"
-      );
-    }
-  }
-);
-
-// Crear/Actualizar review
-export const newReview = createAsyncThunk(
-  "product/newReview",
-  async (id, reviewData, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.put(
-        `${API_ENDPOINTS.PRODUCTS.REVIEWS}/${id}/reviews`,
-        reviewData,
-        config
-      );
-      return data.success;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al crear/actualizar review"
-      );
-    }
-  }
-);
-
-// Obtener todas las reviews de un producto
-export const getProductReviews = createAsyncThunk(
-  "product/getProductReviews",
-  async (id, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.get(
-        `${API_ENDPOINTS.PRODUCTS.BASE}/${id}/reviews`,
-        config
-      );
-      return data.reviews;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al obtener reviews"
-      );
-    }
-  }
-);
-
-// Eliminar review
-export const deleteReview = createAsyncThunk(
-  "product/deleteReview",
-  async ({ productId, reviewId }, { getState, rejectWithValue }) => {
-    try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.delete(
-        `${API_ENDPOINTS.PRODUCTS.BASE}/${productId}/reviews/${reviewId}`,
-        config
-      );
-      return data.success;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Error al eliminar review"
-      );
-    }
-  }
-);
 
 const productSlice = createSlice({
   name: "product",
@@ -296,6 +141,161 @@ const productSlice = createSlice({
       });
   },
 });
+
+// Obtener todos los productos
+export const getProducts = createAsyncThunk(
+  "product/getProducts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(API_ENDPOINTS.PRODUCTS.BASE);
+      console.log("Data recibida de la API:", data); // Inspecciono la respuesta
+      return data.products;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al obtener productos"
+      );
+    }
+  }
+);
+
+// Obtener detalles de un producto
+export const getProductDetails = createAsyncThunk(
+  "product/getProductDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_ENDPOINTS.PRODUCTS.BASE}/${id}`);
+      return data.product;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Error al obtener detalles del producto"
+      );
+    }
+  }
+);
+
+// Crear nuevo producto (Admin) No es solo para el admin por el momento
+export const newProduct = createAsyncThunk(
+  "product/newProduct",
+  async (productData, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getMultipartConfig(user.token);
+      const { data } = await axios.post(
+        API_ENDPOINTS.ADMIN.PRODUCTS,
+        productData
+        //config
+      );
+      return data.product;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al crear producto"
+      );
+    }
+  }
+);
+
+// Actualizar producto (Admin) No es solo para el admin por el momento
+export const updateProduct = createAsyncThunk(
+  "product/updateProduct",
+  async ({ id, productData }, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getMultipartConfig(user.token);
+      const { data } = await axios.put(
+        `${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`,
+        productData
+        //config
+      );
+      return data.success;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al actualizar producto"
+      );
+    }
+  }
+);
+
+// Eliminar producto (Admin) No es solo para el admin por el momento
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.delete(
+        `${API_ENDPOINTS.ADMIN.PRODUCTS}/${id}`
+        //config
+      );
+      return data.success;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al eliminar producto"
+      );
+    }
+  }
+);
+
+// Crear/Actualizar review
+export const newReview = createAsyncThunk(
+  "product/newReview",
+  async (id, reviewData, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.put(
+        `${API_ENDPOINTS.PRODUCTS.REVIEWS}/${id}/reviews`,
+        reviewData
+        //config
+      );
+      return data.success;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al crear/actualizar review"
+      );
+    }
+  }
+);
+
+// Obtener todas las reviews de un producto
+export const getProductReviews = createAsyncThunk(
+  "product/getProductReviews",
+  async (id, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.get(
+        `${API_ENDPOINTS.PRODUCTS.BASE}/${id}/reviews`
+        //config
+      );
+      return data.reviews;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al obtener reviews"
+      );
+    }
+  }
+);
+
+// Eliminar review
+export const deleteReview = createAsyncThunk(
+  "product/deleteReview",
+  async ({ productId, reviewId }, { rejectWithValue }) => {
+    try {
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.delete(
+        `${API_ENDPOINTS.PRODUCTS.BASE}/${productId}/reviews/${reviewId}`
+        //config
+      );
+      return data.success;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error al eliminar review"
+      );
+    }
+  }
+);
 
 export const {
   clearErrors,

@@ -31,9 +31,9 @@ const DummyCard = ({ onClose }) => {
             </DummyCardStyles.CardNumber>
             <DummyCardStyles.CardDetails>
               <div>
-                <DummyCardStyles.Label>EXPIRY</DummyCardStyles.Label>
-                <DummyCardStyles.Value onClick={() => handleValueCopy("12/23")}>
-                  12/23
+                <DummyCardStyles.Label>EXPIRACIÓN</DummyCardStyles.Label>
+                <DummyCardStyles.Value onClick={() => handleValueCopy("12/29")}>
+                  12/29
                 </DummyCardStyles.Value>
               </div>
               <div>
@@ -44,7 +44,7 @@ const DummyCard = ({ onClose }) => {
               </div>
             </DummyCardStyles.CardDetails>
             <DummyCardStyles.Value
-              onClick={() => handleValueCopy("Robert Downey Jr")}
+              onClick={() => handleValueCopy("Roberto Perez")}
             >
               Roberto Perez
             </DummyCardStyles.Value>

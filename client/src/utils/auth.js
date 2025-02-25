@@ -1,12 +1,17 @@
+// Funciones para gestionar los tokens de autenticación (guardar, eliminar, refrescar)
+// y para interactuar con la API de autenticación.
+
 import axios from "../config";
 import { API_ENDPOINTS } from "../config/apiEndpoints";
 
-// Gestión de tokens
+// Gestión de tokens de autenticación
+// Guardar tokens
 export const setTokens = (accessToken, refreshToken) => {
   localStorage.setItem("token", accessToken);
   localStorage.setItem("refreshToken", refreshToken);
 };
 
+// Eliminar tokens
 export const clearTokens = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("refreshToken");

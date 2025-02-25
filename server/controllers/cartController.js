@@ -26,8 +26,8 @@ const addToCart = async (req, res) => {
     //let cart = await Cart.findOne({ user: userId });
 
     const cart = await Cart.findOne({ user: userId }).populate({
-      path: "cartItems.product", // <--  Especifica la ruta al campo que quieres poblar
-      select: "name price images Stock", // Selecciona los campos que necesitas del producto
+      path: "cartItems.product",
+      select: "name price images Stock",
     });
 
     if (!cart) {
@@ -57,17 +57,17 @@ const addToCart = async (req, res) => {
         product: product._id,
         name: product.name,
         price: product.price,
-        image: product.images.map((img) => img.url), //<---Se asume que tienes un array de url en tu product.images.
+        image: product.images.map((img) => img.url),
         quantity: quantity,
       });
     }
 
-    await cart.save(); //<-- Guarda el carrito.
+    await cart.save(); //Guarda el carrito.
     res.status(200).json({
-      //<-- Respuesta de éxito
+      //Respuesta de éxito
       success: true,
       message: "Producto agregado al carrito correctamente",
-      cart, //<--Se incluye el carrito.
+      cart, //Se incluye el carrito.
     });
   } catch (error) {
     console.error("Error al agregar producto al carrito:", error);
@@ -84,15 +84,15 @@ const getCart = async (req, res) => {
     const userId = req.user._id;
 
     const cart = await Cart.findOne({ user: userId }).populate({
-      //<--- Populate para obtener los datos del producto.
+      //Populate para obtener los datos del producto.
 
       path: "cartItems.product",
-      select: "name price images Stock", //<--- Selecciona los campos que quieres del modelo product.
+      select: "name price images Stock",
     });
 
     if (!cart) {
       // Si el carrito no existe, devolver un carrito vacío
-      return res.status(200).json({ success: true, cart: { cartItems: [] } }); // Devuelve un carrito vacío
+      return res.status(200).json({ success: true, cart: { cartItems: [] } });
     }
 
     res.status(200).json({ success: true, cart });

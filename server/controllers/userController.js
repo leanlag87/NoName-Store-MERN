@@ -179,7 +179,7 @@ async function updatePassword(req, res) {
   }
 }
 
-// Update user Profile
+// Actualizar el perfil del usuario
 async function updateUserProfile(req, res) {
   const { user_id } = req.user; // Obtener el ID del usuario autenticado
   const { name, email } = req.body; // Obtener los campos del perfil del usuario
@@ -198,7 +198,7 @@ async function updateUserProfile(req, res) {
     // Guardar la ruta de la imagen en el campo "avatar" si se subió una imagen
     if (req.file) {
       user.avatar = {
-        public_id: req.file.filename, // Guardar el nombre del archivo como `public_id` si estás usando un servicio de almacenamiento que genera ID públicos
+        public_id: req.file.filename, // Guardar el nombre del archivo como `public_id`
         url: req.file.path, // La URL o ruta del archivo subido
       };
     }
@@ -233,7 +233,6 @@ async function getUserAdmin(req, res) {
 }
 
 //Obtener todos los usuarios
-//me falta incluir para que la funcion sea solo para administrador
 async function getUsers(req, res) {
   try {
     const users = await User.find(); //Con el metodo "find" obtenemos todos los usuarios

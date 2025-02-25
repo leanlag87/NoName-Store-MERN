@@ -16,7 +16,7 @@ function CartItem({
   increaseQuantity,
   length,
 }) {
-  /// calculate price after discount
+  /// calcular el precio final
   let finalPrice = generateDiscountedPrice(item.price);
   let discountedPrice = item.price - finalPrice;
   discountedPrice = displayMoney(discountedPrice);

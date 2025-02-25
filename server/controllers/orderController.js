@@ -1,6 +1,5 @@
 const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
-//const User = require("../models/usersModel");
 const mongoose = require("mongoose");
 
 //Crear un nuevo pedido
@@ -24,7 +23,7 @@ const newOrder = async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
-      paidAt: Date.now(), //Se asume que el pago es inmediato. Adáptalo si usas una pasarela de pago.
+      paidAt: Date.now(), //Se asume que el pago es inmediato.
       user: req.user._id,
     });
 
@@ -74,11 +73,10 @@ const getSingleOrder = async (req, res) => {
         .json({ success: false, message: "ID de pedido inválido" });
     }
 
-    //const order = await Order.findById(id).populate("user", "name email");
     const order = await Order.findById(id).populate({
-      path: "user", //especifica el campo a poblar (en este caso, user).
-      select: "name email", //define explícitamente los campos que deseas incluir del modelo relacionado
-      model: "User", // puedes especificar el nombre del modelo explícitamente
+      path: "user",
+      select: "name email",
+      model: "User",
     });
 
     if (!order) {
@@ -110,23 +108,6 @@ const getSingleOrder = async (req, res) => {
 
 //Obtener todas las ordenes
 const myOrders = async (req, res) => {
-  //ESTA LOGICA TAMBIEN FUNCIONA, ANTES DE TERMINAR CON EL PROYECTO VERE CON CUAL ME QUEDO
-  //   try {
-  //     const orders = await Order.find({ user: req.user._id }).sort({
-  //       createdAt: -1,
-  //     }); //Obtener todos los pedidos que coincidan con el ID del usuario y ordenar por pedidos mas recientes
-
-  //     res.status(200).json({
-  //       success: true,
-  //       orders,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error al obtener los pedidos del usuario:", error);
-  //     res.status(500).json({
-  //       success: false,
-  //       message: "Error al obtener los pedidos del usuario",
-  //     });
-  //   }
   try {
     // Obtén el ID del usuario autenticado desde el token
     const userId = req.user._id;
@@ -160,27 +141,6 @@ const myOrders = async (req, res) => {
 
 //Funciones para el Admin
 const getAllOrders = async (req, res) => {
-  //ESTA LOGICA TAMBIEN FUNCIONA, DESPUES VERE CON CUAL ME QUEDO
-  //   try {
-  //     const orders = await Order.find();
-
-  //     let totalAmount = 0; // Variable para calcular el total de ingresos
-
-  //     orders.forEach((order) => {
-  //       totalAmount += order.totalPrice;
-  //     });
-
-  //     res.status(200).json({
-  //       success: true,
-  //       totalAmount, // Total de ingresos
-  //       orders,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error al obtener todos los pedidos:", error);
-  //     res
-  //       .status(500)
-  //       .json({ success: false, message: "Error al obtener los pedidos" });
-  //   }
   try {
     // Obtener todas las órdenes
     const orders = await Order.find().populate({
@@ -235,8 +195,6 @@ const updateStock = async (id, quantity) => {
     await product.save({ validateBeforeSave: false });
   } catch (error) {
     console.error("Error al actualizar el stock:", error);
-
-    // Puedes manejar el error aquí, como enviar una notificación al administrador, etc.
     throw error; // Re-lanzar el error para que lo maneje el try-catch de updateOrder
   }
 };

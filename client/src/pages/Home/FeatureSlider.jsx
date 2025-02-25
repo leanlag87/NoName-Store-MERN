@@ -12,25 +12,6 @@ import {
 } from "../../utils/DisplayMoney";
 
 const FeaturedSlider = ({ products = [] }) => {
-  // Logs detallados para debugging
-  console.group("FeaturedSlider Debug");
-  console.log("Tipo de products:", typeof products);
-  console.log("¿Es un array?:", Array.isArray(products));
-  console.log("Longitud:", products?.length);
-  console.log("Productos recibidos:", products);
-
-  // Si hay productos, mostrar el primero como ejemplo
-  if (products?.length > 0) {
-    console.log("Ejemplo del primer producto:", {
-      id: products[0]._id,
-      name: products[0].name,
-      hasImages: Boolean(products[0].images),
-      imageCount: products[0].images?.length,
-      firstImageUrl: products[0].images?.[0]?.url,
-    });
-  }
-  console.groupEnd();
-
   if (!Array.isArray(products) || products.length === 0) {
     return <div>No hay productos destacados disponibles</div>;
   }

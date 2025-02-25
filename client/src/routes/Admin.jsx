@@ -1,5 +1,4 @@
 //Componente para ruta de administradores
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Admin/Dashboard";
@@ -17,7 +16,7 @@ const Admin = () => {
   return (
     <Routes>
       <Route
-        path="/admin/dashboard"
+        path="dashboard"
         element={
           <AdminRoute>
             <Dashboard />
@@ -25,7 +24,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/products"
+        path="products"
         element={
           <AdminRoute>
             <ProductList />
@@ -33,7 +32,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/product/:id"
+        path="product/:id"
         element={
           <AdminRoute>
             <UpdateProduct />
@@ -41,7 +40,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/reviews"
+        path="reviews"
         element={
           <AdminRoute>
             <ProductReviews />
@@ -49,7 +48,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/orders"
+        path="orders"
         element={
           <AdminRoute>
             <OrderList />
@@ -57,7 +56,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/order/:id"
+        path="order/:id"
         element={
           <AdminRoute>
             <ProcessOrder />
@@ -65,7 +64,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/new/product"
+        path="new/product"
         element={
           <AdminRoute>
             <NewProduct />
@@ -73,7 +72,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/users"
+        path="users"
         element={
           <AdminRoute>
             <UserList />
@@ -81,7 +80,7 @@ const Admin = () => {
         }
       />
       <Route
-        path="/admin/user/:id"
+        path="user/:id"
         element={
           <AdminRoute>
             <UpdateUser />

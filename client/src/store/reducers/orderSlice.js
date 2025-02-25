@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; // Importamos la instancia de axios
-import { getAuthConfig } from "../../utils/authHeaders";
+//import { getAuthConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
 const initialState = {
@@ -106,14 +106,14 @@ const orderSlice = createSlice({
 // Crear nueva orden
 export const createOrder = createAsyncThunk(
   "order/createOrder",
-  async (orderData, { getState, rejectWithValue }) => {
+  async (orderData, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.post(
         `${API_ENDPOINTS.ORDERS.NEW}`,
-        orderData,
-        config
+        orderData
+        //config
       );
       return data;
     } catch (error) {
@@ -127,11 +127,18 @@ export const createOrder = createAsyncThunk(
 // Obtener mis órdenes
 export const myOrders = createAsyncThunk(
   "order/myOrders",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.get(API_ENDPOINTS.ORDERS.ME, config);
+      //obtener el token del localstorage
+      const token = localStorage.getItem("token");
+
+      //verificar que el token exista
+      if (!token) {
+        return rejectWithValue("No se encontró el token de acceso");
+      }
+
+      //const config = getAuthConfig(token);
+      const { data } = await axios.get(API_ENDPOINTS.ORDERS.ME);
       return data.orders;
     } catch (error) {
       return rejectWithValue(
@@ -144,13 +151,13 @@ export const myOrders = createAsyncThunk(
 // Obtener detalles de una orden
 export const getOrderDetails = createAsyncThunk(
   "order/getOrderDetails",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.get(
-        `${API_ENDPOINTS.ORDERS.BASE}/${id}`,
-        config
+        `${API_ENDPOINTS.ORDERS.BASE}/${id}`
+        //config
       );
       return data.order;
     } catch (error) {
@@ -164,11 +171,11 @@ export const getOrderDetails = createAsyncThunk(
 // Obtener todas las órdenes (Admin)
 export const getAllOrders = createAsyncThunk(
   "order/getAllOrders",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
-      const { data } = await axios.get(API_ENDPOINTS.ADMIN.ORDERS, config);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
+      const { data } = await axios.get(API_ENDPOINTS.ADMIN.ORDERS);
       return data.orders;
     } catch (error) {
       return rejectWithValue(
@@ -181,14 +188,14 @@ export const getAllOrders = createAsyncThunk(
 // Actualizar orden (Admin)
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ id, orderData }, { getState, rejectWithValue }) => {
+  async ({ id, orderData }, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         `${API_ENDPOINTS.ADMIN.ORDERS}/${id}`,
-        orderData,
-        config
+        orderData
+        //config
       );
       return data.success;
     } catch (error) {
@@ -202,13 +209,13 @@ export const updateOrder = createAsyncThunk(
 // Eliminar orden (Admin)
 export const deleteOrder = createAsyncThunk(
   "order/deleteOrder",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const { user } = getState().user;
-      const config = getAuthConfig(user.token);
+      // const { user } = getState().user;
+      // const config = getAuthConfig(user.token);
       const { data } = await axios.delete(
-        `${API_ENDPOINTS.ADMIN.ORDERS}/${id}`,
-        config
+        `${API_ENDPOINTS.ADMIN.ORDERS}/${id}`
+        //config
       );
       return data.success;
     } catch (error) {
