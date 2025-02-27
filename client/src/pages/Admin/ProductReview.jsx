@@ -1,43 +1,40 @@
 import React, { useEffect, useState } from "react";
-import "./Styles/productList.css";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
   getProductReviews,
   clearErrors,
   deleteReview,
   resetDeleteReview,
 } from "../../store/reducers/productSlice";
-import { useNavigate } from "react-router-dom";
+import "./Styles/productList.css";
+import * as ProductReviewsStyles from "./Styles/ProductReviewsStyles";
+import { Typography, InputAdornment } from "@mui/material";
+import { toast } from "react-toastify";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
-import { Typography, InputAdornment } from "@mui/material";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import * as ProductReviewsStyles from "./Styles/ProductReviewsStyles";
 import { getProductReviewColumns } from "../utils/productReviewColums"; // Importamos la función que genera la configuración de columnas para el DataGrid
 
 function ProductReviews() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [toggle, setToggle] = useState(false);
-  const { error, reviews, loading } = useSelector(
-    (state) => state.getAllReview
-  );
+  const { error, reviews, loading } = useSelector((state) => state.product);
   const { error: deleteError, isDeleted } = useSelector(
-    (state) => state.deleteReview
+    (state) => state.product
   );
 
   const [productId, setProductId] = useState("");
 
-  // togle handler =>
   const toggleHandler = () => {
     setToggle(!toggle);
   };
 
   useEffect(() => {
     if (productId.length === 24) {
-      dispatch(getProductReviews(productId)); // when in input box string lenght goes ===24 then automatically search occures
+      dispatch(getProductReviews(productId));
     }
 
     if (error) {
@@ -49,13 +46,12 @@ function ProductReviews() {
       dispatch(clearErrors());
     }
     if (isDeleted) {
-      toast.success("Revisión eliminada exitosamente");
+      toast.success("Revisión eliminada correctamente");
       navigate("/admin/reviews");
       dispatch(resetDeleteReview());
     }
   }, [dispatch, error, deleteError, isDeleted, productId, navigate]);
 
-  // to close the sidebar when the screen size is greater than 1000px
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 999 && toggle) {
@@ -77,7 +73,7 @@ function ProductReviews() {
 
   const productReviewsSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch(getProductReviews(productId)); // get this product reviews
+    dispatch(getProductReviews(productId));
   };
 
   // Calculamos las columnas usando la función importada y pasando el handler

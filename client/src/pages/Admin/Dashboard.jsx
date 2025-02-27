@@ -1,19 +1,26 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+// Redux actions
 import { getProducts, clearErrors } from "../../store/reducers/productSlice";
 import { getAllOrders } from "../../store/reducers/orderSlice";
 import { getUsers } from "../../store/reducers/userSlice";
+
+// Componentes
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
-import { toast } from "react-toastify";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import productImg from "../../assets/admin/products.png";
-import ordersImg from "../../assets/admin/order.png";
-import usersImg from "../../assets/admin/user.png";
+
+// Utilidades y estilos
+import { toast } from "react-toastify";
 import * as DashboardStyles from "./Styles/DashboardStyles";
 import { getLineOptions, getDoughnutOptions } from "../utils/chartOptions";
+import usersImg from "../../assets/admin/user.png";
+import productImg from "../../assets/admin/products.png";
+import ordersImg from "../../assets/admin/order.png";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 //import HC_3d from "highcharts-3d";
@@ -22,14 +29,18 @@ import HighchartsReact from "highcharts-react-official";
 //HC_3d(Highcharts);
 
 function Dashboard() {
+  // -------- Hooks y estado --------
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [toggle, setToggle] = useState(false);
+
+  // Selectores de Redux
   const { product, loading, error } = useSelector((state) => state.product);
   const { order, error: ordersError } = useSelector((state) => state.order);
   const { user, error: usersError } = useSelector((state) => state.user);
 
-  // stock de productos agotados
+  // -------- Cálculos y variables derivadas --------
+  // Calcular productos agotados
   let outOfStock = 0;
   product &&
     product.forEach((element) => {
@@ -55,6 +66,8 @@ function Dashboard() {
     ? getDoughnutOptions(product, outOfStock)
     : {}; // Si product es válido, se generan las opciones
 
+  // -------- Efectos y manejadores --------
+  // Efecto para cargar datos y manejar errores
   useEffect(() => {
     if (error) {
       toast.error(error);

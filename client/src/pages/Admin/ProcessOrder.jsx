@@ -16,49 +16,58 @@ import { resetUpdate } from "../../store/reducers/orderSlice";
 import * as ProcessOrderStyles from "./Styles/ProcessOrderStyles";
 
 function ProcessOrder() {
-  const { order, error, loading } = useSelector((state) => state.orderDetails);
-  const {
-    error: updateError,
-    isUpdated,
-    loading: updateLoading,
-  } = useSelector((state) => state.deleteUpdateOrder);
-
+  // Estados de Redux
   const dispatch = useDispatch();
-  const params = useParams();
-  const productId = params.id;
 
-  // for order status
+  // Obtenemos todos los estados del slice "order"
+  const { order, error, loading } = useSelector((state) => state.order);
+  const {
+    isUpdated,
+    error: updateError,
+    loading: updateLoading,
+  } = useSelector((state) => state.order);
+
+  // Obtenemos el ID de la orden de los parámetros de la URL
+  const params = useParams();
+  const orderId = params.id;
+
+  // Estados locales
   const [status, setStatus] = useState("");
   const [toggle, setToggle] = useState(false);
 
-  // togle handler =>
+  // Controlador para mostrar/ocultar la barra lateral
   const toggleHandler = () => {
     setToggle(!toggle);
   };
 
+  //para manejar errores, actualizaciones y cargar detalles de la orden
   useEffect(() => {
+    // Manejo de errores
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
+    // Manejo de errores de actualización
     if (updateError) {
       toast.error(updateError);
       dispatch(clearErrors());
     }
+    // Si la orden se actualiza exitosamente
     if (isUpdated) {
       toast.success("Pedido actualizado exitosamente");
       dispatch(resetUpdate());
     }
-    dispatch(getOrderDetails(productId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, error, isUpdated, updateError, productId]);
+    // Cargamos los detalles de la orden
+    dispatch(getOrderDetails(orderId));
+  }, [dispatch, error, isUpdated, updateError, orderId]);
 
+  // Manejador para enviar la actualización de la orden
   const updateOrderSubmitHandler = (e) => {
     e.preventDefault();
     const myForm = new FormData();
-
     myForm.set("status", status);
-    dispatch(updateOrder(productId, myForm));
+    // Enviamos la actualización de la orden al backend como objeto FormData
+    dispatch(updateOrder({ id: orderId, orderData: myForm }));
   };
 
   return (
@@ -69,17 +78,19 @@ function ProcessOrder() {
         <>
           <MetaData title="Process Order" />
           <ProcessOrderStyles.ProcessOrderContainer>
+            {/* Sidebar de navegación */}
             <ProcessOrderStyles.FirstBox
               className={!toggle ? "" : "toggle-box"}
             >
               <Sidebar />
             </ProcessOrderStyles.FirstBox>
-
+            {/* Contenido principal */}
             <ProcessOrderStyles.SecondBox>
               <ProcessOrderStyles.NavBarContainer>
                 <Navbar toggleHandler={toggleHandler} />
               </ProcessOrderStyles.NavBarContainer>
               <ProcessOrderStyles.MainInfo>
+                {/* Sección de detalles de la orden */}
                 <ProcessOrderStyles.OrderDetailsContainer>
                   <ProcessOrderStyles.ShippingHeading variant="h5">
                     DETALLES DEL PEDIDO DEL USUARIO
@@ -105,7 +116,7 @@ function ProcessOrder() {
                       </Link>
                     ))}
                 </ProcessOrderStyles.OrderDetailsContainer>
-
+                {/* Sección de dirección de envío */}
                 <ProcessOrderStyles.ShippingDetailsContainer>
                   <ProcessOrderStyles.OrderSubHeading variant="h6">
                     DIRECCIÓN DE ENTREGA
@@ -113,6 +124,7 @@ function ProcessOrder() {
 
                   <ProcessOrderStyles.ShippingAddressContainer>
                     <ProcessOrderStyles.ShippingAddressDetails>
+                      {/* Datos del usuario y dirección */}
                       <ProcessOrderStyles.StyledTypography
                         variant="subtitle2"
                         style={{
@@ -158,6 +170,7 @@ function ProcessOrder() {
                 </ProcessOrderStyles.ShippingDetailsContainer>
 
                 <ProcessOrderStyles.BoldDivider />
+                {/* Sección de resumen de precio */}
                 <ProcessOrderStyles.TotalPriceContainer>
                   <ProcessOrderStyles.OrderSummaryItem>
                     <div>
@@ -182,7 +195,7 @@ function ProcessOrder() {
                     </ProcessOrderStyles.TotalPriceP>
                   </ProcessOrderStyles.OrderSummaryItem>
                 </ProcessOrderStyles.TotalPriceContainer>
-
+                {/* Sección de estado del pedido */}
                 <ProcessOrderStyles.TotalPriceContainer>
                   <ProcessOrderStyles.OrderSummaryItem>
                     <div>
@@ -201,7 +214,7 @@ function ProcessOrder() {
                     </ProcessOrderStyles.RedFont>
                   </ProcessOrderStyles.OrderSummaryItem>
                 </ProcessOrderStyles.TotalPriceContainer>
-
+                {/* Sección de estado del pago */}
                 <ProcessOrderStyles.TotalPriceContainer>
                   <ProcessOrderStyles.OrderSummaryItem>
                     <div>
@@ -219,7 +232,7 @@ function ProcessOrder() {
                     </ProcessOrderStyles.GreenFont>
                   </ProcessOrderStyles.OrderSummaryItem>
                 </ProcessOrderStyles.TotalPriceContainer>
-
+                {/* Formulario de actualización de estado */}
                 {order.orderStatus && (
                   <>
                     <div

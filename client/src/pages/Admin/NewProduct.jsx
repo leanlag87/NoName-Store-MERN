@@ -1,17 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+// Componentes UI personalizados
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
 import Sidebar from "./Sidebar";
-import {
-  newProduct,
-  clearErrors,
-  resetNewProduct,
-} from "../../store/reducers/productSlice";
-import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import * as LoginFromStyle from "../../components/user/Styles/LoginFromStyle";
+
+// Material UI
 import InputAdornment from "@mui/material/InputAdornment";
 import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+
+// Iconos
 import DescriptionIcon from "@mui/icons-material/Description";
 import StorageIcon from "@mui/icons-material/Storage";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -19,31 +23,40 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import MenuItem from "@mui/material/MenuItem";
 import InfoIcon from "@mui/icons-material/Info";
-import Navbar from "./Navbar";
-import * as LoginFromStyle from "../../components/user/Styles/LoginFromStyle";
+
+// Redux actions
+import {
+  newProduct,
+  clearErrors,
+  resetNewProduct,
+} from "../../store/reducers/productSlice";
+
+// Categorías
 import { categories } from "../utils/categories";
 
 function NewProduct() {
+  // Redux y React Router
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector(
-    (state) => state.addNewProduct
-  );
+  const { loading, error, success } = useSelector((state) => state.product);
+
+  // Estado del formulario
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [Stock, setStock] = useState(0);
   const [info, setInfo] = useState("");
+  // Estado para manejo de imágenes
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const [isCategory, setIsCategory] = useState(false);
   const fileInputRef = useRef();
+  // Estado UI
+  const [isCategory, setIsCategory] = useState(false);
   const [toggle, setToggle] = useState(false);
 
-  // toggle handler =>
+  //Manejadores de eventos
   const toggleHandler = () => {
     setToggle(!toggle);
   };
@@ -57,35 +70,7 @@ function NewProduct() {
     fileInputRef.current.click();
   };
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearErrors());
-    }
-
-    if (success) {
-      toast.success("Producto creado con éxito");
-      navigate("/admin/dashboard");
-      dispatch(resetNewProduct());
-    }
-  }, [dispatch, error, navigate, success]);
-
-  const createProductSubmitHandler = (e) => {
-    e.preventDefault();
-    const myForm = new FormData();
-    myForm.set("name", name);
-    myForm.set("price", price);
-    myForm.set("description", description);
-    myForm.set("category", category);
-    myForm.set("Stock", Stock);
-    myForm.set("info", info);
-    images.forEach((currImg) => {
-      myForm.append("images", currImg);
-    });
-
-    dispatch(newProduct(myForm));
-  };
-
+  //Procesa las imágenes seleccionadas y crea una vista previa
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
     setImages([]);
@@ -102,6 +87,38 @@ function NewProduct() {
       reader.readAsDataURL(file);
     });
   };
+
+  //Manejador de envío de formulario
+  const createProductSubmitHandler = (e) => {
+    e.preventDefault();
+    const myForm = new FormData();
+    // Agregar datos básicos del producto
+    myForm.set("name", name);
+    myForm.set("price", price);
+    myForm.set("description", description);
+    myForm.set("category", category);
+    myForm.set("Stock", Stock);
+    myForm.set("info", info);
+    // Agregar todas las imágenes
+    images.forEach((currImg) => {
+      myForm.append("images", currImg);
+    });
+
+    dispatch(newProduct(myForm));
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (success) {
+      toast.success("Producto creado con éxito");
+      navigate("/admin/dashboard");
+      dispatch(resetNewProduct());
+    }
+  }, [dispatch, error, navigate, success]);
 
   return (
     <>

@@ -366,6 +366,22 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+// Actualizar usuario completo (Admin)
+export const updateUserAdmin = createAsyncThunk(
+  "user/updateUserAdmin",
+  async ({ id, userData }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(
+        `${API_ENDPOINTS.ADMIN}/user/${id}`,
+        userData
+      );
+      return data.user;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 // Obtener un usuario (Admin)
 export const getUserAdmin = createAsyncThunk(
   "user/getUserAdmin",

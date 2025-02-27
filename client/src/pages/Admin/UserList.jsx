@@ -1,35 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Styles/productList.css";
+import { useSelector, useDispatch } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
+import { toast } from "react-toastify";
+
+// Componentes
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { DataGrid } from "@mui/x-data-grid";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
-//import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
+
+// Acciones Redux
 import {
   getUsers,
   clearErrors,
   deleteUser,
   resetDelete,
 } from "../../store/reducers/userSlice";
+
+// Utilidades y estilos
+import "./Styles/productList.css";
 import { getUserListColums } from "../utils/userListColums";
-//import { DELETE_USER_RESET } from "../../constants/userConstanat";
 
 function UserList() {
+  // Redux y Router
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, users, loading } = useSelector((state) => state.allUsers);
+  // Estados de Redux
   const {
+    error,
+    users,
+    loading,
     error: deleteError,
     isDeleted,
     message,
-  } = useSelector((state) => state.profileData);
+  } = useSelector((state) => state.user);
 
+  // Estado para la barra lateral
   const [toggle, setToggle] = useState(false);
+
+  // para manejar errores, eliminaciones y cargar usuarios
   useEffect(() => {
+    // Cargar la lista de usuarios al montar el componente
+    dispatch(getUsers());
+
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
@@ -41,19 +55,35 @@ function UserList() {
 
     if (isDeleted) {
       toast.success(message);
-      navigate("/admin/users"); // Cambiado a navigate
-      //dispatch({ type: DELETE_USER_RESET });
-      dispatch(resetDelete()); // Cambiado a resetDelete
+      navigate("/admin/users");
+      dispatch(resetDelete());
     }
-
-    //dispatch(getAllUsers());
-    dispatch(getUsers()); // Cambiado a getUsers
   }, [dispatch, error, deleteError, navigate, isDeleted, message]);
 
   // Handler para eliminar un usuario
   const deleteUserHandler = (id) => {
-    dispatch(deleteUser(id));
+    if (window.confirm("¿Estás seguro de eliminar este usuario?"))
+      dispatch(deleteUser(id));
   };
+
+  // Handler para controlar el toggle
+  const toggleHandler = () => {
+    setToggle(!toggle);
+  };
+
+  // para cerrar automáticamente la barra lateral en pantallas grandes
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 999 && toggle) {
+        setToggle(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [toggle]);
 
   // Calculamos las columnas usando la función importada y pasando el handler
   const columns = getUserListColums(deleteUserHandler);
@@ -71,51 +101,34 @@ function UserList() {
       });
     });
 
-  // Handler para controlar el toggle
-  const toggleHandler = () => {
-    console.log("toggle");
-    setToggle(!toggle);
-  };
-
-  // to close the sidebar when the screen size is greater than 1000px
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 999 && toggle) {
-        setToggle(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [toggle]);
-
   return (
     <>
       {loading ? (
         <Loader />
       ) : (
         <>
-          <MetaData title={`ALL Users - Admin`} />
+          <MetaData title="Gestión de Usuarios - Admin" />
 
           <div className="product-list" style={{ marginTop: 0 }}>
+            {/* Barra lateral de navegación */}
             <div className={!toggle ? "listSidebar" : "toggleBox"}>
               <Sidebar />
             </div>
-
+            {/* Contenido principal */}
             <div className="list-table">
+              {/* Barra de navegación superior */}
               <Navbar toggleHandler={toggleHandler} />
+              {/* Contenedor de la tabla de usuarios */}
               <div className="productListContainer">
                 <h4 id="productListHeading">TODOS LOS USUARIOS</h4>
-
+                {/* Tabla de usuarios usando DataGrid */}
                 <DataGrid
                   rows={rows}
                   columns={columns}
                   pageSize={10}
                   disableSelectionOnClick
                   className="productListTable"
+                  autoHeight
                 />
               </div>
             </div>

@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
-import "./Styles/productList.css";
-import { DataGrid } from "@mui/x-data-grid";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   getAllOrders,
   clearErrors,
   deleteOrder,
   resetDelete,
 } from "../../store/reducers/orderSlice";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { DataGrid } from "@mui/x-data-grid";
+import { toast } from "react-toastify";
+import "./Styles/productList.css";
 import { getOrderListColumns } from "../utils/orderListColums"; // Importamos la función que genera las columnas para el DataGrid
-//import { DELETE_ORDER_RESET } from "../../constants/orderConstant";
 
 function OrderList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, loading, orders } = useSelector((state) => state.allOrders);
-  const { error: deleteError, isDeleted } = useSelector(
-    (state) => state.deleteUpdateOrder
-  );
+  const { error, loading, orders } = useSelector((state) => state.order);
+  const { error: deleteError, isDeleted } = useSelector((state) => state.order);
   const [toggle, setToggle] = useState(false);
 
   // Handler para controlar el toggle
@@ -52,7 +49,7 @@ function OrderList() {
       });
     });
 
-  //El useEffect se ejecuta cuando carga el componente y cada vez que cambia el estado de toggle
+  //Se ejecuta cuando carga el componente y cada vez que cambia el estado de toggle
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 999 && toggle) {
@@ -67,7 +64,7 @@ function OrderList() {
     };
   }, [toggle]);
 
-  // dispatching the action
+  // Se ejecuta cuando cambia el estado de error, isDeleted, deleteError y orders
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -80,11 +77,10 @@ function OrderList() {
     if (isDeleted) {
       toast.success("Orden eliminada exitosamente");
       navigate("/admin/orders");
-      dispatch({ type: resetDelete });
+      dispatch(resetDelete());
     }
     dispatch(getAllOrders());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, error, isDeleted, deleteError]);
+  }, [dispatch, error, isDeleted, deleteError, navigate]);
 
   return (
     <>

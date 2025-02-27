@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
-import DescriptionIcon from "@mui/icons-material/Description";
-import StorageIcon from "@mui/icons-material/Storage";
+import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import {
   updateProduct,
@@ -12,47 +11,116 @@ import {
   getProductDetails,
   resetUpdateProduct,
 } from "../../store/reducers/productSlice";
-import { useNavigate, useParams } from "react-router-dom";
-import InputAdornment from "@mui/material/InputAdornment";
+import { toast } from "react-toastify";
+
+// Material UI
 import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
+import MenuItem from "@mui/material/MenuItem";
+
+// Iconos
+import StorageIcon from "@mui/icons-material/Storage";
+import DescriptionIcon from "@mui/icons-material/Description";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import InfoIcon from "@mui/icons-material/Info";
-import MenuItem from "@mui/material/MenuItem";
-import Navbar from "./Navbar";
+
+// Estilos y datos
 import * as LoginFromStyle from "../../components/user/Styles/LoginFromStyle";
 import { categories } from "../utils/categories";
 
 function UpdateProduct() {
+  // Redux y React Router
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const productId = useParams().id;
-  const { error, product } = useSelector((state) => state.productDetails);
+  const { id: productId } = useParams();
 
+  // Estados de Redux
+  const {
+    error,
+    product,
+    loading: producLoading,
+  } = useSelector((state) => state.product);
   const {
     loading,
     error: updateError,
     isUpdated,
-  } = useSelector((state) => state.deleteUpdateProduct);
+  } = useSelector((state) => state.product);
 
+  // Estados del formulario
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [isCategory, setIsCategory] = useState(false);
   const [Stock, setStock] = useState(0);
-  const [images, setImages] = useState([]);
   const [info, setInfo] = useState("");
+
+  // Estados para imágenes
+  const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
   const [oldImages, setOldImages] = useState([]);
   const fileInputRef = useRef();
+
+  // Estados UI
   const [toggle, setToggle] = useState(false);
+  const [isCategory, setIsCategory] = useState(false);
+
+  //Maneja el cambio de categoria
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
     setIsCategory(true);
+  };
+
+  //Muestra/ocuta el sidebar
+  const toggleHandler = () => {
+    setToggle(!toggle);
+  };
+
+  //Activa el selector de archivos
+  const handleImageUpload = () => {
+    fileInputRef.current.click();
+  };
+
+  //Actualiza las imágenes del producto y las muestra en el formulario
+  const updateProductImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages([]);
+    setImagesPreview([]);
+    setOldImages([]);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImagesPreview((prev) => [...prev, reader.result]);
+          setImages((prev) => [...prev, reader.result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  //Manejador de envío del formulario con
+  const updateProductSubmitHandler = (e) => {
+    e.preventDefault();
+    const myForm = new FormData();
+
+    // Añadir todos los campos al FormData
+    myForm.set("name", name);
+    myForm.set("price", price);
+    myForm.set("description", description);
+    myForm.set("category", category);
+    myForm.set("Stock", Stock);
+    myForm.set("info", info);
+
+    // Añadir imágenes si hay nuevas
+    images.forEach((currImg) => {
+      myForm.append("images", currImg);
+    });
+
+    dispatch(updateProduct({ id: productId, formData: myForm }));
   };
 
   useEffect(() => {
@@ -83,62 +151,24 @@ function UpdateProduct() {
       navigate("/admin/products");
       dispatch(resetUpdateProduct());
     }
-  }, [dispatch, error, navigate, isUpdated, productId, product, updateError]);
-
-  const createProductSubmitHandler = (e) => {
-    e.preventDefault();
-    const myForm = new FormData();
-    myForm.set("name", name);
-    myForm.set("price", price);
-    myForm.set("description", description);
-    myForm.set("category", category);
-    myForm.set("Stock", Stock);
-    myForm.set("info", info);
-    images.forEach((currImg) => {
-      myForm.append("images", currImg);
-    });
-
-    dispatch(updateProduct(productId, myForm));
-  };
-
-  const handleImageUpload = () => {
-    fileInputRef.current.click();
-  };
-
-  const updateProductImagesChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages([]);
-    setImagesPreview([]);
-    setOldImages([]);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImagesPreview((prev) => [...prev, reader.result]);
-          setImages((prev) => [...prev, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const toggleHandler = () => {
-    setToggle(!toggle);
-  };
+  }, [dispatch, navigate, error, isUpdated, productId, product, updateError]);
 
   return (
     <>
-      {loading ? (
+      {loading || producLoading ? (
         <Loader />
       ) : (
         <>
-          <MetaData title="Create Product" />
+          <MetaData title="Actualizar Producto" />
           <LoginFromStyle.UpdateProduct>
+            {/* Barra lateral */}
             <LoginFromStyle.SidebarContainer
               className={!toggle ? "firstBox" : "toggleBox"}
             >
               <Sidebar />
             </LoginFromStyle.SidebarContainer>
+
+            {/* Contenedor principal */}
             <Box
               sx={{
                 width: "75%",
@@ -154,12 +184,13 @@ function UpdateProduct() {
                 },
               }}
             >
+              {/* Barra de navegación */}
               <Box sx={{ margin: "0rem" }}>
                 <Navbar toggleHandler={toggleHandler} />
               </Box>
-
+              {/* Formulario */}
               <LoginFromStyle.FormContainer sx={{ marginTop: "-6rem" }}>
-                <LoginFromStyle.Form onSubmit={createProductSubmitHandler}>
+                <LoginFromStyle.Form onSubmit={updateProductSubmitHandler}>
                   <LoginFromStyle.StyledAvatar>
                     <AddCircleOutlineIcon />
                   </LoginFromStyle.StyledAvatar>
@@ -169,7 +200,7 @@ function UpdateProduct() {
                   <LoginFromStyle.NameInput
                     variant="outlined"
                     fullWidth
-                    label="Product Name"
+                    label="Nombre del producto"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -186,9 +217,10 @@ function UpdateProduct() {
                       ),
                     }}
                   />
+                  {/* Precio */}
                   <LoginFromStyle.NameInput
                     variant="outlined"
-                    label="Price"
+                    label="Precio"
                     value={price}
                     required
                     fullWidth
@@ -207,6 +239,7 @@ function UpdateProduct() {
                       ),
                     }}
                   />
+                  {/* Stock */}
                   <LoginFromStyle.NameInput
                     variant="outlined"
                     label="Stock"
@@ -227,9 +260,10 @@ function UpdateProduct() {
                       ),
                     }}
                   />
+                  {/* Información adicional */}
                   <LoginFromStyle.NameInput
                     variant="outlined"
-                    label="Product Info"
+                    label="Información del producto"
                     value={info}
                     required
                     onChange={(e) => setInfo(e.target.value)}
@@ -247,6 +281,7 @@ function UpdateProduct() {
                       ),
                     }}
                   />
+                  {/* Selector de categoría */}
                   <LoginFromStyle.SelectOption>
                     {!isCategory && (
                       <LoginFromStyle.LabelText category={category}>
@@ -291,10 +326,11 @@ function UpdateProduct() {
                       </LoginFromStyle.StyledSelect>
                     </LoginFromStyle.StyledFormControl>
                   </LoginFromStyle.SelectOption>
+                  {/* Descripción */}
                   <LoginFromStyle.DescriptionInput
                     variant="outlined"
                     fullWidth
-                    label="Product Description"
+                    label="Descripción del producto"
                     multiline
                     rows={1}
                     value={description}
@@ -312,6 +348,7 @@ function UpdateProduct() {
                       ),
                     }}
                   />
+                  {/* Sección de carga de imágenes */}
                   <Box
                     sx={{
                       display: "flex",
@@ -344,6 +381,7 @@ function UpdateProduct() {
                       style={{ display: "none" }}
                       ref={fileInputRef}
                     />
+                    {/* Botón para activar selector de archivos */}
                     <label htmlFor="avatar-input">
                       <LoginFromStyle.UploadAvatarButton
                         variant="contained"
@@ -363,30 +401,32 @@ function UpdateProduct() {
                       </LoginFromStyle.UploadAvatarButton>
                     </label>
                   </Box>
+                  {/* Área de vista previa de imágenes */}
                   <LoginFromStyle.ImageArea>
                     {imagesPreview.length > 0
                       ? imagesPreview.map((image, index) => (
                           <LoginFromStyle.Image
                             key={index}
                             src={image}
-                            alt="Product Preview"
+                            alt="Vista previa del producto"
                           />
                         ))
                       : oldImages.map((image, index) => (
                           <LoginFromStyle.Image
                             key={index}
                             src={image.url}
-                            alt="Old Product Preview"
+                            alt="Imagen anterior del producto"
                           />
                         ))}
                   </LoginFromStyle.ImageArea>
+                  {/* Botón de enviar */}
                   <LoginFromStyle.LoginButton
                     variant="contained"
                     fullWidth
-                    onClick={createProductSubmitHandler}
+                    type="submit"
                     disabled={loading}
                   >
-                    Crear
+                    Actualizar
                   </LoginFromStyle.LoginButton>
                 </LoginFromStyle.Form>
               </LoginFromStyle.FormContainer>

@@ -8,7 +8,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import {
   getUserAdmin,
-  updateUser,
+  updateUserAdmin,
   clearErrors,
   resetUpdate,
 } from "../../store/reducers/userSlice";
@@ -16,26 +16,33 @@ import * as UpdateUserStyles from "./Styles/UpdateUserStyles";
 import { InputAdornment } from "@mui/material";
 
 function UpdateUser() {
+  // Redux y Router
   const dispatch = useDispatch();
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { loading, error, user } = useSelector((state) => state.userDetails);
+
+  //Estados de Redux
+  const { loading, error, user } = useSelector((state) => state.user);
   const {
     loading: updateLoading,
     error: updateError,
     isUpdated,
-  } = useSelector((state) => state.profileData);
+  } = useSelector((state) => state.user);
 
+  //Estados del formulario
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+
+  //Estado UI
   const [toggle, setToggle] = useState(false);
 
-  // togle handler =>
+  // Controla la visibilidad de la barra lateral
   const toggleHandler = () => {
     setToggle(!toggle);
   };
 
+  //para cargar datos del usuario y manejar actualizaciones
   useEffect(() => {
     if (user && user._id !== userId) {
       dispatch(getUserAdmin(userId));
@@ -71,7 +78,7 @@ function UpdateUser() {
     myForm.set("email", email);
     myForm.set("role", role);
 
-    dispatch(updateUser(userId, myForm));
+    dispatch(updateUserAdmin({ id: userId, userData: myForm }));
   };
 
   return (
@@ -80,36 +87,40 @@ function UpdateUser() {
         <Loader />
       ) : (
         <>
-          <MetaData title="Update User" />
+          <MetaData title="Actualizar Usuario" />
           <UpdateUserStyles.UpdateUserContainer>
+            {/* Barra lateral */}
             <UpdateUserStyles.FirstBox className={!toggle ? "" : "toggle-box"}>
               <Sidebar />
             </UpdateUserStyles.FirstBox>
-
+            {/* Contenido principal */}
             <UpdateUserStyles.SecondBox>
+              {/* Barra de navegación */}
               <UpdateUserStyles.NavBarContainer>
                 <Navbar toggleHandler={toggleHandler} />
               </UpdateUserStyles.NavBarContainer>
+              {/* Sección de formulario */}
               <UpdateUserStyles.FormSection>
                 <UpdateUserStyles.Form onSubmit={updateUserSubmitHandler}>
+                  {/* Cabecera del formulario */}
                   <UpdateUserStyles.StyledAvatar>
                     <UpdateUserStyles.StyledAccountCircleIcon />
                   </UpdateUserStyles.StyledAvatar>
                   <UpdateUserStyles.Heading variant="h5" component="h1">
                     Actualizar Rol
                   </UpdateUserStyles.Heading>
-
+                  {/* Campo de nombre */}
                   <UpdateUserStyles.NameInput>
                     <UpdateUserStyles.StyledTextField
                       variant="outlined"
                       fullWidth
-                      label="Product Name"
+                      label="Nombre de usuario"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </UpdateUserStyles.NameInput>
-
+                  {/* Campo de email */}
                   <UpdateUserStyles.NameInput>
                     <UpdateUserStyles.StyledTextField
                       variant="outlined"
@@ -127,7 +138,7 @@ function UpdateUser() {
                       }}
                     />
                   </UpdateUserStyles.NameInput>
-
+                  {/* Selector de rol */}
                   <div style={{ position: "relative" }}>
                     <label
                       htmlFor="role_field"
@@ -160,11 +171,11 @@ function UpdateUser() {
                         Admin
                       </UpdateUserStyles.StyledMenuItem>
                       <UpdateUserStyles.StyledMenuItem value="user">
-                        User
+                        Usuario
                       </UpdateUserStyles.StyledMenuItem>
                     </UpdateUserStyles.StyledSelect>
                   </div>
-
+                  {/* Botón de actualización */}
                   <UpdateUserStyles.LoginButton
                     type="submit"
                     fullWidth
