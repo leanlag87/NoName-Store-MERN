@@ -10,7 +10,7 @@ const apiVersion = process.env.API_VERSION;
 const ipeServer = process.env.IP_SERVER;
 const port = process.env.PORT_SERVER;
 
-//ejemplo sacado de como desplegar app del Stack MERN en Railway del video de Fazt Code
+
 //const portDB = process.env.PORT_DB || 3977; //para cuando haga el deploy, si no hay puerto en .env, se usará el 3977
 
 const connectDB = async () => {
