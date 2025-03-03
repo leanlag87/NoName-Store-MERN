@@ -93,7 +93,7 @@ function ProductList() {
         <Loader />
       ) : (
         <>
-          <MetaData title={`ALL PRODUCTS - Admin`} />
+          <MetaData title="Todos los productos - Admin" />
 
           <div className="product-list" style={{ marginTop: 0 }}>
             {/* Barra lateral de navegación */}

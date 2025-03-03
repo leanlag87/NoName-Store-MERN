@@ -120,20 +120,23 @@ function UpdateProduct() {
       myForm.append("images", currImg);
     });
 
-    dispatch(updateProduct({ id: productId, formData: myForm }));
+    dispatch(updateProduct({ id: productId, productData: myForm }));
   };
 
   useEffect(() => {
-    if (product && product._id !== productId) {
+    // Primero cargar los detalles del producto si no existen o no coincide con el ID
+    if (!product || (product && product._id !== productId)) {
       dispatch(getProductDetails(productId));
-    } else {
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(product.price);
-      setCategory("");
-      setInfo(product.info);
-      setStock(product.Stock);
-      setOldImages(product.images);
+    }
+    // Solo setear los valores cuando el producto tenga datos
+    else if (product && product.name) {
+      setName(product.name || "");
+      setDescription(product.description || "");
+      setPrice(product.price || 0);
+      setCategory(product.category || "");
+      setInfo(product.info || "");
+      setStock(product.Stock || 0);
+      setOldImages(product.images || []);
     }
 
     if (error) {

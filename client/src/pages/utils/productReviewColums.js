@@ -13,20 +13,20 @@ export const getProductReviewColumns = (deleteReviewHandler) => [
   },
   {
     field: "user",
-    headerName: "User",
+    headerName: "Usuario",
     flex: 0.8,
     magin: "0 auto",
     headerClassName: "column-header hide-on-mobile",
   },
   {
     field: "comment",
-    headerName: "Comment",
+    headerName: "Comentario",
     minWidth: 350,
     flex: 0.8,
   },
   {
     field: "recommend",
-    headerName: "Recommend",
+    headerName: "Recomendado",
     minWidth: 100,
     flex: 1,
     headerClassName: "column-header hide-on-mobile",
@@ -46,7 +46,7 @@ export const getProductReviewColumns = (deleteReviewHandler) => [
   {
     field: "actions",
     flex: 1,
-    headerName: "Actions",
+    headerName: "Acciones",
     minWidth: 230,
     headerClassName: "column-header1",
     sortable: false,

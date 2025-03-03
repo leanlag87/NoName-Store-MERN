@@ -61,6 +61,9 @@ const userSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user; // Usa la información del usuario del payload
         state.success = true;
+        if (action.payload.access) {
+          localStorage.setItem("token", action.payload.access);
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -283,9 +286,11 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axios.get(API_ENDPOINTS.AUTH.LOGOUT);
+      localStorage.removeItem("token");
       localStorage.removeItem("cartItems");
       return true;
     } catch (error) {
+      localStorage.removeItem("token");
       clearTokens(); // Elimina los tokens del localStorage
       return rejectWithValue(error.response.data.message);
     }

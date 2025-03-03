@@ -14,11 +14,27 @@ const instance = axios.create({
 });
 
 // Interceptor para token
+// instance.interceptors.request.use((config) => {
+//   const token = localStorage.getItem("token");
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// }, Promise.reject);
+
+// Interceptor para token
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // No sobrescribir Content-Type si es una solicitud FormData
+  if (config.data instanceof FormData) {
+    // Eliminar el Content-Type para que el navegador establezca el boundary correcto
+    delete config.headers["Content-Type"];
+  }
+
   return config;
 }, Promise.reject);
 

@@ -70,6 +70,9 @@ export default function Login() {
         throw new Error("No se recibió el token de acceso");
       }
 
+      //Guardar el token en el LocalStorage
+      localStorage.setItem("token", result.access);
+
       // Redirige aquí, después de un inicio de sesión exitoso
       const redirectTo = location.state?.from || "/account";
       navigate(redirectTo, { replace: true });

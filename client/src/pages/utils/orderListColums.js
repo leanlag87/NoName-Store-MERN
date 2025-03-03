@@ -7,14 +7,14 @@ import IconButton from "@mui/material/IconButton";
 export const getOrderListColumns = (deleteOrderHandler) => [
   {
     field: "id",
-    headerName: "Order ID",
+    headerName: "ID del Pedido",
     minWidth: 120,
     flex: 0.7,
     headerClassName: "column-header",
   },
   {
     field: "status",
-    headerName: "Status",
+    headerName: "Estado",
     minWidth: 100,
     flex: 0.8,
     headerClassName: "column-header hide-on-mobile",
@@ -25,7 +25,7 @@ export const getOrderListColumns = (deleteOrderHandler) => [
   },
   {
     field: "itemsQty",
-    headerName: "Items Qty",
+    headerName: "Cantidad de Productos",
     type: "number",
     minWidth: 120,
     flex: 0.8,
@@ -33,7 +33,7 @@ export const getOrderListColumns = (deleteOrderHandler) => [
   },
   {
     field: "amount",
-    headerName: "Amount",
+    headerName: "Monto",
     type: "number",
     minWidth: 120,
     flex: 0.8,
@@ -41,7 +41,7 @@ export const getOrderListColumns = (deleteOrderHandler) => [
   },
   {
     field: "actions",
-    headerName: "Actions",
+    headerName: "Acciones",
     flex: 1.5,
     sortable: false,
     minWidth: 150,

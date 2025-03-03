@@ -74,7 +74,7 @@ function Products() {
         <Loader />
       ) : (
         <>
-          <MetaData title="PRODUCTS --Ecart" />
+          <MetaData title="PRODUCTOS --Ecart" />
           {products === undefined || products.length === 0 ? (
             <>
               <div
@@ -140,7 +140,7 @@ function Products() {
                           IconComponent={ArrowDropDownIcon}
                           renderValue={(selected) =>
                             selected !== "" ? selected : "min"
-                          } // Display "min" as default label
+                          }
                         >
                           <MenuItem value={5000} className="menu_item">
                             5000
@@ -148,7 +148,6 @@ function Products() {
                           <MenuItem value={10000} className="menu_item">
                             10000
                           </MenuItem>
-                          {/* Add more options as per your requirement */}
                         </Select>
                         <span className="toText">a</span>
                         <Select
@@ -264,7 +263,7 @@ function Products() {
                 <Pagination
                   activePage={currentPage}
                   itemsCountPerPage={resultPerPage}
-                  totalItemsCount={productsCount}
+                  totalItemsCount={productsCount || 0}
                   onChange={setCurrentPageNoHandler}
                   nextPageText="Sig."
                   prevPageText="Ant."

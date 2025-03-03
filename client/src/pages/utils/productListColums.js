@@ -6,14 +6,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export const getProductListColums = (deleteProductHandler) => [
   {
     field: "id",
-    headerName: "Product ID",
+    headerName: "Producto ID",
     minWidth: 230,
     flex: 0.5,
     headerClassName: "column-header",
   },
   {
     field: "name",
-    headerName: "Name",
+    headerName: "Nombre",
     minWidth: 150,
     flex: 0.5,
     magin: "0 auto",
@@ -29,7 +29,7 @@ export const getProductListColums = (deleteProductHandler) => [
   },
   {
     field: "price",
-    headerName: "Price",
+    headerName: "Precio",
     type: "number",
     minWidth: 200,
     flex: 0.5,
@@ -37,7 +37,7 @@ export const getProductListColums = (deleteProductHandler) => [
   },
   {
     field: "actions",
-    headerName: "Actions",
+    headerName: "Acciones",
     flex: 1,
     sortable: false,
     minWidth: 230,
@@ -46,17 +46,13 @@ export const getProductListColums = (deleteProductHandler) => [
       return (
         <>
           <Link
-            to={`/admin/product/${params.getValue(params.id, "id")}`}
+            to={`/admin/product/${params.row.id}`}
             style={{ marginLeft: "1rem" }}
           >
             <EditIcon className="icon-" />
           </Link>
 
-          <div
-            onClick={() =>
-              deleteProductHandler(params.getValue(params.id, "id"))
-            }
-          >
+          <div onClick={() => deleteProductHandler(params.row.id)}>
             <DeleteIcon className="iconbtn" />
           </div>
         </>

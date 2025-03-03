@@ -126,7 +126,7 @@ function NewProduct() {
         <Loader />
       ) : (
         <>
-          <MetaData title={"New Product"} />
+          <MetaData title="Nuevo Producto" />
           <LoginFromStyle.UpdateProduct>
             <LoginFromStyle.SidebarContainer
               className={!toggle ? "firstBox" : "toggleBox"}
@@ -166,7 +166,7 @@ function NewProduct() {
                   <LoginFromStyle.NameInput
                     variant="outlined"
                     fullWidth
-                    label="Product Name"
+                    label="Nombre del producto"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -296,7 +296,7 @@ function NewProduct() {
                   <LoginFromStyle.DescriptionInput
                     variant="outlined"
                     fullWidth
-                    label="Product Description"
+                    label="Descripción de producto"
                     multiline
                     rows={1}
                     value={description}

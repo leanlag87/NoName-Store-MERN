@@ -35,15 +35,20 @@ function Dashboard() {
   const [toggle, setToggle] = useState(false);
 
   // Selectores de Redux
-  const { product, loading, error } = useSelector((state) => state.product);
-  const { order, error: ordersError } = useSelector((state) => state.order);
-  const { user, error: usersError } = useSelector((state) => state.user);
+  const { products, loading, error } = useSelector((state) => state.product);
+  const { orders, error: ordersError } = useSelector((state) => state.order);
+  const {
+    isAuthenticated,
+    users,
+    error: usersError,
+  } = useSelector((state) => state.user);
+  const userData = users;
 
   // -------- Cálculos y variables derivadas --------
   // Calcular productos agotados
   let outOfStock = 0;
-  product &&
-    product.forEach((element) => {
+  products &&
+    products.forEach((element) => {
       // Verifica que element sea válido y si el stock es 0
       if (element && element.stock === 0) {
         outOfStock += 1;
@@ -52,8 +57,8 @@ function Dashboard() {
 
   // total de ingresos
   let totalAmount = 0;
-  order &&
-    order.forEach((item) => {
+  orders &&
+    orders.forEach((item) => {
       // Verifica que item sea válido y suma el total de la orden
       if (item) {
         totalAmount += item.totalPrice;
@@ -62,11 +67,41 @@ function Dashboard() {
 
   // Generamos las opciones usando las funciones importadas
   const lineOptions = getLineOptions(totalAmount);
-  const doughnutOptions = product
-    ? getDoughnutOptions(product, outOfStock)
+  const doughnutOptions = products
+    ? getDoughnutOptions(products, outOfStock)
     : {}; // Si product es válido, se generan las opciones
 
   // -------- Efectos y manejadores --------
+  //Verificar autenticación y rol de administrador
+  useEffect(() => {
+    // Verifica si el usuario está autenticado y tiene rol de administrador
+    if (!isAuthenticated) {
+      toast.error("Por favor, inicia sesión primero");
+      navigate("/login");
+      return;
+    }
+
+    // Verifica si el token existe
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Sesión expirada, por favor inicia sesión nuevamente");
+      navigate("/login");
+      return;
+    }
+
+    // Verifica si el usuario tiene permisos de administrador
+    if (userData.role !== "admin") {
+      toast.error("Acceso denegado: Se requieren permisos de administrador");
+      navigate("/");
+      return;
+    }
+
+    // Si todo está bien, entonces carga los datos
+    dispatch(getAllOrders());
+    dispatch(getUsers());
+    dispatch(getProducts());
+  }, [dispatch, isAuthenticated, userData, navigate]);
+
   // Efecto para cargar datos y manejar errores
   useEffect(() => {
     if (error) {
@@ -82,9 +117,9 @@ function Dashboard() {
       dispatch(clearErrors());
     }
 
-    dispatch(getAllOrders());
-    dispatch(getUsers());
-    dispatch(getProducts());
+    // dispatch(getAllOrders());
+    // dispatch(getUsers());
+    // dispatch(getProducts());
   }, [dispatch, error, ordersError, usersError]);
 
   // togle handler =>
@@ -138,7 +173,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {product && product.length}
+                      {products && products.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>
@@ -155,7 +190,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {order && order.length}
+                      {orders && orders.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>
@@ -172,7 +207,7 @@ function Dashboard() {
                   </DashboardStyles.HeaderContent>
                   <DashboardStyles.TextContainer>
                     <DashboardStyles.NumberText variant="body2">
-                      {user && user.length}
+                      {users && users.length}
                     </DashboardStyles.NumberText>
                   </DashboardStyles.TextContainer>
                 </DashboardStyles.CardContainer>
