@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
   const nameTruncated = product.name.split(" ").slice(0, 3).join(" ") + "...";
 
   const addTocartHandler = (id, qty) => {
-    dispatch(addToCart(id, qty));
+    dispatch(addToCart({ id, quantity: qty }));
   };
 
   return (

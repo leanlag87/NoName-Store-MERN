@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../config"; // Importamos la instancia de axios
+import axios from "../../config"; //instancia de axios
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 //import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
-import { clearTokens } from "../../utils/auth";
+import { clearToken } from "../../utils/auth";
 
 const initialState = {
   user: null,
@@ -14,7 +14,7 @@ const initialState = {
   success: false, // Flag para indicar éxito en operaciones
   isUpdated: false, // Flag para indicar si el perfil se actualizó
   isDeleted: false, // Flag para indicar si el usuario fue eliminado
-  authInitialized: false, // Agrega esto, y asegúrate de establecerlo a true cuando se cargue el usuario por primera vez (ya sea al inicio de la app o después de iniciar sesión)
+  authInitialized: false, // Flag para indicar si la autenticación está inicializada
 };
 
 const userSlice = createSlice({
@@ -291,7 +291,7 @@ export const logoutUser = createAsyncThunk(
       return true;
     } catch (error) {
       localStorage.removeItem("token");
-      clearTokens(); // Elimina los tokens del localStorage
+      clearToken(); // Elimina los tokens del localStorage
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -360,11 +360,12 @@ export const updateUser = createAsyncThunk(
       // const { user } = getState().user;
       // const config = getMultipartConfig(user.token);
       const { data } = await axios.put(
-        `${API_ENDPOINTS.USER}/profile/update`,
+        `${API_ENDPOINTS.USER.PROFILE}/update`,
         userData
         //config
       );
-      return data.user;
+      // return data.user;
+      return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }

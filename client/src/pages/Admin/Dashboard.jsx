@@ -116,10 +116,6 @@ function Dashboard() {
       toast.error(ordersError);
       dispatch(clearErrors());
     }
-
-    // dispatch(getAllOrders());
-    // dispatch(getUsers());
-    // dispatch(getProducts());
   }, [dispatch, error, ordersError, usersError]);
 
   // togle handler =>

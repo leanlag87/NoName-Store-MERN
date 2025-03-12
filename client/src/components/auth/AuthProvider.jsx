@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loadUser } from "../../store/reducers/userSlice";
-import { clearTokens } from "../../utils/auth";
+import { clearToken } from "../../utils/auth";
 import { showToast } from "../../utils/showToast";
 import Loader from "../ui/Loader/Loader";
 
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
           ) {
             showToast.error(error);
           }
-          clearTokens();
+          clearToken();
         }
       }
       setIsLoading(false);

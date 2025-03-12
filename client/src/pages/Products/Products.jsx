@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./Styles/products.css";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { clearErrors, getProducts } from "../../store/reducers/productSlice";
+import "./Styles/products.css";
 import MetaData from "../../components/ui/MetaData/MetaData";
 import Loader from "../../components/ui/Loader/Loader";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
-import { clearErrors, getProducts } from "../../store/reducers/productSlice";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "react-js-pagination";
 import Slider from "@mui/material/Slider";
@@ -62,9 +62,9 @@ function Products() {
 
   const [selectedRating, setSelectedRating] = useState("all");
 
-  const handleRatingChange = (event) => {
-    setRatings(event.target.value);
-    setSelectedRating(event.target.value);
+  const handleRatingChange = (e) => {
+    setRatings(e.target.value);
+    setSelectedRating(e.target.value);
     //Activar filtrado con el valor de calificación seleccionado o realizar cualquier otra acción
   };
 

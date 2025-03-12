@@ -2,7 +2,7 @@
 // y los interceptores para añadir el token JWT a las peticiones y manejar el refresh token.
 
 import axios from "axios";
-//import { clearTokens, refreshAccessToken } from "./utils/auth";
+import { setupAxiosInterceptors } from "./utils/auth";
 
 // Configuración base
 const instance = axios.create({
@@ -14,16 +14,11 @@ const instance = axios.create({
 });
 
 // Interceptor para token
-// instance.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("token");
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// }, Promise.reject);
-
-// Interceptor para token
 instance.interceptors.request.use((config) => {
+  // Asegurarse de que header existe
+  config.headers = config.headers || {};
+
+  // Añadir token JWT a las peticiones
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -38,28 +33,48 @@ instance.interceptors.request.use((config) => {
   return config;
 }, Promise.reject);
 
-//Interceptor para errores (un solo interceptor de respuesta)
+// Configurar interceptor para manejar errores de autenticación
+setupAxiosInterceptors(instance);
+
+// interceptor adicional para logging
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Solo mostrar logs si NO es un error 401
+    // No mostrar logs si es un 401 que ya está siendo manejado por el interceptor de refresh
     if (error.response?.status !== 401) {
       console.error("Error en la petición:", {
         url: error.config?.url,
         method: error.config?.method,
         status: error.response?.status,
         data: error.response?.data,
-        headers: error.response?.headers,
       });
-
-      // Debug de la respuesta del servidor
-      if (error.response?.data) {
-        console.log("Respuesta del servidor:", error.response.data);
-      }
     }
     return Promise.reject(error);
   }
 );
+
+// //Interceptor para errores (un solo interceptor de respuesta)
+// instance.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     // Solo mostrar logs si NO es un error 401
+//     if (error.response?.status !== 401) {
+//       console.error("Error en la petición:", {
+//         url: error.config?.url,
+//         method: error.config?.method,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//         headers: error.response?.headers,
+//       });
+
+//       // Debug de la respuesta del servidor
+//       if (error.response?.data) {
+//         console.log("Respuesta del servidor:", error.response.data);
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 // instance.interceptors.response.use(
 //   (response) => response,

@@ -6,7 +6,7 @@ export const API_ENDPOINTS = {
   },
   CART: {
     BASE: "/cart",
-    ADD: "/cart/add",
+    ADD: "/cart",
     ITEM: "/cart/item",
     SHIPPING: "/cart/shipping",
   },

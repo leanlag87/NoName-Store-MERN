@@ -13,7 +13,10 @@ const authUser = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1]; // Extraer el token
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Verificar el token con la clave secreta
+      //const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Verificar el token con la clave secreta
+      const decoded = jwt.verify(token, process.env.JWT_PUBLIC_KEY, {
+        algorithms: ["RS256"],
+      }); // Verificar el token con la clave publica
 
       if (!decoded || !decoded.user_id) {
         return res.status(401).json({

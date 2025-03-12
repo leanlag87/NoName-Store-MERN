@@ -159,14 +159,32 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ id, quantity }, { rejectWithValue }) => {
     try {
+      // Verificar si el token existe en localStorage
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return rejectWithValue(
+          "Debes iniciar sesión para agregar productos al carrito"
+        );
+      }
+
+      // // Configurar cabeceras explícitamente
+      // const config = {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // };
+
       // const { user } = getState().user;
       // const config = getAuthConfig(user.token);
       const { data } = await axios.post(
-        API_ENDPOINTS.CART.ADD,
-        { id, quantity }
+        API_ENDPOINTS.CART.BASE,
+        { productId: id, quantity } //Como esta en el controlador
+        //{ id, quantity }
         //config
       );
-      return data.cart;
+      //return data.cart;
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error al agregar al carrito"
