@@ -7,7 +7,7 @@ export const API_ENDPOINTS = {
   CART: {
     BASE: "/cart",
     ADD: "/cart",
-    ITEM: "/cart/item",
+    ITEM: "/cart",
     SHIPPING: "/cart/shipping",
   },
   ORDERS: {

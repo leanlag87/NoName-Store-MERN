@@ -23,8 +23,6 @@ const addToCart = async (req, res) => {
         .json({ success: false, message: "Producto no encontrado" });
     }
 
-    //let cart = await Cart.findOne({ user: userId });
-
     const cart = await Cart.findOne({ user: userId }).populate({
       path: "cartItems.product",
       select: "name price images Stock",
@@ -38,19 +36,30 @@ const addToCart = async (req, res) => {
       });
     }
 
-    //Verificar si el producto ya existe en el carrito.
-    const isProductInCart = cart.cartItems.some(
-      (item) => item.product.toString() === productId.toString()
-    );
+    //Verificar si el producto ya existe en el carrito
+    const isProductInCart = cart.cartItems.some((item) => {
+      // Manejar tanto si item.product es un objeto o un string
+      const itemProductId =
+        typeof item.product === "object"
+          ? item.product._id.toString()
+          : item.product.toString();
+      return itemProductId === productId.toString();
+    });
 
     if (isProductInCart) {
       //Si existe, actualizar la cantidad.
+      cart.cartItems = cart.cartItems.map((item) => {
+        // Manejar tanto si item.product es un objeto o un string
+        const itemProductId =
+          typeof item.product === "object"
+            ? item.product._id.toString()
+            : item.product.toString();
 
-      cart.cartItems = cart.cartItems.map((item) =>
-        item.product.toString() === productId.toString()
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      );
+        if (itemProductId === productId.toString()) {
+          return { ...item, quantity: quantity };
+        }
+        return item;
+      });
     } else {
       // Agregar el nuevo producto al carrito.
       cart.cartItems.push({
@@ -85,7 +94,6 @@ const getCart = async (req, res) => {
 
     const cart = await Cart.findOne({ user: userId }).populate({
       //Populate para obtener los datos del producto.
-
       path: "cartItems.product",
       select: "name price images Stock",
     });
@@ -124,10 +132,13 @@ const removeFromCart = async (req, res) => {
         .json({ success: false, message: "Carrito no encontrado o vacio" });
     }
 
-    // Eliminar el producto del carrito
-    const updatedCartItems = cart.cartItems.filter(
-      (item) => item.product.toString() !== productId
-    );
+    const updatedCartItems = cart.cartItems.filter((item) => {
+      const itemProductId =
+        typeof item.product === "object"
+          ? item.product._id.toString()
+          : item.product.toString();
+      return itemProductId !== productId.toString();
+    });
 
     //Si no hay mas productos en el carrito eliminamos el carrito
     if (updatedCartItems.length === 0) {
@@ -139,10 +150,17 @@ const removeFromCart = async (req, res) => {
     } else {
       cart.cartItems = updatedCartItems;
       await cart.save();
+
+      // Hacer un populate antes de enviar la respuesta
+      const populatedCart = await Cart.findOne({ user: userId }).populate({
+        path: "cartItems.product",
+        select: "name price images Stock",
+      });
+
       return res.status(200).json({
         success: true,
         message: "Producto eliminado del carrito",
-        cart,
+        cart: populatedCart,
       });
     }
   } catch (error) {

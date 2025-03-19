@@ -12,13 +12,17 @@ import { Typography } from "@mui/material";
 function CartItem({
   deleteCartItems,
   item,
+  quantity, // Recibir la cantidad como props
   decreaseQuantity,
   increaseQuantity,
   length,
+  id,
 }) {
   /// calcular el precio final
-  let finalPrice = generateDiscountedPrice(item.price);
-  let discountedPrice = item.price - finalPrice;
+  //let finalPrice = generateDiscountedPrice(item.price);
+  let finalPrice = generateDiscountedPrice(item.product.price);
+  //let discountedPrice = item.price - finalPrice;
+  let discountedPrice = item.product.price - finalPrice;
   discountedPrice = displayMoney(discountedPrice);
   let total = finalPrice * item.quantity;
   total = displayMoney(total);
@@ -36,7 +40,8 @@ function CartItem({
 
             <CartItemStyles.CartDeleteIcon
               aria-label="delete"
-              onClick={() => deleteCartItems(item.productId)}
+              //onClick={() => deleteCartItems(item.product._id)}
+              onClick={() => deleteCartItems(id)} // Usar id pasado como prop
             >
               <DeleteIcon />
             </CartItemStyles.CartDeleteIcon>
@@ -68,7 +73,10 @@ function CartItem({
             </Typography>
             <div className="additem">
               <CartItemStyles.QuantityButton
-                onClick={() => decreaseQuantity(item.productId, item.quantity)}
+                // onClick={() =>
+                //   decreaseQuantity(item.product._id, item.quantity)
+                // }
+                onClick={() => decreaseQuantity(id, quantity)} // id y quantity como props
                 className="additem_decrease"
               >
                 <RemoveIcon fontSize="small" />
@@ -76,13 +84,21 @@ function CartItem({
               <CartItemStyles.QuantityInput
                 readOnly
                 type="number"
-                value={item.quantity}
+                // value={item.quantity}
+                value={quantity} // Usar la prop quantity
                 className="input"
               />
               <CartItemStyles.QuantityButton
+                // onClick={() =>
+                //   increaseQuantity(
+                //     item.product._id,
+                //     item.quantity,
+                //     item.product.Stock
+                //   )
+                // }
                 onClick={() =>
-                  increaseQuantity(item.productId, item.quantity, item.stock)
-                }
+                  increaseQuantity(id, quantity, item.product.Stock)
+                } //id y quantity como props
                 className="additem_increase"
               >
                 <AddIcon fontSize="small" />

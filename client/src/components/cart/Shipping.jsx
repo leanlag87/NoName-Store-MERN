@@ -27,58 +27,58 @@ const Shipping = () => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isPhoneNoValid, setIsPhoneNoValid] = useState(true);
 
-  const handleAddressChange = (event) => {
-    setAddress(event.target.value);
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
   };
 
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
   };
 
-  const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value);
   };
 
-  const handleCityChange = (event) => {
-    setCity(event.target.value);
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
   };
 
-  const handlePincodeChange = (event) => {
-    setPinCode(event.target.value);
+  const handlePincodeChange = (e) => {
+    setPinCode(e.target.value);
   };
 
-  const handleStateChange = (event) => {
-    setState(event.target.value);
+  const handleStateChange = (e) => {
+    setState(e.target.value);
   };
 
   const handleCountryChange = (value) => {
     setCountry(value.label);
   };
 
-  const handlePhoneChange = (event) => {
-    const newPhoneNo = event.target.value;
+  const handlePhoneChange = (e) => {
+    const newPhoneNo = e.target.value;
     setPhone(newPhoneNo);
     setIsPhoneNoValid(newPhoneNo !== "" && newPhoneNo.length === 10);
   };
 
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
     setEmail(newEmail);
     setIsValidEmail(
       newEmail === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)
     );
   };
 
-  const handleSaveAddressChange = (event) => {
-    setSaveAddress(event.target.checked);
+  const handleSaveAddressChange = (e) => {
+    setSaveAddress(e.target.checked);
   };
 
-  const handleSameBillingDeliveryChange = (event) => {
-    setSameBillingDelivery(event.target.checked);
+  const handleSameBillingDeliveryChange = (e) => {
+    setSameBillingDelivery(e.target.checked);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     if (
       email === "" ||

@@ -35,7 +35,13 @@ const cartSlice = createSlice({
         state.success = true;
         if (action.payload && action.payload.cart) {
           if (Array.isArray(action.payload.cart.cartItems)) {
-            state.cartItems = action.payload.cart.cartItems;
+            //state.cartItems = action.payload.cart.cartItems;
+            // Crea una nueva copia del array cartItems
+            console.log(
+              "Datos recibidos del servidor:",
+              JSON.stringify(action.payload.cart.cartItems, null, 2)
+            );
+            state.cartItems = [...action.payload.cart.cartItems];
           } else {
             console.error(
               "Error: Datos de carrito inválidos recibidos",
@@ -62,7 +68,8 @@ const cartSlice = createSlice({
         state.loading = false;
         if (action.payload && action.payload.cart) {
           if (Array.isArray(action.payload.cart.cartItems)) {
-            state.cartItems = action.payload.cart.cartItems;
+            //state.cartItems = action.payload.cart.cartItems;
+            state.cartItems = [...action.payload.cart.cartItems];
           } else {
             console.error(
               "Error: Datos de carrito inválidos recibidos",
@@ -88,8 +95,13 @@ const cartSlice = createSlice({
       .addCase(removeItemFromCart.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        if (action.payload && Array.isArray(action.payload.cartItems)) {
-          state.cartItems = action.payload.cartItems;
+        if (
+          action.payload &&
+          action.payload.cart &&
+          Array.isArray(action.payload.cart.cartItems)
+        ) {
+          //state.cartItems = action.payload.cart.cartItems;
+          state.cartItems = [...action.payload.cart.cartItems];
         } else {
           console.error(
             "Error: Datos de carrito inválidos recibidos",
@@ -110,7 +122,8 @@ const cartSlice = createSlice({
         state.success = true;
         if (action.payload && action.payload.cart) {
           if (Array.isArray(action.payload.cart.cartItems)) {
-            state.cartItems = action.payload.cart.cartItems;
+            //state.cartItems = action.payload.cart.cartItems;
+            state.cartItems = [...action.payload.cart.cartItems];
           } else {
             console.error(
               "Error: Datos de carrito inválidos recibidos",
@@ -159,6 +172,8 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ id, quantity }, { rejectWithValue }) => {
     try {
+      console.log("Añadiendo al carrito:", { id, quantity });
+
       // Verificar si el token existe en localStorage
       const token = localStorage.getItem("token");
 
@@ -168,22 +183,14 @@ export const addToCart = createAsyncThunk(
         );
       }
 
-      // // Configurar cabeceras explícitamente
-      // const config = {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // };
+      // Asegurarse que el ID sea una cadena válida
+      const productId = typeof id === "string" ? id : String(id);
 
-      // const { user } = getState().user;
-      // const config = getAuthConfig(user.token);
       const { data } = await axios.post(
-        API_ENDPOINTS.CART.BASE,
-        { productId: id, quantity } //Como esta en el controlador
-        //{ id, quantity }
-        //config
+        API_ENDPOINTS.CART.ADD,
+        //{ productId: id, quantity } //Como esta en el controlador
+        { productId, quantity }
       );
-      //return data.cart;
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -198,10 +205,8 @@ export const getCart = createAsyncThunk(
   "cart/getCart",
   async (_, { rejectWithValue }) => {
     try {
-      // const { user } = getState().user;
-      // const config = getAuthConfig(user.token);
       const { data } = await axios.get(API_ENDPOINTS.CART.BASE);
-      return data.cart;
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error al obtener el carrito"
@@ -215,13 +220,10 @@ export const removeItemFromCart = createAsyncThunk(
   "cart/removeItemFromCart",
   async (productId, { rejectWithValue }) => {
     try {
-      // const { user } = getState().user;
-      // const config = getAuthConfig(user.token);
       const { data } = await axios.delete(
         `${API_ENDPOINTS.CART.ITEM}/${productId}`
-        //config
       );
-      return data.cart;
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error al eliminar del carrito"
@@ -235,14 +237,8 @@ export const updateCart = createAsyncThunk(
   "cart/updateCart",
   async (cartItems, { rejectWithValue }) => {
     try {
-      // const { user } = getState().user;
-      // const config = getAuthConfig(user.token);
-      const { data } = await axios.put(
-        API_ENDPOINTS.CART.BASE,
-        { cartItems }
-        //config
-      );
-      return data.cart;
+      const { data } = await axios.put(API_ENDPOINTS.CART.BASE, { cartItems });
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error al actualizar el carrito"
@@ -256,12 +252,9 @@ export const saveShippingInfo = createAsyncThunk(
   "cart/saveShippingInfo",
   async (shippingInfo, { rejectWithValue }) => {
     try {
-      // const { user } = getState().user;
-      // const config = getAuthConfig(user.token);
       const { data } = await axios.put(
         API_ENDPOINTS.CART.SHIPPING,
         shippingInfo
-        //config
       );
       return data.success;
     } catch (error) {

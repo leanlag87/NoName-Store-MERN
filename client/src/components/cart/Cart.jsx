@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./Styles/cart.css";
+import {
+  addToCart,
+  getCart,
+  removeItemFromCart,
+} from "../../store/reducers/cartSlice";
 import TextField from "@mui/material/TextField";
-import { addToCart, removeItemFromCart } from "../../store/reducers/cartSlice";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
-import { Link } from "react-router-dom";
 import MetaData from "../ui/MetaData/MetaData";
 import CartItem from "./CartItem";
 import {
@@ -19,16 +22,41 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
+  const { isAutehnticated } = useSelector((state) => state.user);
   const [couponCode, setCouponCode] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isValid, setIsValid] = useState(true);
+
+  //Cargar el carrito cuando se monte el componente
+  useEffect(() => {
+    if (!isAutehnticated) {
+      dispatch(getCart());
+    }
+  }, [dispatch, isAutehnticated]);
+
+  // Añadir este log para depurar
+  useEffect(() => {
+    console.log("Estructura de cartItems:", JSON.stringify(cartItems, null, 2));
+  }, [cartItems]);
 
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
     if (stock <= quantity) {
       return;
     } else {
-      dispatch(addToCart(id, newQty));
+      console.log(
+        "Incrementando producto con ID:",
+        id,
+        "Nueva cantidad:",
+        newQty
+      );
+      // Verificar que id es válido antes de enviar
+      if (!id) {
+        console.error("Error: ID de producto inválido");
+        return;
+      }
+
+      dispatch(addToCart({ id, quantity: newQty }));
     }
   };
 
@@ -38,18 +66,32 @@ const Cart = () => {
       return;
     }
 
-    dispatch(addToCart(id, newQty));
+    console.log(
+      "Decrementando producto con ID:",
+      id,
+      "Nueva cantidad:",
+      newQty
+    );
+
+    // Verificar que id es válido antes de enviar
+    if (!id) {
+      console.error("Error: ID de producto inválido");
+      return;
+    }
+
+    dispatch(addToCart({ id, quantity: newQty }));
   };
 
   const handleApplyCoupon = () => {
     setIsValid(false);
   };
 
-  const handleFocus = (event) => {
-    setIsFocused(event.target.value !== "");
+  const handleFocus = (e) => {
+    setIsFocused(e.target.value !== "");
   };
 
   const deleteCartItems = (id) => {
+    console.log("Eliminando producto con ID:", id);
     dispatch(removeItemFromCart(id));
   };
 
@@ -62,6 +104,7 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
   let discountedPrice = generateDiscountedPrice(totalPrice);
   let totalDiscount = totalPrice - discountedPrice;
   let final = totalPrice - totalDiscount;
@@ -72,7 +115,7 @@ const Cart = () => {
   return (
     <>
       <div className="cartPage">
-        <MetaData title="Your Cart" />
+        <MetaData title="Tu carrito" />
         <div className="cart_HeaderTop">
           <div className="headerLeft">
             <Typography variant="h5" component="h1" className="cartHeading">
@@ -117,20 +160,24 @@ const Cart = () => {
               <div className="cart_left_container">
                 {cartItems &&
                   cartItems.map((item) => (
-                    <Link
-                      to="#"
-                      style={{ textDecoration: "none", color: "none" }}
+                    <div
+                      key={item._id}
+                      style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <CartItem
-                        key={item.productId}
                         item={item}
+                        quantity={item.quantity}
                         deleteCartItems={deleteCartItems}
                         decreaseQuantity={decreaseQuantity}
                         increaseQuantity={increaseQuantity}
                         length={cartItems.length}
-                        id={item.productId}
+                        id={
+                          typeof item.product === "object"
+                            ? item.product._id
+                            : item.product
+                        }
                       />
-                    </Link>
+                    </div>
                   ))}
               </div>
 
@@ -174,7 +221,7 @@ const Cart = () => {
                             color: "#414141",
                           }}
                         >
-                          (Inclusivo de todos los impuestos)
+                          (Incluido todos los impuestos)
                         </p>
                       </div>
                       <p>

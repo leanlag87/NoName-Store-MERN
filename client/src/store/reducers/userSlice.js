@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; //instancia de axios
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
-//import { getAuthConfig, getMultipartConfig } from "../../utils/authHeaders";
 import { clearToken } from "../../utils/auth";
+import { getCart } from "./cartSlice";
 
 const initialState = {
   user: null,
@@ -231,7 +231,7 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async (userData, { rejectWithValue }) => {
+  async (userData, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.post(API_ENDPOINTS.AUTH.LOGIN, userData, {
         headers: { "Content-Type": "application/json" },
@@ -244,6 +244,9 @@ export const loginUser = createAsyncThunk(
 
       // Guardar token
       localStorage.setItem("token", data.access);
+
+      //Cargar el carrito despues del login
+      dispatch(getCart());
 
       return {
         access: data.access, // devuelve el token
