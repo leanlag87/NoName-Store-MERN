@@ -1,40 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+//import { clearErrors, createOrder } from "../../store/reducers/orderSlice";
+import { clearErrors } from "../../store/reducers/orderSlice";
+import instance from "../../config"; //Instancia configurada de axios
+import { API_ENDPOINTS } from "../../config/apiEndpoints";
 import MetaData from "../ui/MetaData/MetaData";
 import { toast } from "react-toastify";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import OrderDetailsSection from "./OrderDetails";
-import DummyCard from "./DummyCard";
-import { clearErrors, createOrder } from "../../store/reducers/orderSlice";
 import CheckoutSteps from "./CheckoutSteps";
-import {
-  initMercadoPago,
-  CardNumber,
-  ExpirationDate,
-  SecurityCode,
-  createCardToken,
-} from "@mercadopago/sdk-react";
-import "./Styles/cart.css";
-import { Typography, TextField, Grid, Link } from "@mui/material";
-import { CardMembership, Payment, Lock } from "@mui/icons-material";
+import DummyCard from "./DummyCard";
+import { Typography, TextField, Link } from "@mui/material";
 import {
   displayMoney,
   generateDiscountedPrice,
 } from "../../utils/DisplayMoney";
+import "./Styles/cart.css";
 import * as PaymentComponentStyles from "./Styles/PaymentComponentStyles";
 
 const PaymentComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
-  const user = JSON.parse(sessionStorage.getItem("user"));
-  const { error } = useSelector((state) => state.newOrder);
+  const { user } = useSelector((state) => state.user);
+  const { error } = useSelector((state) => state.order);
   const [isFocused, setIsFocused] = useState(false);
-  const [nameOnCard, setNameOnCard] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [showDummyCard, setShowDummyCard] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const subTotal = cartItems.reduce((acc, currItem) => {
     return acc + currItem.quantity * currItem.price;
@@ -42,12 +36,7 @@ const PaymentComponent = () => {
 
   const totalFinalPrice = subTotal;
 
-  const handleNameOnCardChange = (e) => {
-    setNameOnCard(e.target.value);
-  };
-
   const handleApplyCoupon = () => {
-    // handle apply coupon logic
     setIsValid(false);
   };
 
@@ -67,62 +56,87 @@ const PaymentComponent = () => {
     shippingInfo.state
   } , ${shippingInfo.pinCode} , ${shippingInfo.country || "Argentina"}`;
 
+  const DEFAULT_IMAGE = "https://via.placeholder.com/150?text=No+Image";
+
   const order = {
     shippingInfo,
-    orderItems: cartItems,
+    orderItems: cartItems.map((item) => {
+      // Intentar obtener una imagen válida de múltiples fuentes
+      let imageUrl = "";
+
+      if (Array.isArray(item.image) && item.image.length > 0) {
+        imageUrl = item.image[0];
+      } else if (typeof item.image === "string" && item.image) {
+        imageUrl = item.image;
+      } else if (
+        item.product &&
+        Array.isArray(item.product.images) &&
+        item.product.images.length > 0
+      ) {
+        imageUrl = item.product.images[0];
+      } else {
+        imageUrl = DEFAULT_IMAGE;
+      }
+
+      // Para depuración
+      console.log("Original product:", item.product);
+      const productId =
+        typeof item.product === "object" ? item.product._id : item.product;
+      console.log("Extracted product ID:", productId);
+
+      return {
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: imageUrl,
+        product: productId,
+      };
+    }),
+
     itemsPrice: subTotal,
     shippingPrice: 0,
     totalPrice: totalFinalPrice,
+    // Info de pago temporal que se actualizará después del pago real
+    paymentInfo: {
+      id: "pending_" + Date.now(), // ID temporal único
+      status: "pending", // Estado inicial
+      paymentMethod: "mercadopago", // Método de pago que estamos usando
+    },
   };
 
-  const paymentData = {
-    amount: Math.round(totalFinalPrice * 100),
-  };
-
-  useEffect(() => {
-    initMercadoPago({ publicKey: process.env.REACT_APP_MP_PUBLIC_KEY });
-  }, []);
-
-  async function paymentSubmitHandler(e) {
-    e.preventDefault();
-    if (nameOnCard === "") {
-      toast.error("Por favor, introduzca el nombre en la tarjeta");
-      return;
-    }
-
+  // función para el flujo de CheckoutPro
+  const handleCheckoutPro = async () => {
     try {
-      const cardToken = await createCardToken({
-        cardholderName: nameOnCard,
-        identificationType: "DNI", // Tipo de documento
-        identificationNumber: "12345678", // Número de documento
-      });
+      setLoading(true);
+      console.log("Enviando orden:", JSON.stringify(order, null, 2));
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        "/api/v1/payment/process",
-        { token: cardToken.id, ...paymentData },
-        config
+      // 1. Crear la orden
+      const orderResponse = await instance.post(
+        API_ENDPOINTS.ORDERS.NEW,
+        order
       );
 
-      if (data.status === "approved") {
-        order.paymentInfo = {
-          id: data.id,
-          status: data.status,
-        };
-        toast.success(data.status);
-        dispatch(createOrder(order));
-        navigate("/success");
-      } else {
-        toast.error("Hay algún problema al procesar el pago.");
+      if (!orderResponse.data.success) {
+        toast.error("Error al crear la orden");
+        setLoading(false);
+        return;
       }
+
+      const orderId = orderResponse.data.order._id;
+
+      // 2. Obtener la preferencia de pago
+      const { data } = await instance.post(API_ENDPOINTS.PAYMENT.BASE, {
+        orderId,
+      });
+
+      // 3. Redirigir al usuario a la URL de pago de MercadoPago
+      window.location.href = data.init_point;
     } catch (error) {
-      toast.error(error.message);
+      setLoading(false);
+      toast.error(error.response?.data?.message || error.message);
+      console.error("Error en el proceso de checkout:", error);
     }
-  }
+  };
 
   useEffect(() => {
     if (error) {
@@ -147,7 +161,7 @@ const PaymentComponent = () => {
     <>
       <PaymentComponentStyles.PaymentPage>
         <CheckoutSteps activeStep={2} />
-        <MetaData title={"Payment"} />
+        <MetaData title={"Pago"} />
         <PaymentComponentStyles.PaymentPageContainer>
           <PaymentComponentStyles.PaymentBox>
             <PaymentComponentStyles.PaymentHeading variant="h5" component="h1">
@@ -164,100 +178,34 @@ const PaymentComponent = () => {
 
             <PaymentComponentStyles.CardContainer>
               <PaymentComponentStyles.SubHeading variant="h6">
-                Tarjeta de crédito{" "}
+                Pago seguro con MercadoPago{" "}
                 <PaymentComponentStyles.StyledCreditCardIcon fontSize="medium" />
               </PaymentComponentStyles.SubHeading>
-              <PaymentComponentStyles.CardDetails container spacing={2}>
-                <Grid item xs={12}>
-                  <PaymentComponentStyles.LabelText variant="subtitle2">
-                    Número de tarjeta
-                  </PaymentComponentStyles.LabelText>
-                  <PaymentComponentStyles.CardNumberInput>
-                    <CardMembership
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: "1rem",
-                        transform: "translateY(-50%)",
-                        color: "#00000080",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <CardNumber
-                      id="form-checkout__cardNumber"
-                      placeholder="Card number"
-                      as={PaymentComponentStyles.PaymentInput}
-                    />
-                  </PaymentComponentStyles.CardNumberInput>
-                </Grid>
-                <Grid item xs={12} container justifyContent="space-between">
-                  <PaymentComponentStyles.Icons item>
-                    <PaymentComponentStyles.StyledMasterCard />
-                    <PaymentComponentStyles.StyledVisa />
-                    <PaymentComponentStyles.StyledPaytm />
-                  </PaymentComponentStyles.Icons>
-                </Grid>
-                <Grid item xs={6}>
-                  <PaymentComponentStyles.LabelText variant="subtitle2">
-                    FECHA DE EXPIRACION
-                  </PaymentComponentStyles.LabelText>
-                  <PaymentComponentStyles.ExpiryInput>
-                    <Payment
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: "1rem",
-                        transform: "translateY(-50%)",
-                        color: "#00000080",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <ExpirationDate
-                      id="form-checkout__expirationDate"
-                      placeholder="MM/YY"
-                      as={PaymentComponentStyles.PaymentInput2}
-                    />
-                  </PaymentComponentStyles.ExpiryInput>
-                </Grid>
-                <Grid item xs={6}>
-                  <PaymentComponentStyles.LabelText variant="subtitle2">
-                    CVV/CVV
-                  </PaymentComponentStyles.LabelText>
-                  <PaymentComponentStyles.CvvInput>
-                    <Lock
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: "1rem",
-                        transform: "translateY(-50%)",
-                        color: "#00000080",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <SecurityCode
-                      id="form-checkout__securityCode"
-                      placeholder="Security code"
-                      as={PaymentComponentStyles.PaymentInput2}
-                    />
-                  </PaymentComponentStyles.CvvInput>
-                </Grid>
-                <Grid item xs={12}>
-                  <PaymentComponentStyles.LabelText variant="subtitle2">
-                    NOMBRE EN LA TARJETA
-                  </PaymentComponentStyles.LabelText>
-                  <PaymentComponentStyles.OutlinedInput
-                    id="form-checkout__cardholderName"
-                    placeholder="John Doe"
-                    variant="outlined"
-                    fullWidth
-                    value={nameOnCard}
-                    required
-                    onChange={handleNameOnCardChange}
-                  />
-                </Grid>
-              </PaymentComponentStyles.CardDetails>
+              {/* Botón para iniciar el flujo de CheckoutPro */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  margin: "20px 0",
+                }}
+              >
+                <img
+                  src="../../assets/MP.jpg"
+                  alt="MercadoPago"
+                  style={{ width: "200px", marginBottom: "20px" }}
+                />
+                <PaymentComponentStyles.PlaceOrderBtn
+                  variant="contained"
+                  fullWidth
+                  disabled={loading}
+                  onClick={handleCheckoutPro}
+                >
+                  {loading ? "Procesando..." : "Pagar con MercadoPago"}
+                </PaymentComponentStyles.PlaceOrderBtn>
+              </div>
             </PaymentComponentStyles.CardContainer>
-
+            {/*DummyCard */}
             <PaymentComponentStyles.CardSelection>
               <PaymentComponentStyles.StyledRadio
                 value="dummyCard"
@@ -271,20 +219,11 @@ const PaymentComponent = () => {
               {showDummyCard && <DummyCard onClose={handleCloseDummyCard} />}
             </PaymentComponentStyles.CardSelection>
             <PaymentComponentStyles.TermsAndConditionsText variant="body2">
-              Al hacer clic en "Realizar pedido", usted acepta nuestros{" "}
+              Al hacer clic en "PROCEDER AL PAGO", usted acepta nuestros{" "}
               <PaymentComponentStyles.PrivacyText href="#">
                 Terminos & Condiciones
               </PaymentComponentStyles.PrivacyText>
             </PaymentComponentStyles.TermsAndConditionsText>
-            <PaymentComponentStyles.PlaceOrderBtn
-              variant="contained"
-              fullWidth
-              // disabled={isDisable}
-              style={{ marginTop: "3rem" }}
-              onClick={paymentSubmitHandler}
-            >
-              Realizar pedido
-            </PaymentComponentStyles.PlaceOrderBtn>
           </PaymentComponentStyles.PaymentBox>
           <PaymentComponentStyles.PaymentAmount>
             <PaymentComponentStyles.OrderSummary>
@@ -340,7 +279,7 @@ const PaymentComponent = () => {
             <PaymentComponentStyles.CouponBoxWrapper>
               <PaymentComponentStyles.CouponBoxContent isFocused={isFocused}>
                 <TextField
-                  label="Enter coupon code"
+                  label="Ingrese el código de cupón"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
                   onFocus={handleFocus}
@@ -402,7 +341,8 @@ const PaymentComponent = () => {
                     variant="subtitle2"
                     style={{ fontSize: "16px", fontWeight: 400 }}
                   >
-                    {user.name && user.name}
+                    {user?.name ||
+                      `${shippingInfo.firstName} ${shippingInfo.lastName}`}
                   </Typography>
                   <Typography
                     variant="subtitle2"
@@ -434,7 +374,7 @@ const PaymentComponent = () => {
                 variant="subtitle2"
                 style={{ fontWeight: 400, fontSize: "16px" }}
               >
-                {user.email}
+                {user?.email || shippingInfo.email || ""}
               </Typography>
             </PaymentComponentStyles.ShippingDetails>
 
@@ -452,7 +392,8 @@ const PaymentComponent = () => {
                     variant="subtitle2"
                     style={{ fontSize: "16px", fontWeight: 400 }}
                   >
-                    {user.name}
+                    {user?.name ||
+                      `${shippingInfo.firstName} ${shippingInfo.lastName}`}
                   </Typography>
                   <Typography
                     variant="subtitle2"
@@ -484,7 +425,7 @@ const PaymentComponent = () => {
                 variant="subtitle2"
                 style={{ fontWeight: 400, fontSize: "16px" }}
               >
-                {user.email}
+                {user?.email || shippingInfo.email || ""}
               </Typography>
             </PaymentComponentStyles.ShippingDetails>
           </PaymentComponentStyles.PaymentAmount>

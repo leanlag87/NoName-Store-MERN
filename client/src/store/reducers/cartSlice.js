@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../config"; // Importamos la instancia de axios
-//import { getAuthConfig } from "../../utils/authHeaders";
 import { API_ENDPOINTS } from "../../config/apiEndpoints";
 
 //Carrito en el Frontend (usando el backend)
@@ -8,6 +7,19 @@ import { API_ENDPOINTS } from "../../config/apiEndpoints";
 //Estado inicial
 const initialState = {
   cartItems: [],
+  shippingInfo: {},
+  paymentInfo: {
+    id: "", // Identificador de la transacción de pago
+    status: "", // Estado del pago (completado, pendiente, fallido)
+    method: "", // Método de pago (tarjeta, MercadoPago, efectivo, etc.)
+  },
+  orderInfo: {
+    subtotal: 0, // Suma de precios de productos sin impuestos ni envío
+    shippingCost: 0, // Costo de envío calculado
+    tax: 0, // Impuestos aplicables
+    total: 0, // Monto total a pagar (subtotal + envío + impuestos)
+    orderStatus: "", // Estado del pedido (procesando, enviado, entregado, etc.
+  },
   loading: false,
   error: null,
   success: false, //para actualizar o eliminar productos del carrito
@@ -146,9 +158,12 @@ const cartSlice = createSlice({
       .addCase(saveShippingInfo.pending, (state) => {
         state.loading = true;
       })
-      .addCase(saveShippingInfo.fulfilled, (state) => {
+      .addCase(saveShippingInfo.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
+        if (action.payload && action.payload.shippingInfo) {
+          state.shippingInfo = action.payload.shippingInfo;
+        }
       })
       .addCase(saveShippingInfo.rejected, (state, action) => {
         state.loading = false;
@@ -252,11 +267,13 @@ export const saveShippingInfo = createAsyncThunk(
   "cart/saveShippingInfo",
   async (shippingInfo, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(
-        API_ENDPOINTS.CART.SHIPPING,
-        shippingInfo
-      );
-      return data.success;
+      // const { data } = await axios.put(
+      //   API_ENDPOINTS.CART.SHIPPING,
+      //   shippingInfo
+      // );
+      // return data.success;
+
+      return { success: true, shippingInfo };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error al guardar información de envío"

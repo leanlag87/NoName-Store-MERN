@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import "./Styles/shipping.css";
 import { useSelector, useDispatch } from "react-redux";
 import { saveShippingInfo } from "../../store/reducers/cartSlice";
+import { useNavigate } from "react-router-dom";
 import MetaData from "../ui/MetaData/MetaData";
 import CheckoutSteps from "./CheckoutSteps";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
+import "./Styles/shipping.css";
 import * as ShippingStyles from "./Styles/ShippingStyles";
 
 const Shipping = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { shippingInfo } = useSelector((state) => state.cart);
+  const { shippingInfo = {} } = useSelector((state) => state.cart); // Proporcionar un objeto vacío como valor predeterminado
+  //const { shippingInfo } = useSelector((state) => state.cart);
   const [address, setAddress] = useState(shippingInfo.address);
   const [firstName, setFirstName] = useState(shippingInfo.firstName);
   const [lastName, setLastName] = useState(shippingInfo.lastName);
@@ -113,13 +114,14 @@ const Shipping = () => {
         lastName,
       })
     );
-    navigate("/process/payment");
+    //navigate("/process/payment");
+    navigate("/payment");
   };
 
   return (
     <>
       <ShippingStyles.ShippingPage>
-        <MetaData title={"Shipping Info"} />
+        <MetaData title={"Información de Envío"} />
         <CheckoutSteps activeStep={1} />
 
         <ShippingStyles.ShippingPageContainer>
@@ -252,7 +254,7 @@ const Shipping = () => {
                       variant="contained"
                       color="primary"
                     >
-                      Continue
+                      Continuar
                     </ShippingStyles.SubmitButton>
                   </Grid>
                 </Grid>

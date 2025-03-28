@@ -64,7 +64,7 @@ export default function Login() {
 
     try {
       const result = await dispatch(loginUser({ email, password })).unwrap();
-      console.log("Resultado del login:", result);
+      //console.log("Resultado del login:", result);
 
       if (!result.access) {
         throw new Error("No se recibió el token de acceso");

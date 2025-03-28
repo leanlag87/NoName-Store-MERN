@@ -34,22 +34,22 @@ const Cart = () => {
     }
   }, [dispatch, isAutehnticated]);
 
-  // Añadir este log para depurar
-  useEffect(() => {
-    console.log("Estructura de cartItems:", JSON.stringify(cartItems, null, 2));
-  }, [cartItems]);
+  //log para depurar
+  // useEffect(() => {
+  //   console.log("Estructura de cartItems:", JSON.stringify(cartItems, null, 2));
+  // }, [cartItems]);
 
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
     if (stock <= quantity) {
       return;
     } else {
-      console.log(
-        "Incrementando producto con ID:",
-        id,
-        "Nueva cantidad:",
-        newQty
-      );
+      // console.log(
+      //   "Incrementando producto con ID:",
+      //   id,
+      //   "Nueva cantidad:",
+      //   newQty
+      // );
       // Verificar que id es válido antes de enviar
       if (!id) {
         console.error("Error: ID de producto inválido");
@@ -66,12 +66,12 @@ const Cart = () => {
       return;
     }
 
-    console.log(
-      "Decrementando producto con ID:",
-      id,
-      "Nueva cantidad:",
-      newQty
-    );
+    // console.log(
+    //   "Decrementando producto con ID:",
+    //   id,
+    //   "Nueva cantidad:",
+    //   newQty
+    // );
 
     // Verificar que id es válido antes de enviar
     if (!id) {
@@ -91,12 +91,22 @@ const Cart = () => {
   };
 
   const deleteCartItems = (id) => {
-    console.log("Eliminando producto con ID:", id);
+    //console.log("Eliminando producto con ID:", id);
     dispatch(removeItemFromCart(id));
   };
 
+  // const checkoutHandler = () => {
+  //   navigate("/login?redirect=/shipping");
+  // };
+
   const checkoutHandler = () => {
-    navigate("/login?redirect=/shipping");
+    if (isAutehnticated) {
+      // Si ya está autenticado, ir directamente a shipping
+      navigate("/shipping");
+    } else {
+      // Si no está autenticado, ir a login con parámetro de redirección
+      navigate("/login", { state: { from: "/shipping" } });
+    }
   };
 
   // calcular el precio total

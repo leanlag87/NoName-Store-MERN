@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const userCreatedAt = user ? formatCreatedAt(user) : "Fecha no disponible";
 
   //log para verificar el ciclo de vida
-  console.log("Estado del perfil:", { user, loading });
+  //console.log("Estado del perfil:", { user, loading });
 
   if (loading) {
     return <Loader />;
