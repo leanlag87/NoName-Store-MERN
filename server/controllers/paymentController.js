@@ -2,7 +2,6 @@
 // SDK de MercadoPago
 const { MercadoPagoConfig, Payment, Preference } = require("mercadopago");
 const Order = require("../models/orderModel");
-const { updateOrder } = require("./orderController");
 
 // Configuración del cliente de MercadoPago
 const client = new MercadoPagoConfig({
