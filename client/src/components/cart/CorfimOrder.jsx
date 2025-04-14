@@ -62,7 +62,7 @@ function ConfirmOrder() {
                 </div>
               </div>
 
-              {/* confirm cartItem  */}
+              {/* confirmar cartItem  */}
 
               <div className="confirmCartItems">
                 <Typography>Artículos de su carrito:</Typography>
@@ -85,7 +85,7 @@ function ConfirmOrder() {
               </div>
             </div>
 
-            {/* Order Summery right side */}
+            {/* Orden Resumen lado derecho */}
 
             <div>
               <div className="orderSummary">

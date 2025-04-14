@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import MetaData from "../ui/MetaData/MetaData";
 import Loader from "../ui/Loader/Loader";
-import { Typography } from "@mui/material"; // Cambiado a @mui/material
+import { Typography } from "@mui/material";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -46,7 +46,6 @@ function ResetPassword() {
     }
   }, [dispatch, error, success, navigate]);
 
-  // submit handler
   function resetPasswordSubmitHandler(e) {
     e.preventDefault();
 

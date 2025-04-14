@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-//import { clearErrors, createOrder } from "../../store/reducers/orderSlice";
 import { clearErrors } from "../../store/reducers/orderSlice";
 import instance from "../../config"; //Instancia configurada de axios
 import { API_ENDPOINTS } from "../../config/apiEndpoints";

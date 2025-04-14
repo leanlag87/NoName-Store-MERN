@@ -34,22 +34,11 @@ const Cart = () => {
     }
   }, [dispatch, isAutehnticated]);
 
-  //log para depurar
-  // useEffect(() => {
-  //   console.log("Estructura de cartItems:", JSON.stringify(cartItems, null, 2));
-  // }, [cartItems]);
-
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
     if (stock <= quantity) {
       return;
     } else {
-      // console.log(
-      //   "Incrementando producto con ID:",
-      //   id,
-      //   "Nueva cantidad:",
-      //   newQty
-      // );
       // Verificar que id es válido antes de enviar
       if (!id) {
         console.error("Error: ID de producto inválido");
@@ -65,14 +54,6 @@ const Cart = () => {
     if (1 >= quantity) {
       return;
     }
-
-    // console.log(
-    //   "Decrementando producto con ID:",
-    //   id,
-    //   "Nueva cantidad:",
-    //   newQty
-    // );
-
     // Verificar que id es válido antes de enviar
     if (!id) {
       console.error("Error: ID de producto inválido");
@@ -91,13 +72,8 @@ const Cart = () => {
   };
 
   const deleteCartItems = (id) => {
-    //console.log("Eliminando producto con ID:", id);
     dispatch(removeItemFromCart(id));
   };
-
-  // const checkoutHandler = () => {
-  //   navigate("/login?redirect=/shipping");
-  // };
 
   const checkoutHandler = () => {
     if (isAutehnticated) {
