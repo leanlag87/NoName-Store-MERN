@@ -78,10 +78,10 @@ const PaymentComponent = () => {
       }
 
       // Para depuración
-      console.log("Original product:", item.product);
+      //console.log("Original product:", item.product);
       const productId =
         typeof item.product === "object" ? item.product._id : item.product;
-      console.log("Extracted product ID:", productId);
+      //console.log("Extracted product ID:", productId);
 
       return {
         name: item.name,
