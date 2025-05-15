@@ -45,19 +45,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-// //obtener todos los productos
-// const getAllProducts = async (req, res) => {
-//   try {
-//     const products = await Product.find();
-//     res.status(200).json({ success: true, products });
-//   } catch (error) {
-//     console.error("Error al obtener productos:", error);
-//     res
-//       .status(500)
-//       .json({ success: false, message: "Error al obtener los productos" });
-//   }
-// };
-
+//obtener todos los productos
 const getAllProducts = async (req, res) => {
   try {
     // Extraer parámetros de la URL
