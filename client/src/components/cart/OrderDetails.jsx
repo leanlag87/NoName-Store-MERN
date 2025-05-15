@@ -1,7 +1,12 @@
 import React from "react";
 import * as OrderDetailsSectionStyles from "./Styles/OrderDetailsSectionStyles";
 
-const OrderDetailsSection = ({ item, totalDiscount, totalPrice }) => {
+const OrderDetailsSection = ({
+  item,
+  totalDiscount,
+  totalPrice,
+  paymentStatus,
+}) => {
   return (
     <OrderDetailsSectionStyles.RootPayment>
       <OrderDetailsSectionStyles.Image src={item.image} alt={item.name} />
@@ -30,7 +35,19 @@ const OrderDetailsSection = ({ item, totalDiscount, totalPrice }) => {
             <OrderDetailsSectionStyles.PaymentValue>
               Pago:
             </OrderDetailsSectionStyles.PaymentValue>{" "}
-            Pagado
+            {paymentStatus === "approved" ? (
+              <OrderDetailsSectionStyles.PaymentStatusSuccess>
+                Aprobado
+              </OrderDetailsSectionStyles.PaymentStatusSuccess>
+            ) : paymentStatus === "pending" ? (
+              <OrderDetailsSectionStyles.PaymentStatusPending>
+                Pendiente
+              </OrderDetailsSectionStyles.PaymentStatusPending>
+            ) : (
+              <OrderDetailsSectionStyles.PaymentStatusFailure>
+                Fallido
+              </OrderDetailsSectionStyles.PaymentStatusFailure>
+            )}
           </OrderDetailsSectionStyles.PaymentStatus>
         </div>
       </OrderDetailsSectionStyles.Details>

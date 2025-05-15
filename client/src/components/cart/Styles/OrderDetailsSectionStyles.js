@@ -64,3 +64,18 @@ export const PaymentValue = styled("span")({
   marginRight: "10px",
   color: "#00000080",
 });
+
+export const PaymentStatusSuccess = styled("span")({
+  color: "green",
+  fontWeight: 500,
+});
+
+export const PaymentStatusPending = styled("span")({
+  color: "orange",
+  fontWeight: 500,
+});
+
+export const PaymentStatusFailure = styled("span")({
+  color: "red",
+  fontWeight: 500,
+});

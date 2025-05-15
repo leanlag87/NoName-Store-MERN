@@ -27,6 +27,9 @@ const createPreference = async (req, res) => {
       return res.status(404).json({ error: "Orden no encontrada" });
     }
 
+    console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
+    console.log("NOTIFICATION_URL:", process.env.NOTIFICATION_URL);
+
     const preferenceBody = {
       items: order.orderItems.map((item) => ({
         title: item.name,

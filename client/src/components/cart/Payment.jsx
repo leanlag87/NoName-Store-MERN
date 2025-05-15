@@ -190,7 +190,7 @@ const PaymentComponent = () => {
                 }}
               >
                 <img
-                  src="../../assets/MP.jpg"
+                  src={require("../../assets/mercado-pago.jpg")}
                   alt="MercadoPago"
                   style={{ width: "200px", marginBottom: "20px" }}
                 />
@@ -324,6 +324,9 @@ const PaymentComponent = () => {
                       item={item}
                       totalDiscount={totalDiscount}
                       totalPrice={totalPrice}
+                      //paymentStatus={item.paymentInfo.status}
+                      // Aquí puedes pasar el ID del producto si es necesario
+                      productId={item.productId}
                     />
                   </Link>
                 ))}
