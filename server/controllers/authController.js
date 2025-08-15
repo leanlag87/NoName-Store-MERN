@@ -66,7 +66,6 @@ async function registerUser(req, res) {
       msg: "Usuario registrado correctamente. Por favor, inicie sesión.",
     });
   } catch (error) {
-    console.error("Error en registro:", error);
     res.status(500).send({
       success: false,
       msg: "Error al registrar usuario",
