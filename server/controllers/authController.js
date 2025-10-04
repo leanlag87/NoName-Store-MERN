@@ -41,7 +41,7 @@ async function registerUser(req, res) {
     // Crear usuario
     const user = new User({
       name,
-      lastName, // Nota: cambiado de lastname a lastName
+      lastName,
       email,
       password,
       role: "user",
