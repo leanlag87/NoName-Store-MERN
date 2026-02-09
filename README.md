@@ -1,6 +1,6 @@
 # 🛒 NoName-Store-MERN
 
-Una **tienda en línea completa (e-commerce)** desarrollada con la arquitectura **MERN Stack** (MongoDB, Express.js, React, Node.js). Esta aplicación web full-stack permite la gestión y venta de productos en línea con un panel de administración completo.
+**Tienda en línea (e-commerce)** desarrollada con la arquitectura **MERN Stack** (MongoDB, Express.js, React, Node.js). Esta aplicación web full-stack permite la gestión y venta de productos en línea con un panel de administración completo.
 
 ## 📋 Tabla de Contenidos
 
