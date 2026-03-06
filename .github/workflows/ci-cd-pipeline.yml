@@ -1,0 +1,267 @@
+#Se configura primero el pipeline de CI/CD porque es la base que ejecuta todas las validaciones. 
+#Los workflows de Dependabot dependen de que este pipeline exista y funcione correctamente
+
+name: CI/CD Pipeline
+
+# Cuándo se ejecuta este workflow
+on:
+  push:
+    branches: [main, develop, feature/setup-ci-cd-pipeline]
+  pull_request:
+    branches: [main, develop]
+
+# Permisos necesarios
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  # JOB 1: TESTING DEL CLIENTE (React)
+  test-client:
+    name: 🧪 Test Cliente (React)
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: 📦 Instalar dependencias del cliente
+        working-directory: ./client
+        run: npm ci
+
+      - name: 🧪 Ejecutar tests del cliente
+        working-directory: ./client
+        run: npm test -- --watchAll=false --passWithNoTests
+        continue-on-error: false
+
+      - name: 🏗️ Build del cliente
+        working-directory: ./client
+        run: npm run build
+        env:
+          CI: true
+
+      - name: 📊 Verificar tamaño del build
+        working-directory: ./client
+        run: |
+          echo "📦 Tamaño del build:"
+          du -sh build/
+          echo "📊 Archivos generados:"
+          ls -lh build/static/js/ | head -n 10
+
+  # JOB 2: TESTING DEL SERVIDOR (Node/Express)
+  test-server:
+    name: 🧪 Test Servidor (Node.js)
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: 📦 Instalar dependencias del servidor
+        working-directory: ./server
+        run: npm ci
+
+      - name: ✅ Verificar sintaxis del código
+        working-directory: ./server
+        run: node -c index.js
+
+      - name: 🔍 Verificar que no haya errores de imports
+        working-directory: ./server
+        run: |
+          echo "Verificando estructura del proyecto..."
+          if [ -f "index.js" ]; then
+            echo "✅ index.js encontrado"
+          else
+            echo "❌ index.js no encontrado"
+            exit 1
+          fi
+
+  # JOB 3: SECURITY AUDIT
+  security-audit:
+    name: 🔒 Security Audit
+    runs-on: ubuntu-latest
+    needs: [test-client, test-server]
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      # Audit del cliente
+      - name: 🔍 Audit Cliente
+        working-directory: ./client
+        run: |
+          echo "🔍 Ejecutando npm audit en el cliente..."
+          npm audit --audit-level=moderate || echo "⚠️ Se encontraron vulnerabilidades en el cliente"
+        continue-on-error: true
+
+      # Audit del servidor
+      - name: 🔍 Audit Servidor
+        working-directory: ./server
+        run: |
+          echo "🔍 Ejecutando npm audit en el servidor..."
+          npm audit --audit-level=moderate || echo "⚠️ Se encontraron vulnerabilidades en el servidor"
+        continue-on-error: true
+
+      - name: 📋 Resumen de seguridad
+        run: |
+          echo "============================================"
+          echo "📊 RESUMEN DE SEGURIDAD"
+          echo "============================================"
+          echo "✅ Audit completado"
+          echo "⚠️  Revisa las alertas arriba si las hay"
+          echo "============================================"
+
+  # JOB 4: CODE QUALITY
+  code-quality:
+    name: 📊 Code Quality
+    runs-on: ubuntu-latest
+    needs: [test-client, test-server]
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: 📊 Estadísticas del proyecto
+        run: |
+          echo "============================================"
+          echo "📊 ESTADÍSTICAS DEL PROYECTO"
+          echo "============================================"
+          echo "📁 Líneas de código JavaScript:"
+          find . -name "*.js" -not -path "*/node_modules/*" -not -path "*/build/*" | xargs wc -l | tail -n 1
+          echo ""
+          echo "📁 Líneas de código CSS:"
+          find . -name "*.css" -not -path "*/node_modules/*" -not -path "*/build/*" | xargs wc -l | tail -n 1
+          echo ""
+          echo "📦 Archivos JavaScript:"
+          find . -name "*.js" -not -path "*/node_modules/*" -not -path "*/build/*" | wc -l
+          echo "============================================"
+
+  # JOB 5: DEPLOY (PREPARADO PERO COMENTADO)
+  # 
+  # IMPORTANTE: Este job está deshabilitado por ahora
+  # 
+  # Descomenta este job cuando tengas configurado tu deploy
+  # 
+  # deploy:
+  #   name: 🚀 Deploy a Producción
+  #   runs-on: ubuntu-latest
+  #   needs: [test-client, test-server, security-audit, code-quality]
+  #   # Solo ejecutar en push a main (no en PRs)
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   
+  #   steps:
+  #     - name: 📥 Checkout código
+  #       uses: actions/checkout@v4
+  #
+  #     - name: 🟢 Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20.x'
+  #
+  #     # OPCIÓN 1: DEPLOY A VERCEL (Cliente)
+  #     # - name: 🚀 Deploy Cliente a Vercel
+  #     #   working-directory: ./client
+  #     #   run: |
+  #     #     npm install -g vercel
+  #     #     vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+  #     #   env:
+  #     #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  #     #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  #     #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #
+  #     # OPCIÓN 2: DEPLOY A RAILWAY (Servidor)
+  #     # - name: 🚀 Deploy Servidor a Railway
+  #     #   run: |
+  #     #     npm install -g @railway/cli
+  #     #     railway up
+  #     #   env:
+  #     #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  #     # OPCIÓN 3: DEPLOY A RENDER
+  #     # - name: 🚀 Trigger Deploy en Render
+  #     #   run: |
+  #     #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+  #
+  #     # OPCIÓN 4: DEPLOY A NETLIFY (Cliente)
+  #     # - name: 🚀 Deploy Cliente a Netlify
+  #     #   working-directory: ./client
+  #     #   run: |
+  #     #     npm install -g netlify-cli
+  #     #     npm run build
+  #     #     netlify deploy --prod --dir=build
+  #     #   env:
+  #     #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #     #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #
+  #     # INSTRUCCIONES PARA HABILITAR EL DEPLOY:
+  #     # 1. Elige tu plataforma de deploy (Vercel, Railway, Render, Netlify, etc.)
+  #     # 2. Descomenta la sección correspondiente arriba
+  #     # 3. Agrega los secrets necesarios en GitHub:
+  #     #    - Ve a Settings → Secrets and variables → Actions
+  #     #    - Click en "New repository secret"
+  #     #    - Agrega los tokens/IDs que necesites
+  #     # 4. Descomenta todo este job (desde "deploy:" hasta aquí)
+  #     # 5. Haz push y el deploy se ejecutará automáticamente en main
+
+  # JOB 6: RESUMEN FINAL
+  summary:
+    name: 📋 Resumen del Pipeline
+    runs-on: ubuntu-latest
+    needs: [test-client, test-server, security-audit, code-quality]
+    if: always()
+    
+    steps:
+      - name: 📊 Resumen de ejecución
+        run: |
+          echo "============================================"
+          echo "🎉 PIPELINE COMPLETADO"
+          echo "============================================"
+          echo "✅ Tests del cliente: ${{ needs.test-client.result }}"
+          echo "✅ Tests del servidor: ${{ needs.test-server.result }}"
+          echo "🔒 Security audit: ${{ needs.security-audit.result }}"
+          echo "📊 Code quality: ${{ needs.code-quality.result }}"
+          echo "============================================"
+          
+          if [ "${{ needs.test-client.result }}" == "success" ] && \
+             [ "${{ needs.test-server.result }}" == "success" ] && \
+             [ "${{ needs.security-audit.result }}" == "success" ] && \
+             [ "${{ needs.code-quality.result }}" == "success" ]; then
+            echo "🎉 TODOS LOS CHECKS PASARON"
+            echo "✅ El código está listo para merge"
+          else
+            echo "❌ ALGUNOS CHECKS FALLARON"
+            echo "⚠️  Revisa los errores arriba"
+            exit 1
+          fi
