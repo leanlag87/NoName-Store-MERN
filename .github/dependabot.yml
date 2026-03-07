@@ -1,0 +1,156 @@
+# CONFIGURACIÓN DE DEPENDABOT
+# Este archivo configura Dependabot para:
+# - Revisar dependencias de npm en client/ y server/
+# - Crear PRs automáticos con actualizaciones
+# - Agrupar actualizaciones menores para reducir PRs
+# - Ejecutar revisiones semanalmente
+
+version: 2
+updates:
+  # DEPENDENCIAS DEL CLIENTE (React)
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    
+    # Configuración de PRs
+    open-pull-requests-limit: 10
+    
+    # Formato de commits
+    commit-message:
+      prefix: "chore(deps-client)"
+      prefix-development: "chore(deps-dev-client)"
+      include: "scope"
+    
+    # Etiquetas para los PRs
+    labels:
+      - "dependencies"
+      - "client"
+      - "automated"
+    
+    # Agrupar actualizaciones menores y patches
+    # Esto reduce la cantidad de PRs individuales
+    groups:
+      # Grupo 1: Actualizaciones menores y patches de producción
+      production-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "@testing-library/*"
+          - "react-scripts"
+      
+      # Grupo 2: Dependencias de testing
+      testing-dependencies:
+        patterns:
+          - "@testing-library/*"
+        update-types:
+          - "minor"
+          - "patch"
+      
+      # Grupo 3: React y ecosistema (más cuidadoso)
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@emotion/*"
+        update-types:
+          - "patch"
+    
+    # Mantener actualizaciones major separadas para revisión manual
+    # (por defecto, las actualizaciones major no se agrupan)
+
+  # ============================================
+  # DEPENDENCIAS DEL SERVIDOR (Node.js/Express)
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    
+    # Configuración de PRs
+    open-pull-requests-limit: 10
+    
+    # Formato de commits
+    commit-message:
+      prefix: "chore(deps-server)"
+      prefix-development: "chore(deps-dev-server)"
+      include: "scope"
+    
+    # Etiquetas para los PRs
+    labels:
+      - "dependencies"
+      - "server"
+      - "automated"
+    
+    # Agrupar actualizaciones menores y patches
+    groups:
+      # Grupo 1: Actualizaciones menores y patches generales
+      production-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "express*"
+          - "mongoose"
+          - "jsonwebtoken"
+      
+      # Grupo 2: Dependencias críticas del servidor
+      # (Express, Mongoose, JWT se mantienen separados para revisión cuidadosa)
+      critical-server-dependencies:
+        patterns:
+          - "express"
+          - "body-parser"
+          - "cors"
+        update-types:
+          - "patch"
+      
+      # Grupo 3: Base de datos
+      database-dependencies:
+        patterns:
+          - "mongoose"
+        update-types:
+          - "patch"
+
+# ============================================
+# NOTAS IMPORTANTES:
+# 
+# 1. REVIEWERS Y ASSIGNEES:
+#    - NO se pueden configurar en dependabot.yml
+#    - Se configuran en el archivo 3 (dependabot-auto-merge.yml)
+#    - O manualmente desde GitHub Settings
+# 
+# 2. TIMEZONE: Configurado para Argentina (UTC-3)
+#    Cambiar si estás en otra zona horaria
+# 
+# 3. GRUPOS (groups):
+#    - Reduce la cantidad de PRs individuales
+#    - Agrupa actualizaciones menores/patches relacionadas
+#    - Actualizaciones MAJOR siempre van en PRs separados
+# 
+# 4. LABELS:
+#    - "dependencies": Indica que es actualización de deps
+#    - "client"/"server": Identifica qué parte del proyecto
+#    - "automated": Indica que fue creado automáticamente
+# 
+# 5. SECURITY UPDATES:
+#    - Dependabot SIEMPRE prioriza actualizaciones de seguridad
+#    - Las crea inmediatamente, sin esperar al schedule
+# 
+# 6. OPEN-PULL-REQUESTS-LIMIT:
+#    - Máximo 10 PRs abiertos simultáneamente por directorio
+#    - Previene saturación de PRs
+# 
+# 7. COMMIT MESSAGE FORMAT:
+#    - Sigue Conventional Commits
+#    - Ejemplos:
+#      * "chore(deps-client): bump react from 18.3.1 to 18.3.2"
+#      * "chore(deps-server): bump express from 4.21.0 to 4.21.2"
