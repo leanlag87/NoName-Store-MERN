@@ -1,0 +1,214 @@
+# DEPENDABOT AUTO-MERGE WORKFLOW
+
+# Este workflow automatiza:
+# - Aprobación de PRs creados por Dependabot
+# - Merge automático de actualizaciones menores y patches
+# - Ejecuta solo si el pipeline de CI/CD pasa exitosamente
+#
+# Las actualizaciones MAJOR siempre requieren revisión manual
+
+
+name: Dependabot Auto-Merge
+
+# Se ejecuta cuando Dependabot abre o actualiza un PR
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Permisos necesarios para aprobar y mergear PRs
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # JOB: AUTO-MERGE DE DEPENDABOT
+  dependabot-auto-merge:
+    name: 🤖 Auto-merge Dependabot PR
+    runs-on: ubuntu-latest
+    
+    # Solo ejecutar si el PR fue creado por Dependabot
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+      # ============================================
+      # PASO 1: Obtener metadata del PR de Dependabot
+      - name: 📊 Obtener metadata de Dependabot
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      # ============================================
+      # PASO 2: Mostrar información del PR
+      - name: 📋 Información del PR
+        run: |
+          echo "============================================"
+          echo "📦 INFORMACIÓN DE LA ACTUALIZACIÓN"
+          echo "============================================"
+          echo "🔖 Dependencia: ${{ steps.metadata.outputs.dependency-names }}"
+          echo "📊 Tipo de actualización: ${{ steps.metadata.outputs.update-type }}"
+          echo "🏷️  Versión anterior: ${{ steps.metadata.outputs.previous-version }}"
+          echo "🆕 Versión nueva: ${{ steps.metadata.outputs.new-version }}"
+          echo "🔒 Es security update: ${{ steps.metadata.outputs.alert-state }}"
+          echo "============================================"
+
+      # ============================================
+      # PASO 3: Aprobar automáticamente
+      # Solo aprueba actualizaciones menores y patches
+      # Las actualizaciones MAJOR requieren revisión manual
+      - name: ✅ Aprobar PR automáticamente
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: |
+          echo "✅ Aprobando PR automáticamente..."
+          echo "📌 Tipo: ${{ steps.metadata.outputs.update-type }}"
+          gh pr review --approve "$PR_URL" --body "🤖 **Auto-aprobado por Dependabot Auto-Merge**
+
+          ✅ Esta actualización fue aprobada automáticamente porque:
+          - Es una actualización **${{ steps.metadata.outputs.update-type }}**
+          - El pipeline de CI/CD debe pasar antes del merge
+          - Las actualizaciones MAJOR requieren revisión manual
+          
+          📦 **Dependencia:** ${{ steps.metadata.outputs.dependency-names }}
+          🏷️ **Versión:** ${{ steps.metadata.outputs.previous-version }} → ${{ steps.metadata.outputs.new-version }}"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ============================================
+      # PASO 4: Habilitar auto-merge
+      # GitHub esperará a que pasen todos los checks requeridos
+      # antes de hacer el merge automáticamente
+      - name: 🔀 Habilitar auto-merge
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: |
+          echo "🔀 Habilitando auto-merge..."
+          gh pr merge --auto --squash "$PR_URL"
+          echo "✅ Auto-merge habilitado. El PR se mergeará automáticamente cuando:"
+          echo "   1. Todos los checks del CI/CD pasen ✅"
+          echo "   2. No haya conflictos ✅"
+          echo "   3. Tenga al menos una aprobación ✅"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ============================================
+      # PASO 5: Comentar en PRs de actualizaciones MAJOR
+      # Para actualizaciones MAJOR, dejamos un comentario
+      # indicando que requiere revisión manual
+      - name: ⚠️ Comentar en PR de actualización MAJOR
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          echo "⚠️ Esta es una actualización MAJOR - requiere revisión manual"
+          gh pr comment "$PR_URL" --body "⚠️ **Actualización MAJOR detectada**
+
+          Esta actualización requiere **revisión manual** porque:
+          - Es una actualización **MAJOR** (${{ steps.metadata.outputs.update-type }})
+          - Puede contener breaking changes
+          - Requiere verificación de compatibilidad
+          
+          📦 **Dependencia:** ${{ steps.metadata.outputs.dependency-names }}
+          🏷️ **Versión:** ${{ steps.metadata.outputs.previous-version }} → ${{ steps.metadata.outputs.new-version }}
+          
+          📋 **Acciones requeridas:**
+          1. ✅ Revisar el changelog de la dependencia
+          2. ✅ Verificar breaking changes
+          3. ✅ Ejecutar tests localmente
+          4. ✅ Aprobar manualmente si es seguro
+          
+          🔗 **Recursos útiles:**
+          - [Changelog](${{ steps.metadata.outputs.changelog-url }})
+          - [Release notes](${{ steps.metadata.outputs.release-notes-url }})"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ============================================
+      # PASO 6: Resumen final
+      # ============================================
+      - name: 📊 Resumen de acciones
+        if: always()
+        run: |
+          echo "============================================"
+          echo "📊 RESUMEN DEL AUTO-MERGE"
+          echo "============================================"
+          if [ "${{ steps.metadata.outputs.update-type }}" == "version-update:semver-patch" ] || \
+             [ "${{ steps.metadata.outputs.update-type }}" == "version-update:semver-minor" ]; then
+            echo "✅ PR aprobado automáticamente"
+            echo "🔀 Auto-merge habilitado"
+            echo "⏳ Esperando a que pasen los checks del CI/CD..."
+            echo ""
+            echo "El PR se mergeará automáticamente cuando:"
+            echo "  • CI/CD Pipeline pase exitosamente ✅"
+            echo "  • No haya conflictos de merge ✅"
+            echo "  • Tenga aprobación (ya aprobado) ✅"
+          elif [ "${{ steps.metadata.outputs.update-type }}" == "version-update:semver-major" ]; then
+            echo "⚠️  Actualización MAJOR detectada"
+            echo "👤 Requiere revisión manual"
+            echo "💬 Se agregó un comentario con instrucciones"
+          else
+            echo "ℹ️  Tipo de actualización: ${{ steps.metadata.outputs.update-type }}"
+            echo "👤 Requiere revisión manual"
+          fi
+          echo "============================================"
+
+
+# NOTAS IMPORTANTES:
+# 1. ESTRATEGIA DE MERGE:
+#    - Se usa "--squash" para mantener un historial limpio
+#    - Todos los commits del PR se combinan en uno solo
+#    - Alternativas: "--merge" o "--rebase"
+# 
+# 2. TIPOS DE ACTUALIZACIÓN:
+#    - semver-patch (1.0.0 → 1.0.1): Auto-merge ✅
+#    - semver-minor (1.0.0 → 1.1.0): Auto-merge ✅
+#    - semver-major (1.0.0 → 2.0.0): Revisión manual ⚠️
+# 
+# 3. SEGURIDAD:
+#    - TODAS las actualizaciones pasan por CI/CD primero
+#    - Si los tests fallan, NO se hace merge automático
+#    - Branch protection rules se respetan siempre
+# 
+# 4. SECURITY UPDATES:
+#    - Se tratan igual (minor/patch = auto-merge)
+#    - Tienen prioridad pero siguen las mismas reglas
+# 
+# 5. PERSONALIZACIÓN:
+#    - Puedes cambiar "--squash" por "--merge" o "--rebase"
+#    - Puedes ajustar qué tipos de actualización auto-mergear
+#    - Puedes agregar más validaciones antes del merge
+# 
+# ============================================
+# CÓMO FUNCIONA EN LA PRÁCTICA:
+# ============================================
+# 
+# CUANDO DEPENDABOT CREA UN PR:
+# 
+# 1. Este workflow se ejecuta automáticamente
+# 2. Verifica que sea de Dependabot
+# 3. Obtiene información de la actualización
+# 4. Si es PATCH o MINOR:
+#    a. Aprueba el PR automáticamente
+#    b. Habilita auto-merge
+#    c. Espera a que el CI/CD pase
+#    d. Mergea automáticamente si todo OK
+# 5. Si es MAJOR:
+#    a. Deja un comentario explicando
+#    b. Espera tu revisión manual
+# 
+# RESULTADO FINAL:
+# - Actualizaciones menores: 100% automáticas ✅
+# - Actualizaciones mayores: Revisión manual ⚠️
+# - Sin sacrificar seguridad: CI/CD siempre se ejecuta 🔒
+# 
+# ============================================
+# CÓMO DESHABILITAR AUTO-MERGE:
+# ============================================
+# 
+# Si prefieres aprobar manualmente TODOS los PRs:
+# 1. Elimina o comenta los pasos 3 y 4
+# 2. Mantén los pasos 1, 2, 5 y 6
+# 3. El workflow solo comentará en los PRs
