@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/styled": "^11.14.1",
     "@mercadopago/sdk-react": "^0.0.23",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.16.8",
