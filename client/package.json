@@ -21,7 +21,7 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-js-pagination": "^3.0.3",
-    "react-loader-spinner": "^6.1.6",
+    "react-loader-spinner": "^8.0.2",
     "react-material-ui-carousel": "^3.4.2",
     "react-redux": "^9.2.0",
     "react-responsive-carousel": "^3.2.23",
