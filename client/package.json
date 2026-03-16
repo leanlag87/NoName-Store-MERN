@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@mercadopago/sdk-react": "^0.0.23",
+    "@mercadopago/sdk-react": "^1.0.7",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.16.8",
     "@mui/x-data-grid": "^7.23.5",
