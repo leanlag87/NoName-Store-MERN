@@ -22,7 +22,7 @@
 
 ### El Ciclo de Desarrollo Completo
 
-````
+```
 ┌─────────────────────────────────────────────────────────────┐
 │ DÍA A DÍA CON CI/CD                                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -43,6 +43,7 @@
 │ 8. Branch auto-borrada                                      │
 │ └─ Repetir para siguiente feature                           │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -728,7 +729,5 @@ Tiempo promedio por feature: 1-3 días (dependiendo de tamaño)
 
 Workflow profesional implementado 🚀
 
-</div> ```
-
-
-````
+</div>
+```

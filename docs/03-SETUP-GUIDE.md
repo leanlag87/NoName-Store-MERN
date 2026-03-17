@@ -107,6 +107,7 @@ ls -la client/package.json
 # Verificar package.json del servidor
 ls -la server/package.json
 # Debe existir
+```
 
 ✅ Resultado esperado:
 ✅ Estás en la raíz del proyecto
@@ -119,15 +120,21 @@ Navega a la raíz correcta del proyecto
 Verifica que la estructura coincida
 
 Paso 0.2: Verificar Git y GitHub
+
 # Verificar que es un repositorio git
+
 git status
 
 # Verificar el remote
+
 git remote -v
-# Debe mostrar: origin  https://github.com/leanlag87/NoName-Store-MERN.git
+
+# Debe mostrar: origin https://github.com/leanlag87/NoName-Store-MERN.git
 
 # Verificar tu rama actual
+
 git branch
+
 # Debes estar en 'main' o 'master'
 
 ✅ Resultado esperado:
@@ -136,12 +143,17 @@ git branch
 ✅ Estás en la rama main
 
 Paso 0.3: Verificar Node.js
+
 # Verificar versión de Node.js
+
 node --version
+
 # Debe ser v18.x.x o v20.x.x
 
 # Verificar npm
+
 npm --version
+
 # Debe ser 9.x.x o superior
 
 ✅ Resultado esperado:
@@ -149,16 +161,21 @@ npm --version
 
 🚀 Fase 1: Preparación del Entorno
 Paso 1.1: Crear Rama de Trabajo
+
 # Asegurarte de estar en main y actualizado
+
 git checkout main
 git pull origin main
 
 # Crear nueva rama para la implementación
+
 git checkout -b feature/setup-ci-cd-pipeline
 
 # Verificar que estás en la nueva rama
+
 git branch
-# Debe mostrar: * feature/setup-ci-cd-pipeline
+
+# Debe mostrar: \* feature/setup-ci-cd-pipeline
 
 📝 Explicación:
 
@@ -166,17 +183,23 @@ Trabajamos en una rama separada (best practice)
 No tocamos main directamente
 Luego haremos PR para mergear
 Paso 1.2: Crear Estructura de Carpetas
+
 # Crear carpeta .github (con el punto al inicio)
+
 mkdir .github
 
 # Crear subcarpeta workflows dentro de .github
+
 mkdir .github/workflows
 
 # Verificar que se crearon correctamente
+
 ls -la .github/
+
 # Debe mostrar: workflows/
 
 ls -la .github/workflows/
+
 # Debe estar vacío por ahora
 
 ⚠️ IMPORTANTE:
@@ -185,32 +208,40 @@ La carpeta DEBE llamarse .github (con punto al inicio)
 La subcarpeta DEBE llamarse workflows (en plural)
 Respeta mayúsculas/minúsculas
 Paso 1.3: Verificar Estructura Completa
+
 # Ver estructura del proyecto
+
 tree -L 2 -a
+
 # O si no tienes tree:
+
 ls -la
 ls -la .github/
 
 ✅ Debe verse así:
 NoName-Store-MERN/
 ├── .git/
-├── .github/              ← NUEVO
-│   └── workflows/        ← NUEVO
+├── .github/ ← NUEVO
+│ └── workflows/ ← NUEVO
 ├── client/
-│   ├── package.json
-│   └── ...
+│ ├── package.json
+│ └── ...
 ├── server/
-│   ├── package.json
-│   └── ...
+│ ├── package.json
+│ └── ...
 └── README.md
 
 🤖 Fase 2: Configuración del Pipeline CI/CD
 Paso 2.1: Crear Archivo del Pipeline
+
 # Crear el archivo (vacío por ahora)
+
 touch .github/workflows/ci-cd-pipeline.yml
 
 # Verificar que existe
+
 ls -la .github/workflows/
+
 # Debe mostrar: ci-cd-pipeline.yml
 
 Paso 2.2: Agregar Contenido al Pipeline
@@ -218,25 +249,31 @@ Abre el archivo .github/workflows/ci-cd-pipeline.yml en tu editor y pega este co
 name: CI/CD Pipeline
 
 # Cuándo se ejecuta este workflow
+
 on:
-  push:
-    branches: [main, develop, feature/setup-ci-cd-pipeline]
-  pull_request:
-    branches: [main, develop]
+push:
+branches: [main, develop, feature/setup-ci-cd-pipeline]
+pull_request:
+branches: [main, develop]
 
 # Permisos necesarios
+
 permissions:
-  contents: read
-  pull-requests: write
-  checks: write
+contents: read
+pull-requests: write
+checks: write
 
 jobs:
-  # ============================================
-  # JOB 1: TESTING DEL CLIENTE (React)
-  # ============================================
-  test-client:
-    name: 🧪 Test Cliente (React)
-    runs-on: ubuntu-latest
+
+# ============================================
+
+# JOB 1: TESTING DEL CLIENTE (React)
+
+# ============================================
+
+test-client:
+name: 🧪 Test Cliente (React)
+runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -276,12 +313,15 @@ jobs:
           echo "📊 Archivos generados:"
           ls -lh build/static/js/ | head -n 10
 
-  # ============================================
-  # JOB 2: TESTING DEL SERVIDOR (Node/Express)
-  # ============================================
-  test-server:
-    name: 🧪 Test Servidor (Node.js)
-    runs-on: ubuntu-latest
+# ============================================
+
+# JOB 2: TESTING DEL SERVIDOR (Node/Express)
+
+# ============================================
+
+test-server:
+name: 🧪 Test Servidor (Node.js)
+runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -317,13 +357,16 @@ jobs:
             exit 1
           fi
 
-  # ============================================
-  # JOB 3: SECURITY AUDIT
-  # ============================================
-  security-audit:
-    name: 🔒 Security Audit
-    runs-on: ubuntu-latest
-    needs: [test-client, test-server]
+# ============================================
+
+# JOB 3: SECURITY AUDIT
+
+# ============================================
+
+security-audit:
+name: 🔒 Security Audit
+runs-on: ubuntu-latest
+needs: [test-client, test-server]
 
     steps:
       - name: 📥 Checkout código
@@ -359,13 +402,16 @@ jobs:
           echo "⚠️  Revisa las alertas arriba si las hay"
           echo "============================================"
 
-  # ============================================
-  # JOB 4: CODE QUALITY
-  # ============================================
-  code-quality:
-    name: 📊 Code Quality
-    runs-on: ubuntu-latest
-    needs: [test-client, test-server]
+# ============================================
+
+# JOB 4: CODE QUALITY
+
+# ============================================
+
+code-quality:
+name: 📊 Code Quality
+runs-on: ubuntu-latest
+needs: [test-client, test-server]
 
     steps:
       - name: 📥 Checkout código
@@ -391,93 +437,173 @@ jobs:
           find . -name "*.js" -not -path "*/node_modules/*" -not -path "*/build/*" | wc -l
           echo "============================================"
 
-  # ============================================
-  # JOB 5: DEPLOY (PREPARADO PERO COMENTADO)
-  # ============================================
-  #
-  # 🚨 IMPORTANTE: Este job está deshabilitado por ahora
-  #
-  # Descomenta este job cuando tengas configurado tu deploy
-  #
-  # deploy:
-  #   name: 🚀 Deploy a Producción
-  #   runs-on: ubuntu-latest
-  #   needs: [test-client, test-server, security-audit, code-quality]
-  #   # Solo ejecutar en push a main (no en PRs)
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-  #
-  #   steps:
-  #     - name: 📥 Checkout código
-  #       uses: actions/checkout@v4
-  #
-  #     - name: 🟢 Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.x'
-  #
-  #     # ============================================
-  #     # OPCIÓN 1: DEPLOY A VERCEL (Cliente)
-  #     # ============================================
-  #     # - name: 🚀 Deploy Cliente a Vercel
-  #     #   working-directory: ./client
-  #     #   run: |
-  #     #     npm install -g vercel
-  #     #     vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-  #     #   env:
-  #     #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #     #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  #     #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  #
-  #     # ============================================
-  #     # OPCIÓN 2: DEPLOY A RAILWAY (Servidor)
-  #     # ============================================
-  #     # - name: 🚀 Deploy Servidor a Railway
-  #     #   run: |
-  #     #     npm install -g @railway/cli
-  #     #     railway up
-  #     #   env:
-  #     #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-  #
-  #     # ============================================
-  #     # OPCIÓN 3: DEPLOY A RENDER
-  #     # ============================================
-  #     # - name: 🚀 Trigger Deploy en Render
-  #     #   run: |
-  #     #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-  #
-  #     # ============================================
-  #     # OPCIÓN 4: DEPLOY A NETLIFY (Cliente)
-  #     # ============================================
-  #     # - name: 🚀 Deploy Cliente a Netlify
-  #     #   working-directory: ./client
-  #     #   run: |
-  #     #     npm install -g netlify-cli
-  #     #     npm run build
-  #     #     netlify deploy --prod --dir=build
-  #     #   env:
-  #     #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-  #     #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-  #
-  #     # ============================================
-  #     # INSTRUCCIONES PARA HABILITAR EL DEPLOY:
-  #     # ============================================
-  #     # 1. Elige tu plataforma de deploy (Vercel, Railway, Render, Netlify, etc.)
-  #     # 2. Descomenta la sección correspondiente arriba
-  #     # 3. Agrega los secrets necesarios en GitHub:
-  #     #    - Ve a Settings → Secrets and variables → Actions
-  #     #    - Click en "New repository secret"
-  #     #    - Agrega los tokens/IDs que necesites
-  #     # 4. Descomenta todo este job (desde "deploy:" hasta aquí)
-  #     # 5. Haz push y el deploy se ejecutará automáticamente en main
+# ============================================
 
-  # ============================================
-  # JOB 6: RESUMEN FINAL
-  # ============================================
-  summary:
-    name: 📋 Resumen del Pipeline
-    runs-on: ubuntu-latest
-    needs: [test-client, test-server, security-audit, code-quality]
-    if: always()
+# JOB 5: DEPLOY (PREPARADO PERO COMENTADO)
+
+# ============================================
+
+#
+
+# 🚨 IMPORTANTE: Este job está deshabilitado por ahora
+
+#
+
+# Descomenta este job cuando tengas configurado tu deploy
+
+#
+
+# deploy:
+
+# name: 🚀 Deploy a Producción
+
+# runs-on: ubuntu-latest
+
+# needs: [test-client, test-server, security-audit, code-quality]
+
+# # Solo ejecutar en push a main (no en PRs)
+
+# if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+#
+
+# steps:
+
+# - name: 📥 Checkout código
+
+# uses: actions/checkout@v4
+
+#
+
+# - name: 🟢 Setup Node.js
+
+# uses: actions/setup-node@v4
+
+# with:
+
+# node-version: '20.x'
+
+#
+
+# # ============================================
+
+# # OPCIÓN 1: DEPLOY A VERCEL (Cliente)
+
+# # ============================================
+
+# # - name: 🚀 Deploy Cliente a Vercel
+
+# # working-directory: ./client
+
+# # run: |
+
+# # npm install -g vercel
+
+# # vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+# # env:
+
+# # VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+# # VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+# # VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+#
+
+# # ============================================
+
+# # OPCIÓN 2: DEPLOY A RAILWAY (Servidor)
+
+# # ============================================
+
+# # - name: 🚀 Deploy Servidor a Railway
+
+# # run: |
+
+# # npm install -g @railway/cli
+
+# # railway up
+
+# # env:
+
+# # RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+#
+
+# # ============================================
+
+# # OPCIÓN 3: DEPLOY A RENDER
+
+# # ============================================
+
+# # - name: 🚀 Trigger Deploy en Render
+
+# # run: |
+
+# # curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+#
+
+# # ============================================
+
+# # OPCIÓN 4: DEPLOY A NETLIFY (Cliente)
+
+# # ============================================
+
+# # - name: 🚀 Deploy Cliente a Netlify
+
+# # working-directory: ./client
+
+# # run: |
+
+# # npm install -g netlify-cli
+
+# # npm run build
+
+# # netlify deploy --prod --dir=build
+
+# # env:
+
+# # NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+# # NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+#
+
+# # ============================================
+
+# # INSTRUCCIONES PARA HABILITAR EL DEPLOY:
+
+# # ============================================
+
+# # 1. Elige tu plataforma de deploy (Vercel, Railway, Render, Netlify, etc.)
+
+# # 2. Descomenta la sección correspondiente arriba
+
+# # 3. Agrega los secrets necesarios en GitHub:
+
+# # - Ve a Settings → Secrets and variables → Actions
+
+# # - Click en "New repository secret"
+
+# # - Agrega los tokens/IDs que necesites
+
+# # 4. Descomenta todo este job (desde "deploy:" hasta aquí)
+
+# # 5. Haz push y el deploy se ejecutará automáticamente en main
+
+# ============================================
+
+# JOB 6: RESUMEN FINAL
+
+# ============================================
+
+summary:
+name: 📋 Resumen del Pipeline
+runs-on: ubuntu-latest
+needs: [test-client, test-server, security-audit, code-quality]
+if: always()
 
     steps:
       - name: 📊 Resumen de ejecución
@@ -508,17 +634,23 @@ jobs:
 Ctrl+S (Windows/Linux) o Cmd+S (Mac)
 Verifica que se guardó correctamente
 Paso 2.3: Commit del Pipeline
+
 # Verificar los cambios
+
 git status
+
 # Debe mostrar: .github/workflows/ci-cd-pipeline.yml
 
 # Ver el contenido agregado
+
 git diff .github/workflows/ci-cd-pipeline.yml
 
 # Agregar el archivo
+
 git add .github/workflows/ci-cd-pipeline.yml
 
 # Commit con mensaje descriptivo
+
 git commit -m "feat: add CI/CD pipeline workflow
 
 - Add automated testing for client (React)
@@ -529,10 +661,13 @@ git commit -m "feat: add CI/CD pipeline workflow
 - Deploy job prepared but disabled"
 
 # Verificar el commit
+
 git log -1
 
 Paso 2.4: Push y Primera Ejecución
+
 # Push de la rama
+
 git push origin feature/setup-ci-cd-pipeline
 
 📊 Verificar en GitHub:
@@ -542,10 +677,10 @@ Click en la pestaña "Actions" (arriba)
 Deberías ver el workflow "CI/CD Pipeline" ejecutándose 🟡
 ✅ Resultado esperado:
 🟡 Workflow ejecutándose...
-   ├─ 🧪 Test Cliente (18.x) - Running
-   ├─ 🧪 Test Cliente (20.x) - Running
-   ├─ 🧪 Test Servidor (18.x) - Running
-   └─ 🧪 Test Servidor (20.x) - Running
+├─ 🧪 Test Cliente (18.x) - Running
+├─ 🧪 Test Cliente (20.x) - Running
+├─ 🧪 Test Servidor (18.x) - Running
+└─ 🧪 Test Servidor (20.x) - Running
 
 Tiempo estimado: 5-7 minutos
 
@@ -558,11 +693,15 @@ Si algo falla, ve a Troubleshooting
 🔄 Fase 3: Configuración de Dependabot
 
 Paso 3.1: Crear Archivo de Dependabot
+
 # Crear el archivo (en .github, NO en workflows)
+
 touch .github/dependabot.yml
 
 # Verificar que existe
+
 ls -la .github/
+
 # Debe mostrar: dependabot.yml y workflows/
 
 Paso 3.2: Agregar Contenido de Dependabot
@@ -570,118 +709,113 @@ Paso 3.2: Agregar Contenido de Dependabot
 Abre el archivo .github/dependabot.yml y pega este contenido:
 version: 2
 updates:
-  # ============================================
-  # DEPENDENCIAS DEL CLIENTE (React)
-  # ============================================
-  - package-ecosystem: "npm"
-    directory: "/client"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Argentina/Buenos_Aires"
 
-    # Configuración de PRs
-    open-pull-requests-limit: 10
+# ============================================
 
-    # Formato de commits
-    commit-message:
-      prefix: "chore(deps-client)"
-      prefix-development: "chore(deps-dev-client)"
-      include: "scope"
+# DEPENDENCIAS DEL CLIENTE (React)
 
-    # Etiquetas para los PRs
-    labels:
-      - "dependencies"
-      - "client"
-      - "automated"
+# ============================================
 
-    # Agrupar actualizaciones menores y patches
-    groups:
-      production-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "@testing-library/*"
-          - "react-scripts"
+- package-ecosystem: "npm"
+  directory: "/client"
+  schedule:
+  interval: "weekly"
+  day: "monday"
+  time: "09:00"
+  timezone: "America/Argentina/Buenos_Aires"
 
-      testing-dependencies:
-        patterns:
-          - "@testing-library/*"
-        update-types:
-          - "minor"
-          - "patch"
+  # Configuración de PRs
 
-      react-ecosystem:
-        patterns:
-          - "react*"
-          - "@emotion/*"
-        update-types:
-          - "patch"
+  open-pull-requests-limit: 10
 
-  # ============================================
-  # DEPENDENCIAS DEL SERVIDOR (Node.js/Express)
-  # ============================================
-  - package-ecosystem: "npm"
-    directory: "/server"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Argentina/Buenos_Aires"
+  # Formato de commits
 
-    # Configuración de PRs
-    open-pull-requests-limit: 10
+  commit-message:
+  prefix: "chore(deps-client)"
+  prefix-development: "chore(deps-dev-client)"
+  include: "scope"
 
-    # Formato de commits
-    commit-message:
-      prefix: "chore(deps-server)"
-      prefix-development: "chore(deps-dev-server)"
-      include: "scope"
+  # Etiquetas para los PRs
 
-    # Etiquetas para los PRs
-    labels:
-      - "dependencies"
-      - "server"
-      - "automated"
+  labels:
+  - "dependencies"
+  - "client"
+  - "automated"
 
-    # Agrupar actualizaciones menores y patches
-    groups:
-      production-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "express*"
-          - "mongoose"
-          - "jsonwebtoken"
+  # Agrupar actualizaciones menores y patches
 
-      critical-server-dependencies:
-        patterns:
-          - "express"
-          - "body-parser"
-          - "cors"
-        update-types:
-          - "patch"
+  groups:
+  production-dependencies:
+  patterns: - "_"
+  update-types: - "minor" - "patch"
+  exclude-patterns: - "@testing-library/_" - "react-scripts"
 
-      database-dependencies:
-        patterns:
-          - "mongoose"
-        update-types:
-          - "patch"
+  testing-dependencies:
+  patterns: - "@testing-library/\*"
+  update-types: - "minor" - "patch"
+
+  react-ecosystem:
+  patterns: - "react*" - "@emotion/*"
+  update-types: - "patch"
+
+# ============================================
+
+# DEPENDENCIAS DEL SERVIDOR (Node.js/Express)
+
+# ============================================
+
+- package-ecosystem: "npm"
+  directory: "/server"
+  schedule:
+  interval: "weekly"
+  day: "monday"
+  time: "09:00"
+  timezone: "America/Argentina/Buenos_Aires"
+
+  # Configuración de PRs
+
+  open-pull-requests-limit: 10
+
+  # Formato de commits
+
+  commit-message:
+  prefix: "chore(deps-server)"
+  prefix-development: "chore(deps-dev-server)"
+  include: "scope"
+
+  # Etiquetas para los PRs
+
+  labels:
+  - "dependencies"
+  - "server"
+  - "automated"
+
+  # Agrupar actualizaciones menores y patches
+
+  groups:
+  production-dependencies:
+  patterns: - "_"
+  update-types: - "minor" - "patch"
+  exclude-patterns: - "express_" - "mongoose" - "jsonwebtoken"
+
+  critical-server-dependencies:
+  patterns: - "express" - "body-parser" - "cors"
+  update-types: - "patch"
+
+  database-dependencies:
+  patterns: - "mongoose"
+  update-types: - "patch"
 
 💾 Guardar el archivo
 
 Paso 3.3: Commit de Dependabot
+
 # Agregar el archivo
+
 git add .github/dependabot.yml
 
 # Commit
+
 git commit -m "chore: add dependabot configuration
 
 - Weekly dependency updates (Mondays 9 AM)
@@ -691,6 +825,7 @@ git commit -m "chore: add dependabot configuration
 - Prioritize security updates"
 
 # Push
+
 git push origin feature/setup-ci-cd-pipeline
 
 Paso 3.4: Verificar Dependabot en GitHub
@@ -707,11 +842,15 @@ Habilita "Dependabot security updates" si no lo está ✅
 🤝 Fase 4: Configuración de Auto-merge
 
 Paso 4.1: Crear Archivo de Auto-merge
+
 # Crear el archivo
+
 touch .github/workflows/dependabot-auto-merge.yml
 
 # Verificar
+
 ls -la .github/workflows/
+
 # Debe mostrar: ci-cd-pipeline.yml y dependabot-auto-merge.yml
 
 Paso 4.2: Agregar Contenido de Auto-merge
@@ -720,17 +859,17 @@ Abre el archivo .github/workflows/dependabot-auto-merge.yml y pega este contenid
 name: Dependabot Auto-Merge
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+pull_request:
+types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
-  pull-requests: write
+contents: write
+pull-requests: write
 
 jobs:
-  dependabot-auto-merge:
-    name: 🤖 Auto-merge Dependabot PR
-    runs-on: ubuntu-latest
+dependabot-auto-merge:
+name: 🤖 Auto-merge Dependabot PR
+runs-on: ubuntu-latest
 
     if: github.actor == 'dependabot[bot]'
 
@@ -841,12 +980,14 @@ jobs:
           fi
           echo "============================================"
 
-
 Paso 4.3: Commit de Auto-merge
+
 # Agregar el archivo
+
 git add .github/workflows/dependabot-auto-merge.yml
 
 # Commit
+
 git commit -m "feat: add dependabot auto-merge workflow
 
 - Auto-approve PATCH and MINOR updates
@@ -855,6 +996,7 @@ git commit -m "feat: add dependabot auto-merge workflow
 - Squash merge strategy"
 
 # Push
+
 git push origin feature/setup-ci-cd-pipeline
 
 Paso 4.4: Verificar que el Workflow se Ejecute
@@ -889,19 +1031,21 @@ Activa estos checkboxes:
 ✅ Require status checks to pass before merging
 
 ✅ Require branches to be up to date before merging
-  - En el buscador de checks, busca y selecciona:
-✅ test-client (18.x)
-✅ test-client (20.x)
-✅ test-server (18.x)
-✅ test-server (20.x)
-✅ security-audit
-✅ code-quality
-✅ summary
+
+- En el buscador de checks, busca y selecciona:
+  ✅ test-client (18.x)
+  ✅ test-client (20.x)
+  ✅ test-server (18.x)
+  ✅ test-server (20.x)
+  ✅ security-audit
+  ✅ code-quality
+  ✅ summary
 
 ✅ Require conversation resolution before merging
 ❌ Allow force pushes
+
 - DEJAR DESACTIVADO
-❌ Allow deletions
+  ❌ Allow deletions
 - DEJAR DESACTIVADO
 
 Paso 5.3: Guardar la Regla
@@ -930,10 +1074,13 @@ Paso 5.4: Configurar Auto-delete de Ramas
 Paso 6.1: Crear Pull Request
 
 # Verificar que todos los cambios estén commiteados
+
 git status
+
 # Debe mostrar: nothing to commit, working tree clean
 
 # Si hay cambios sin commitear
+
 git add .
 git commit -m "docs: add setup documentation"
 git push origin feature/setup-ci-cd-pipeline
@@ -956,6 +1103,7 @@ Título:
 feat: Setup CI/CD Pipeline with Dependabot automation
 
 Descripción:
+
 ## 🚀 Setup CI/CD Pipeline
 
 Este PR implementa un pipeline completo de CI/CD para el proyecto.
@@ -963,6 +1111,7 @@ Este PR implementa un pipeline completo de CI/CD para el proyecto.
 ### 📋 Cambios incluidos:
 
 #### 1. Pipeline de CI/CD (`.github/workflows/ci-cd-pipeline.yml`)
+
 - ✅ Tests automáticos del cliente (React) en Node 18 y 20
 - ✅ Tests automáticos del servidor (Node.js/Express) en Node 18 y 20
 - ✅ Security audit con npm audit
@@ -971,6 +1120,7 @@ Este PR implementa un pipeline completo de CI/CD para el proyecto.
 - 📝 Deploy job preparado pero comentado (para uso futuro)
 
 #### 2. Configuración de Dependabot (`.github/dependabot.yml`)
+
 - ✅ Revisión semanal de dependencias (lunes 9 AM)
 - ✅ Separación entre cliente y servidor
 - ✅ Agrupación inteligente de actualizaciones
@@ -978,9 +1128,10 @@ Este PR implementa un pipeline completo de CI/CD para el proyecto.
 - ✅ Priorización de security updates
 
 #### 3. Auto-merge de Dependabot (`.github/workflows/dependabot-auto-merge.yml`)
+
 - ✅ Aprobación automática de actualizaciones PATCH y MINOR
 - ✅ Merge automático si CI/CD pasa
-- ⚠️  Actualizaciones MAJOR requieren revisión manual
+- ⚠️ Actualizaciones MAJOR requieren revisión manual
 - 💬 Comentarios automáticos con contexto
 
 ### 🎯 Beneficios:
@@ -1000,6 +1151,7 @@ Este PR implementa un pipeline completo de CI/CD para el proyecto.
 ### 📚 Documentación:
 
 Todos los archivos incluyen comentarios detallados explicando:
+
 - Qué hace cada sección
 - Cómo funciona en la práctica
 - Cómo personalizar para necesidades futuras
@@ -1011,20 +1163,20 @@ Paso 6.3: Verificar que el CI/CD se Ejecute en el PR
 
 ✅ Deberías ver en el PR:
 🟡 Some checks haven't completed yet
-   ├─ 🟡 test-client (18.x) - In progress
-   ├─ 🟡 test-client (20.x) - In progress
-   ├─ 🟡 test-server (18.x) - In progress
-   └─ 🟡 test-server (20.x) - In progress
+├─ 🟡 test-client (18.x) - In progress
+├─ 🟡 test-client (20.x) - In progress
+├─ 🟡 test-server (18.x) - In progress
+└─ 🟡 test-server (20.x) - In progress
 
 ⏳ Esperar a que todos pasen:
-   ✅ All checks have passed
-   ├─ ✅ test-client (18.x) - Passed
-   ├─ ✅ test-client (20.x) - Passed
-   ├─ ✅ test-server (18.x) - Passed
-   ├─ ✅ test-server (20.x) - Passed
-   ├─ ✅ security-audit - Passed
-   ├─ ✅ code-quality - Passed
-   └─ ✅ summary - Passed
+✅ All checks have passed
+├─ ✅ test-client (18.x) - Passed
+├─ ✅ test-client (20.x) - Passed
+├─ ✅ test-server (18.x) - Passed
+├─ ✅ test-server (20.x) - Passed
+├─ ✅ security-audit - Passed
+├─ ✅ code-quality - Passed
+└─ ✅ summary - Passed
 
 Paso 6.4: Revisar y Aprobar el PR
 
@@ -1042,19 +1194,26 @@ Luego mergea
 Paso 6.5: Verificación Post-Merge
 
 Después del merge:
- # Volver a main local
+
+# Volver a main local
+
 git checkout main
 
 # Actualizar main
+
 git pull origin main
 
 # Verificar que los archivos están en main
+
 ls -la .github/
 ls -la .github/workflows/
 
 # Debería mostrar:
+
 # .github/dependabot.yml
+
 # .github/workflows/ci-cd-pipeline.yml
+
 # .github/workflows/dependabot-auto-merge.yml
 
 ✅ En GitHub:
@@ -1068,27 +1227,27 @@ Paso 6.6: Checklist Final
 
 Verifica que todo esté configurado:
 ✅ Archivos creados:
-   ✅ .github/workflows/ci-cd-pipeline.yml
-   ✅ .github/workflows/dependabot-auto-merge.yml
-   ✅ .github/dependabot.yml
+✅ .github/workflows/ci-cd-pipeline.yml
+✅ .github/workflows/dependabot-auto-merge.yml
+✅ .github/dependabot.yml
 
 ✅ GitHub Actions:
-   ✅ Workflow "CI/CD Pipeline" ejecutándose
-   ✅ Workflow "Dependabot Auto-Merge" creado
-   ✅ Todos los checks pasando
+✅ Workflow "CI/CD Pipeline" ejecutándose
+✅ Workflow "Dependabot Auto-Merge" creado
+✅ Todos los checks pasando
 
 ✅ Dependabot:
-   ✅ Dependabot alerts habilitado
-   ✅ Dependabot security updates habilitado
-   ✅ Archivo dependabot.yml detectado
+✅ Dependabot alerts habilitado
+✅ Dependabot security updates habilitado
+✅ Archivo dependabot.yml detectado
 
 ✅ Branch Protection:
-   ✅ Rama main protegida
-   ✅ 7 status checks requeridos
-   ✅ Aprobación requerida
-   ✅ Force push deshabilitado
-   ✅ Delete deshabilitado
-   ✅ Auto-delete branches habilitado
+✅ Rama main protegida
+✅ 7 status checks requeridos
+✅ Aprobación requerida
+✅ Force push deshabilitado
+✅ Delete deshabilitado
+✅ Auto-delete branches habilitado
 
 ✅ PR mergeado exitosamente
 ✅ Main actualizado con los cambios
@@ -1121,10 +1280,13 @@ Verificaciones:
 3. La rama está incluida en on: push: branches:?
 
 Solución:
+
 # Verificar ubicación
+
 ls -la .github/workflows/ci-cd-pipeline.yml
 
 # Verificar contenido del trigger
+
 head -10 .github/workflows/ci-cd-pipeline.yml
 
 ❌ Error: Tests fallan con "passWithNoTests"
@@ -1138,8 +1300,8 @@ El flag --passWithNoTests hace que pase aunque no haya tests.
 
 Para agregar tests (opcional):
 cd client/src
-mkdir __tests__
-touch __tests__/App.test.js
+mkdir **tests**
+touch **tests**/App.test.js
 
 ❌ Error: Branch protection no muestra los checks
 Síntomas:
@@ -1181,4 +1343,3 @@ Forzar ejecución manual:
 
 Ve a Insights → Dependency graph → Dependabot
 Click "Check for updates"
-```
