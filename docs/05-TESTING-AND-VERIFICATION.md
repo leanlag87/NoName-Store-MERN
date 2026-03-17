@@ -51,7 +51,7 @@ Branch Protection:
 
 **Objetivo:** Verificar que el pipeline se ejecute en cada push.
 
-````bash
+```bash
 # 1. Crear rama de prueba
 git checkout -b test/pipeline-verification
 
@@ -62,8 +62,7 @@ git commit -m "test: verify pipeline execution"
 
 # 3. Push
 git push origin test/pipeline-verification
-
-✅ Verificar en GitHub:
+```
 
 1. Ve a Actions
 2. Deberías ver "CI/CD Pipeline" ejecutándose
@@ -71,14 +70,14 @@ git push origin test/pipeline-verification
 
 Resultado esperado:
 
- 🟢 CI/CD Pipeline
-   ├─ ✅ test-client (18.x) - 2m 15s
-   ├─ ✅ test-client (20.x) - 2m 18s
-   ├─ ✅ test-server (18.x) - 1m 45s
-   ├─ ✅ test-server (20.x) - 1m 42s
-   ├─ ✅ security-audit - 1m 05s
-   ├─ ✅ code-quality - 45s
-   └─ ✅ summary - 12s
+🟢 CI/CD Pipeline
+├─ ✅ test-client (18.x) - 2m 15s
+├─ ✅ test-client (20.x) - 2m 18s
+├─ ✅ test-server (18.x) - 1m 45s
+├─ ✅ test-server (20.x) - 1m 42s
+├─ ✅ security-audit - 1m 05s
+├─ ✅ code-quality - 45s
+└─ ✅ summary - 12s
 
 Total: ~5-7 minutos
 Estado: Success ✅
@@ -95,6 +94,7 @@ Test 2: Crear Pull Request
 Objetivo: Verificar que el pipeline se ejecute en PRs.
 
 # En la misma rama test/pipeline-verification
+
 En GitHub:
 
 1. Abre un PR: test/pipeline-verification → main
@@ -106,18 +106,18 @@ En GitHub:
 En la página del PR, verás:
 
 🟡 Some checks haven't completed yet
-   • CI/CD Pipeline - In progress
+• CI/CD Pipeline - In progress
 
 Después de 5-7 minutos:
 
 ✅ All checks have passed
-   • test-client (18.x) - Required
-   • test-client (20.x) - Required
-   • test-server (18.x) - Required
-   • test-server (20.x) - Required
-   • security-audit - Required
-   • code-quality - Required
-   • summary - Required
+• test-client (18.x) - Required
+• test-client (20.x) - Required
+• test-server (18.x) - Required
+• test-server (20.x) - Required
+• security-audit - Required
+• code-quality - Required
+• summary - Required
 
 Botón de merge:
 
@@ -129,6 +129,7 @@ Test 3: Verificar Bloqueo por Tests Fallidos
 Objetivo: Confirmar que un test fallido bloquea el merge.
 
 # 1. Crear cambio que rompa algo
+
 echo "const syntax error = " >> client/src/App.js
 git add client/src/App.js
 git commit -m "test: intentional syntax error"
@@ -136,8 +137,8 @@ git push origin test/pipeline-verification
 
 ✅ Verificar:
 ❌ Some checks were not successful
-   • test-client (18.x) - Failed ❌
-   • test-client (20.x) - Failed ❌
+• test-client (18.x) - Failed ❌
+• test-client (20.x) - Failed ❌
 
 ❌ Merge blocked
 ⚠️ Required status checks must pass
@@ -154,10 +155,10 @@ Objetivo: Confirmar que se ejecuta en Node 18.x y 20.x.
 3. Verás jobs duplicados:
 
 Jobs:
-├─ test-client (18.x)  ← Matrix 1
-├─ test-client (20.x)  ← Matrix 2
-├─ test-server (18.x)  ← Matrix 1
-└─ test-server (20.x)  ← Matrix 2
+├─ test-client (18.x) ← Matrix 1
+├─ test-client (20.x) ← Matrix 2
+├─ test-server (18.x) ← Matrix 1
+└─ test-server (20.x) ← Matrix 2
 
 ✅ Confirmación: Todos los 4 jobs ejecutados = Testing multi-version OK
 
@@ -207,12 +208,12 @@ Si Dependabot encuentra múltiples updates:
 
 Esperado:
 ├─ PR #1: "chore(deps-client): bump production-dependencies"
-│          Contiene: react, axios, etc. (agrupados)
+│ Contiene: react, axios, etc. (agrupados)
 │
 └─ PR #2: "chore(deps-server): bump mongoose to 9.0.0"
-           MAJOR update = PR individual
+MAJOR update = PR individual
 
-  ❌ Si cada update crea un PR separado:
+❌ Si cada update crea un PR separado:
 
 Revisa el archivo dependabot.yml
 Verifica la sección groups:
@@ -229,7 +230,7 @@ Cuando Dependabot cree un PR PATCH/MINOR:
 2. En 1-2 minutos deberías ver:
 
 🤖 dependabot-auto-merge comentó:
-   "✅ Auto-aprobado por Dependabot Auto-Merge"
+"✅ Auto-aprobado por Dependabot Auto-Merge"
 
 Estado del PR:
 ├─ ✅ Aprobado automáticamente
@@ -254,12 +255,13 @@ Objetivo: Confirmar que updates MAJOR requieren revisión manual.
 Cuando Dependabot cree un PR MAJOR:
 
 🤖 dependabot-auto-merge comentó:
-   "⚠️ Actualización MAJOR detectada
+"⚠️ Actualización MAJOR detectada
 
-   Esta actualización requiere revisión manual porque:
-   - Es una actualización MAJOR
-   - Puede contener breaking changes
-   - Requiere verificación de compatibilidad"
+Esta actualización requiere revisión manual porque:
+
+- Es una actualización MAJOR
+- Puede contener breaking changes
+- Requiere verificación de compatibilidad"
 
 Estado del PR:
 ├─ ⚠️ No aprobado automáticamente
@@ -278,6 +280,7 @@ git checkout main
 git pull origin main
 
 # Intentar push directo
+
 echo "test" >> README.md
 git add README.md
 git commit -m "test: direct push"
@@ -288,7 +291,7 @@ git push origin main
 remote: error: GH006: Protected branch update failed
 remote: error: Changes must be made through a pull request
 To https://github.com/leanlag87/NoName-Store-MERN.git
- ! [remote rejected] main -> main (protected branch hook declined)
+! [remote rejected] main -> main (protected branch hook declined)
 error: failed to push some refs
 
 ❌ Si el push funciona: Branch protection NO configurada correctamente
@@ -324,16 +327,19 @@ Test 13: Workflow Completo (Happy Path)
 Objetivo: Simular el workflow completo de desarrollo.
 
 # 1. Crear feature branch
+
 git checkout main
 git pull
 git checkout -b feature/complete-workflow-test
 
 # 2. Hacer cambio
+
 echo "# Feature Complete" >> FEATURE.md
 git add FEATURE.md
 git commit -m "feat: add complete workflow test"
 
 # 3. Push
+
 git push origin feature/complete-workflow-test
 
 En GitHub:
@@ -428,6 +434,7 @@ Verificar:
 Herramienta de debug:
 
 # Validar YAML
+
 yamllint .github/workflows/ci-cd-pipeline.yml
 
 ❌ Status checks no aparecen en PR
@@ -493,10 +500,10 @@ Continúa con:
 06-DAILY-USAGE.md - Aprende el workflow diario
 07-TROUBLESHOOTING.md - Problemas comunes
 10-NEXT-STEPS.md - Configurar deploy
+
 <div align="center">
 ⬅️ Branch Protection | ⬆️ Volver al Índice | Siguiente: Uso Diario ➡️
 
 Pipeline verificado y listo para producción ✅
 
-</div> ```
-````
+</div>
