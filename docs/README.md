@@ -33,11 +33,12 @@ Esta documentación está organizada en módulos independientes. Léelos en orde
 
 ### 📚 Referencia
 
-| #   | Documento                                | Descripción                        | Tiempo de lectura |
-| --- | ---------------------------------------- | ---------------------------------- | ----------------- |
-| 9   | [**Glosario**](./09-GLOSSARY.md)         | Términos técnicos explicados       | 10 min            |
-| 10  | [**Próximos Pasos**](./10-NEXT-STEPS.md) | Deploy, monitoring, optimizaciones | 15 min            |
-| 11  | [**Referencias**](./REFERENCES.md)       | Links útiles y recursos externos   | 5 min             |
+| #   | Documento                                                                 | Descripción                           | Tiempo de lectura |
+| --- | ------------------------------------------------------------------------- | ------------------------------------- | ----------------- |
+| 9   | [**Glosario**](./09-GLOSSARY.md)                                          | Términos técnicos explicados          | 10 min            |
+| 10  | [**Próximos Pasos**](./10-NEXT-STEPS.md)                                  | Deploy, monitoring, optimizaciones    | 15 min            |
+| 11  | [**Desactivar o Eliminar CI/CD**](./11-CI-CD-DEACTIVATION-AND-REMOVAL.md) | Cómo pausar o quitar automatizaciones | 8 min             |
+| 12  | [**Referencias**](./REFERENCES.md)                                        | Links útiles y recursos externos      | 5 min             |
 
 ---
 
@@ -55,7 +56,7 @@ Dependiendo de tu objetivo, sigue estas rutas:
 
 ### 📖 Para Consultar Referencia
 
-9 → 11 (Glosario y Referencias)
+9 → 11 → 12 (Glosario, desactivación y referencias)
 
 ### 🚀 Para Planear Siguientes Pasos
 
