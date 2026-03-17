@@ -46,3 +46,21 @@ Esta documentación está organizada en módulos independientes. Léelos en orde
 Dependiendo de tu objetivo, sigue estas rutas:
 
 ### 👨‍💻 Para Implementar desde Cero
+
+1 → 2 → 3 → 4 → 5 → 6
+
+### 🐛 Para Resolver un Problema
+
+7 → 8 → (si persiste) 4
+
+### 📖 Para Consultar Referencia
+
+9 → 11 (Glosario y Referencias)
+
+### 🚀 Para Planear Siguientes Pasos
+
+10 (Próximos Pasos)
+
+---
+
+> Documentación generada para el proyecto [NoName-Store-MERN](https://github.com/leanlag87/NoName-Store-MERN).
