@@ -17,7 +17,7 @@
     "highcharts": "^12.6.0",
     "highcharts-3d": "^0.1.7",
     "highcharts-react-official": "^3.2.3",
-    "react": "^18.3.1",
+    "react": "^19.2.5",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-js-pagination": "^3.0.3",
