@@ -4,7 +4,7 @@ const { authUser } = require("../middlewares/authUserMiddleware");
 
 const api = express.Router();
 
-api.post("/cart", authUser, cartController.addToCart); // Ruta protegida por authUser
+api.post("/cart", authUser, cartController.addToCart);
 api.get("/cart", authUser, cartController.getCart);
 api.delete("/cart/:productId", authUser, cartController.removeFromCart);
 api.put("/cart", authUser, cartController.updateCart);
