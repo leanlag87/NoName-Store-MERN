@@ -1,4 +1,3 @@
-//Json web token / Creamos el Token
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -16,7 +15,7 @@ function createAccessToken(user, privateKey) {
     exp: expToken.getTime() / 1000, //Fecha de expiracion q le dimos al token
     role: user.role, // Agregar el rol del usuario al payload
   };
-  //Devolver el Token
+
   return jwt.sign(payload, privateKey, { algorithm: "RS256" });
 }
 
