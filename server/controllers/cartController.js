@@ -1,9 +1,7 @@
-// Importar modelo de carrito y producto
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 
-// Agregar producto al carrito
 const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
@@ -87,7 +85,6 @@ const addToCart = async (req, res) => {
   }
 };
 
-// Obtener el carrito del usuario actual
 const getCart = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -112,7 +109,6 @@ const getCart = async (req, res) => {
   }
 };
 
-// Eliminar producto del carrito
 const removeFromCart = async (req, res) => {
   try {
     const { productId } = req.params;
@@ -172,7 +168,6 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-// actualizar el carrito
 const updateCart = async (req, res) => {
   try {
     const { cartItems } = req.body;
@@ -203,7 +198,6 @@ const updateCart = async (req, res) => {
   }
 };
 
-//vaciar el carrito
 const clearCart = async (req, res) => {
   try {
     const userId = req.user._id;

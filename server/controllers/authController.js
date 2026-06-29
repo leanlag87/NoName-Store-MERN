@@ -1,10 +1,9 @@
-const User = require("../models/usersModel"); // Importamos el modelo de usuarios
-const bcryptjs = require("bcryptjs"); // Importamos bcryptjs para encriptar contraseñas
-const jwt = require("../utils/jwt"); // Importamos la función para generar tokens
-const validator = require("validator"); // Importamos validator para validar los datos
-const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY; // Importamos la clave privada del archivo .env
+const User = require("../models/usersModel");
+const bcryptjs = require("bcryptjs");
+const jwt = require("../utils/jwt");
+const validator = require("validator");
+const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 
-//Logica para registrar ususarios
 async function registerUser(req, res) {
   try {
     const { name, lastName, email, password } = req.body;
@@ -74,7 +73,6 @@ async function registerUser(req, res) {
   }
 }
 
-//Logica para loguear usuarios
 async function login(req, res) {
   try {
     const { email, password } = req.body;
