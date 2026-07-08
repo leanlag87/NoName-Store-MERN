@@ -6,7 +6,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mercadopago/sdk-react": "^1.0.7",
-    "@mui/icons-material": "^5.16.8",
+    "@mui/icons-material": "^9.2.0",
     "@mui/material": "^5.16.8",
     "@mui/x-data-grid": "^7.23.5",
     "@reduxjs/toolkit": "^2.12.0",
