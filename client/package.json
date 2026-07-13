@@ -30,7 +30,7 @@
     "react-toastify": "^11.1.0",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.4.3",
-    "swiper": "^14.0.1",
+    "swiper": "^14.0.5",
     "web-vitals": "^5.3.0"
   },
   "scripts": {
