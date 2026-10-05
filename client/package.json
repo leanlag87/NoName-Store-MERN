@@ -9,7 +9,7 @@
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.16.8",
     "@mui/x-data-grid": "^7.23.5",
-    "@reduxjs/toolkit": "^2.12.0",
+    "@reduxjs/toolkit": "^2.13.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
@@ -30,7 +30,7 @@
     "react-toastify": "^11.1.0",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.5.3",
-    "swiper": "^14.2.0",
+    "swiper": "^14.3.0",
     "web-vitals": "^6.2.2"
   },
   "scripts": {
