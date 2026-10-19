@@ -12,7 +12,7 @@
     "@reduxjs/toolkit": "^2.13.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.7",
+    "@testing-library/user-event": "^14.6.8",
     "axios": "^1.20.0",
     "highcharts": "^13.1.1",
     "highcharts-3d": "^0.1.7",
