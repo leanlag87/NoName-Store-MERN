@@ -11,7 +11,7 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^2.3.0",
+    "body-parser": "^2.4.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
